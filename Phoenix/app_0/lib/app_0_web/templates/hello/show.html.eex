@@ -1,0 +1,4 @@
+<div class="jumbotron">
+  <!-- `@messenger` is special bit of metaprogrammed syntax for assigns.messenger -->
+  <h2>Hello World, from <%= @messenger %>!</h2>
+</div>

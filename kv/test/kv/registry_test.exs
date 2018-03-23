@@ -3,8 +3,15 @@ defmodule KV.RegistryTest do
 
   setup do
     # The advantage of using start_supervised! is that ExUnit will guarantee that the registry process will be shutdown before the next test starts. In other words, it helps guarantee the state of one test is not going to interfere with the next one in case they depend on shared resources.
+    # https://hexdocs.pm/ex_unit/ExUnit.Callbacks.html#start_supervised!/2
+    # if your application starts a supervision tree by running:
+    #  Supervisor.start_link([MyServer, {OtherSupervisor, ...}], ...)
+    # You can start those processes under test in isolation by running:
+    #  start_supervised(MyServer)
+    #  start_supervised({OtherSupervisor, :initial_value})
+    # A keyword list can also be given if there is a need to change the child specification for the given child process (as opts)
+    # start_supervised!(child_spec_or_module, opts \\ [])
     registry = start_supervised!(KV.Registry)
-    # https://hexdocs.pm/ex_unit/ExUnit.Callbacks.html#start_supervised/2
     %{registry: registry}
   end
 
