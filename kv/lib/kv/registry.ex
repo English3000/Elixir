@@ -1,6 +1,6 @@
 defmodule KV.Registry do
   use GenServer
-  # REVIEW GenServer API: https://hexdocs.pm/elixir/GenServer.html
+  # GenServer API: https://hexdocs.pm/elixir/GenServer.html
 
   # Client API
 
@@ -9,7 +9,7 @@ defmodule KV.Registry do
   """
   def start_link(options) do
     GenServer.start_link(__MODULE__, :ok, options)
-    # arg's: module w/ server callbacks, init. arg's, options for custom'zn
+    # arg's: module w/ server callbacks, init. arg's, options for custom'zn--e.g. :name
   end
 
   @doc """
@@ -18,13 +18,16 @@ defmodule KV.Registry do
   Returns `{:ok, pid}` if the bucket exists, `:error` otherwise.
   """
   def lookup(server, name) do
+    # The client sends the given request to the server and waits until a reply arrives or a timeout occurs. handle_call/3 will be called on the server to handle the request.
     GenServer.call(server, {:lookup, name})
   end
 
   @doc """
-
+  Ensures there is a bucket associated with the given `name` in `server`.
   """
   def create(server, name) do
+    # cast/2 always returns :ok regardless of whether the destination server (or node) exists.
+    # handle_cast/2 will be called on the server to handle the request.
     GenServer.cast(server, {:create, name})
   end
 

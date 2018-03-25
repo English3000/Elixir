@@ -1,3 +1,10 @@
 ### Guides
-* _"Getting Started"_ **(90%)** https://elixir-lang.org/getting-started/debugging.html#observer
-* _"Mix and OTP"_ @ https://elixir-lang.org/getting-started/mix-otp/supervisor-and-application.html#naming-processes
+* ["Getting Started"](https://elixir-lang.org/getting-started/debugging.html#observer) **READ**
+* ["Mix and OTP"]( https://elixir-lang.org/getting-started/mix-otp/supervisor-and-application.html#naming-processes)
+
+### Resources
+* [Coherence **(user auth)** & Ex Admin **(db UI)**](http://www.akitaonrails.com/2016/12/06/coherence-and-exadmin-devise-and-activeadmin-for-phoenix)
+* [OAuth2](https://github.com/scrogson/oauth2)
+* [Arc **(uploading)**](https://github.com/stavro/arc)
+
+* https://elixir-lang.org/learning.html
