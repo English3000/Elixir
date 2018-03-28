@@ -1,0 +1,24 @@
+<h1>Sign Up</h1>
+
+<%= if @changeset.action do %>
+  <p class="alert alert-danger" role="alert">Errors below.</p>
+<% end %>
+
+<%= form_for @changeset, user_path(@conn, :create), fn f -> %>
+  <div class="form-group">
+    <%= text_input f, :name, placeholder: "Name", class: "form-control", autofocus: true %>
+    <%= error_tag f, :name %>
+  </div>
+
+  <div class="form-group">
+    <%= text_input f, :username, placeholder: "Username", class: "form-control" %>
+    <%= error_tag f, :username %>
+  </div>
+
+  <div class="form-group">
+    <%= password_input f, :password, placeholder: "Password", class: "form-control" %>
+    <%= error_tag f, :password %>
+  </div>
+
+  <%= submit "Join", class: "btn btn-primary" %>
+<% end %>

@@ -21,6 +21,7 @@ defmodule Practice do
   @doc """
   Given a linked list whose nodes have data in ascending order, delete some nodes so that no value occurs more than once.
   """
+  #heh, Elixir already has Enum.dedup & Enum.uniq
   def delete_dups(list) do
     list
     |> Enum.with_index
