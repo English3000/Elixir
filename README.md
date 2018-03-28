@@ -1,3 +1,5 @@
+Currently walking through ["Programming Phoenix"](https://www.amazon.com/Programming-Phoenix-Productive-Reliable-Fast-ebook/dp/B01FRIOYEC/ref=sr_1_1).
+
 ### Guides
 * ["Getting Started"](https://elixir-lang.org/getting-started/debugging.html#observer) **READ**
 * ["Mix and OTP"]( https://elixir-lang.org/getting-started/mix-otp/supervisor-and-application.html#naming-processes)
