@@ -1,16 +1,35 @@
 defmodule Rumbl.Auth do
   import Plug.Conn
   import Comeonin.Bcrypt, only: [checkpw: 2, dummy_checkpw: 0]
+  import Phoenix.Controller #put_flash, redirect
 
+  alias Rumbl.Router.Helpers
+  # compiled
   def init(options) do
     # as in Keyword List
     Keyword.fetch!(options, :repo)
   end
-
+  # runtime
   def call(conn, repo) do
     user_id = get_session(conn, :user_id)
-    user = user_id && repo.get(Rumbl.User, user_id)
-    assign(conn, :current_user, user)
+    # added (except the middle cond) for testability = 'controversial'
+    cond do
+      user = conn.assigns[:current_user] -> conn
+      user = user_id && repo.get(Rumbl.User, user_id) ->
+        assign(conn, :current_user, user)
+      true -> assign(conn, :current_user, nil)
+    end
+  end
+
+  def authenticate_user(conn, _opts) do
+    if conn.assigns.current_user do
+      conn
+    else
+      conn
+      |> put_flash(:error, "Please sign in.")
+      |> redirect(to: Helpers.page_path(conn, :index))
+      |> halt() #b/c plugged in a pipeline
+    end
   end
 
   def sign_up(conn, user) do

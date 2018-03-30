@@ -1,7 +1,7 @@
 defmodule Rumbl.UserController do
   use Rumbl.Web, :controller
 
-  plug :authenticate when action in [:index, :show]
+  plug :authenticate_user when action in [:index, :show]
 
   alias Rumbl.User
 
@@ -27,21 +27,11 @@ defmodule Rumbl.UserController do
     case insertion do
       {:error, changeset} -> render(conn, "new.html", changeset: changeset) #w/ failed validations
         # for some reason, '/users/new' => '/users'; still w/ "new.html"
+        # same bug w/ Phoenix-gen'd one!
       {:ok, user} -> conn
         |> Rumbl.Auth.sign_up(user)
         |> put_flash(:info, "#{user.name} created!")
         |> redirect(to: user_path(conn, :index))
-    end
-  end
-
-  defp authenticate(conn, _opts) do
-    if conn.assigns.current_user do
-      conn
-    else
-      conn
-      |> put_flash(:error, "Please sign in.")
-      |> redirect(to: page_path(conn, :index))
-      |> halt() #b/c plugged in a pipeline
     end
   end
 end

@@ -6,6 +6,7 @@ defmodule Rumbl.User do
     field :username, :string
     field :password, :string, virtual: true
     field :password_hash, :string
+    has_many :videos, Rumbl.Video
 
     timestamps()
   end
@@ -14,7 +15,7 @@ defmodule Rumbl.User do
   def registration_changeset(model, params \\ %{}) do
     model
     |> changeset(params)
-    |> cast(params, [:password], [])
+    |> cast(params, [:password])
     |> validate_length(:password, min: 6, max: 100)
     |> put_pw_hash()
   end
@@ -28,6 +29,7 @@ defmodule Rumbl.User do
     # need this to handle empty fields
     |> validate_required([:name, :username])
     |> validate_length(:username, min: 1, max: 20)
+    |> unique_constraint(:username)
   end
 
   defp put_pw_hash(changeset) do
