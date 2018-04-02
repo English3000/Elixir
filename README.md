@@ -21,6 +21,7 @@
 * **GO DEEPER:** [The Erlang Runtime System](https://happi.github.io/theBeamBook/#P-ERTS)
 
 ### Plugs
+* [SSL](https://spin.atomicobject.com/2018/03/07/force-ssl-phoenix-framework/?utm_campaign=elixir_radar_135&utm_medium=email&utm_source=RD+Station)
 * [Coherence **(user auth)** & Ex Admin **(db UI)**](http://www.akitaonrails.com/2016/12/06/coherence-and-exadmin-devise-and-activeadmin-for-phoenix)
 * [OAuth2](https://github.com/scrogson/oauth2)
 * [Arc **(uploading)**](https://github.com/stavro/arc)
