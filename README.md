@@ -26,3 +26,5 @@
 * [Arc **(uploading)**](https://github.com/stavro/arc)
 
 ### Cheatsheet SOON...
+
+Oh, and a shameless plug, [Object-Oriented vs. Functional Interviewing](https://www.linkedin.com/pulse/object-oriented-vs-functional-interviewing-alexander-marks-katz/)!
