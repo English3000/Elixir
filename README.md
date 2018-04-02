@@ -16,7 +16,7 @@
 
 ### _Advanced_
 * [Intro to Memory](https://www.cs.cornell.edu/courses/cs3110/2014sp/lectures/26/memory.html)
-* **GO DEEPER:** [Erlang VM Garage Collection](https://www.erlang-solutions.com/blog/erlang-garbage-collector.html)
+* **GO DEEPER:** [Erlang VM Garbage Collection](https://www.erlang-solutions.com/blog/erlang-garbage-collector.html)
 * [Intro to Assembly (if accessible)](https://vimeo.com/175634887)
 * **GO DEEPER:** [The Erlang Runtime System](https://happi.github.io/theBeamBook/#P-ERTS)
 
