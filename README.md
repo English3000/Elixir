@@ -17,8 +17,8 @@
 
 ### _Absinthe (GraphQL backend)_
 * [Intro to Absinthe](https://www.howtographql.com/graphql-elixir/0-introduction/)
-* [Full walkthru](https://pragprog.com/book/wwgraphql/craft-graphql-apis-in-elixir-with-absinthe)
 * **[SOURCE](https://github.com/absinthe-graphql/absinthe)**
+* [Full walkthru](https://pragprog.com/book/wwgraphql/craft-graphql-apis-in-elixir-with-absinthe)
 * [Relay: GraphQL for a React frontend](http://facebook.github.io/relay/docs/en/introduction-to-relay.html)
 
 ### _Advanced_
