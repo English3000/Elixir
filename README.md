@@ -25,6 +25,10 @@
 * [OAuth2](https://github.com/scrogson/oauth2)
 * [Arc **(uploading)**](https://github.com/stavro/arc)
 
-### Cheatsheet SOON...
+* [Dialxyr](https://github.com/jeremyjh/dialyxir)
+* [MonadEx](https://github.com/rob-brown/MonadEx)
+
 
 Oh, and a shameless plug, [Object-Oriented vs. Functional Interviewing](https://www.linkedin.com/pulse/object-oriented-vs-functional-interviewing-alexander-marks-katz/)!
+
+### Cheatsheet SOON...
