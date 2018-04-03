@@ -21,6 +21,11 @@
 * [Full walkthru](https://pragprog.com/book/wwgraphql/craft-graphql-apis-in-elixir-with-absinthe)
 * [Relay: GraphQL for a React frontend](http://facebook.github.io/relay/docs/en/introduction-to-relay.html)
 
+### _Deploying Your App_
+* [Heroku](https://hexdocs.pm/phoenix/heroku.html) has some limitations
+* [Gigalixir](http://gigalixir.readthedocs.io/en/latest/main.html) is a platform-as-a-service without those limitations
+* If you are deploying to a cloud platform ([AWS EC2](https://www.google.com/search?client=firefox-b-1-ab&ei=fuvDWuncNOKP0wLzl5ywBw&q=distillery+cloud+deploy+aws&oq=distillery+cloud+deploy+aws&gs_l=psy-ab.3...7076.7546.0.7790.4.4.0.0.0.0.200.452.0j2j1.3.0....0...1..64.psy-ab..1.2.302...33i160k1j33i21k1.0.rhnwg9WMOPk), [Google Cloud](https://cloud.google.com/community/tutorials/elixir-phoenix-on-google-app-engine)), use [Distillery](https://hexdocs.pm/distillery/phoenix-walkthrough.html#content)
+
 ### _Advanced_
 * [Intro to Memory](https://www.cs.cornell.edu/courses/cs3110/2014sp/lectures/26/memory.html)
 * **GO DEEPER:** [Erlang VM Garbage Collection](https://www.erlang-solutions.com/blog/erlang-garbage-collector.html)
