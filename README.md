@@ -20,6 +20,7 @@
 * **[SOURCE](https://github.com/absinthe-graphql/absinthe)**
 * [Full walkthru](https://pragprog.com/book/wwgraphql/craft-graphql-apis-in-elixir-with-absinthe)
 * [Relay: GraphQL for a React frontend](http://facebook.github.io/relay/docs/en/introduction-to-relay.html)
+  * [`react-native-web`](https://github.com/necolas/react-native-web/blob/master/website/guides/getting-started.md#getting-started) for [cross-platform](https://github.com/necolas/react-native-web#react-native-for-web) React components
 
 ### _Deploying Your App_
 * [Heroku](https://hexdocs.pm/phoenix/heroku.html) has some limitations
