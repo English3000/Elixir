@@ -249,3 +249,33 @@ fast, configurable, sometimes subscription interfaces
 3. Load balancers allow traffic to a single endpoint to be shared across multiple machines
 4. Due to the nature of data, db's are the most difficult to scale
 5. Caching handles redundant processing of static assets, saving time-to-load & money
+
+### Readings Notes
+DevOps began going mainstream, being adopted by major vendors, in 2011.
+
+System Admin (admin's servers) ensures prod is running 99.99% of the time w/o hitches; has to debug dev code.
+
+DevOps: automate everything! (also, as an IT mindset)
+
+
+* source control (versioning)
+* **build server**, e.g. Jenkins, for continuous testing of new prod code
+
+Configuration management defines the config of a server or env (e.g. via Chef or Puppet).
+
+Virtual infrastructure (e.g. AWS, Azure; VMware for a private cloud, which runs on top of db hardware)
+
+* an extensive automated testing strategy
+* "pipeline orchestration"
+* app & system logs (e.g. New Relic)
+
+IT roles: developer; network specialist; system admin; tester; PM
+
+#### What is DevOps?
+3 levels:
+
+**Continuous integration** is the practice of quickly integrating newly developed code w/ the main body of code for release: _checking in your code, compiling it to an executable, & running basic validation testing_.
+
+**Continuous delivery** sits on top of this, adding automation & testing. It's the practice of having the code base continuously ready-to-deploy.
+
+**Continuous development** is the practice of deploying code to production w/o any human intervention. Newly created code runs thru automated testing. The code release typ. goes to a small % of users, and there's an automated feedback loop that monitors quality & usage. Few companies do this (e.g. Amazon, Google, Netflix).
