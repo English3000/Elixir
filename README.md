@@ -16,6 +16,7 @@
 * **GO DEEPER:** [Learn Metaprogramming in Elixir](https://www.amazon.com/Metaprogramming-Elixir-Write-Less-Code-ebook/dp/B00U1VU2GA/ref=pd_sim_351_1?_encoding=UTF8&psc=1&refRID=WC6E4JWN3VQF8713QY76)
 
 ### _Absinthe (GraphQL backend)_
+* ["Getting" GraphQL](https://medium.com/@english3000.org/getting-graphql-40dd48dd53a1)
 * [Intro to Absinthe](https://www.howtographql.com/graphql-elixir/0-introduction/)
 * **[SOURCE](https://github.com/absinthe-graphql/absinthe)**
 * [Full walkthru](https://pragprog.com/book/wwgraphql/craft-graphql-apis-in-elixir-with-absinthe)
