@@ -13,6 +13,9 @@
 * [Learn Phoenix](https://www.amazon.com/Programming-Phoenix-Productive-Reliable-Fast-ebook/dp/B01FRIOYEC/ref=sr_1_1)
 * [React setup](https://medium.com/@diamondgfx/phoenix-v1-1-2-and-react-js-3dbd195a880a)
 * [Reph, for server-side rendering in React](https://github.com/reph-stack/reph)
+> My suggestion is to just use HTML on the server-side. Rendering React with SSR uses more server resources. By server-side rendering with HTML, you still get the benefits of faster load time to first byte and an SEO-friendly website. Then, you can client-side hydrate your React for interactivity.
+>
+> This isn't a hard rule, just my current thinking.
 * **GO DEEPER:** [Learn Metaprogramming in Elixir](https://www.amazon.com/Metaprogramming-Elixir-Write-Less-Code-ebook/dp/B00U1VU2GA/ref=pd_sim_351_1?_encoding=UTF8&psc=1&refRID=WC6E4JWN3VQF8713QY76)
 
 ### _Absinthe (GraphQL backend)_
