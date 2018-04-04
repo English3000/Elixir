@@ -42,6 +42,6 @@
 * [MonadEx](https://github.com/rob-brown/MonadEx)
 
 
-Oh, and a shameless plug, [Object-Oriented vs. Functional Interviewing](https://www.linkedin.com/pulse/object-oriented-vs-functional-interviewing-alexander-marks-katz/)!
+Oh, and a shameless plug, [Object-Oriented vs. Functional Interviewing](https://medium.com/@english3000.org/object-oriented-vs-functional-interviewing-a383cf87bcf8)!
 
 ### Cheatsheet SOON...
