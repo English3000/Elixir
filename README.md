@@ -26,6 +26,7 @@ At a bare minimum, I'd go through [Learn Elixir](https://elixir-lang.org/getting
 * [Learn Absinthe](https://pragprog.com/book/wwgraphql/craft-graphql-apis-in-elixir-with-absinthe)
 * [Relay: GraphQL for a React frontend](http://facebook.github.io/relay/docs/en/introduction-to-relay.html)
   * [`Absinthe.Relay` docs](https://hexdocs.pm/absinthe/relay.html)
+  * [Sending a request with variables](https://github.com/absinthe-graphql/absinthe-socket/tree/master/packages/socket#send) (not covered in the book)
   * [`react-native-web`](https://github.com/necolas/react-native-web/blob/master/website/guides/getting-started.md#getting-started) for [cross-platform](https://github.com/necolas/react-native-web#react-native-for-web) React components
 
 ### _Deploying Your App_
