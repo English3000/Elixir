@@ -38,6 +38,7 @@
     * [Semaphore + Docker](https://semaphoreci.com/docs/docker.html)
   * Docker [tutorial](https://docker-curriculum.com/) & [resources](https://github.com/veggiemonk/awesome-docker#what-is-docker)
 > ["Ansible isn't meant to be a continuous integration engine."](https://stackoverflow.com/questions/25842718/is-ansible-a-replacement-for-a-ci-tool-like-hudson-jenkins?utm_medium=organic&utm_source=google_rich_qa&utm_campaign=google_rich_qa)
+* [DevOps 2.0](https://leanpub.com/the-devops-2-toolkit) (check out the free sample)
 
 ### _Advanced_
 * [Intro to Memory](https://www.cs.cornell.edu/courses/cs3110/2014sp/lectures/26/memory.html)
