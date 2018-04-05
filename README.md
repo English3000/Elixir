@@ -24,6 +24,8 @@ At a bare minimum, I'd go through [Learn Elixir](https://elixir-lang.org/getting
 * [Intro to Absinthe](https://www.howtographql.com/graphql-elixir/0-introduction/)
   * [another free tutorial](https://hexdocs.pm/absinthe/start.html#content)
 * [Learn Absinthe](https://pragprog.com/book/wwgraphql/craft-graphql-apis-in-elixir-with-absinthe)
+
+* ["Getting" Relay](https://www.reindex.io/blog/redux-and-relay/)
 * [Relay: GraphQL for a React frontend](http://facebook.github.io/relay/docs/en/introduction-to-relay.html)
   * [`Absinthe.Relay` docs](https://hexdocs.pm/absinthe/relay.html)
   * [Sending a request with variables](https://github.com/absinthe-graphql/absinthe-socket/tree/master/packages/socket#send) (not covered in the book)
