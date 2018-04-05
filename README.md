@@ -1,4 +1,5 @@
 ## Ramping up with Elixir/Phoenix
+At a bare minimum, I'd go through [Learn Elixir](https://elixir-lang.org/getting-started/introduction.html) **(free!)**, [Learn Phoenix](https://www.amazon.com/Programming-Phoenix-Productive-Reliable-Fast-ebook/dp/B01FRIOYEC/ref=sr_1_1) **($24)**, and [Learn Absinthe](https://pragprog.com/book/wwgraphql/craft-graphql-apis-in-elixir-with-absinthe) **($26, Kindle-compatible)**.
 
 ### _Why Elixir?_
 * [Creator José Valim explains...](https://softwareengineeringdaily.com/2016/04/18/elixir-erlang-jose-valim/)
@@ -21,9 +22,10 @@
 ### _Absinthe (GraphQL backend)_
 * ["Getting" GraphQL](https://medium.com/@english3000.org/getting-graphql-40dd48dd53a1)
 * [Intro to Absinthe](https://www.howtographql.com/graphql-elixir/0-introduction/)
-* **[SOURCE](https://github.com/absinthe-graphql/absinthe)**
-* [Full walkthru](https://pragprog.com/book/wwgraphql/craft-graphql-apis-in-elixir-with-absinthe)
+  * [another free tutorial](https://hexdocs.pm/absinthe/start.html#content)
+* [Learn Absinthe](https://pragprog.com/book/wwgraphql/craft-graphql-apis-in-elixir-with-absinthe)
 * [Relay: GraphQL for a React frontend](http://facebook.github.io/relay/docs/en/introduction-to-relay.html)
+  * [`Absinthe.Relay` docs](https://hexdocs.pm/absinthe/relay.html)
   * [`react-native-web`](https://github.com/necolas/react-native-web/blob/master/website/guides/getting-started.md#getting-started) for [cross-platform](https://github.com/necolas/react-native-web#react-native-for-web) React components
 
 ### _Deploying Your App_
