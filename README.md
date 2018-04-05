@@ -29,6 +29,7 @@
 ### _Deploying Your App_
 * [Heroku](https://hexdocs.pm/phoenix/heroku.html) has some limitations
 * [Gigalixir](http://gigalixir.readthedocs.io/en/latest/main.html) is a platform-as-a-service without those limitations
+> ["I chose to use Gigalixir for hosting my application so that I could get the Heroku-like ease-of-use that it provides, while being able to still learn and use features of Elixir that make it special (like ETS and hot upgrades)."](https://medium.com/@b1ackmartian/deployment-to-gigalixir-using-travis-ci-46329167082e)
 * If you are deploying to a cloud platform ([AWS EC2](https://www.google.com/search?client=firefox-b-1-ab&ei=fuvDWuncNOKP0wLzl5ywBw&q=distillery+cloud+deploy+aws&oq=distillery+cloud+deploy+aws&gs_l=psy-ab.3...7076.7546.0.7790.4.4.0.0.0.0.200.452.0j2j1.3.0....0...1..64.psy-ab..1.2.302...33i160k1j33i21k1.0.rhnwg9WMOPk), [Google Cloud](https://cloud.google.com/community/tutorials/elixir-phoenix-on-google-app-engine)), use [Distillery](https://hexdocs.pm/distillery/phoenix-walkthrough.html#content)
 > ["Distillery is a release tool. It builds a deployable artifact."](https://elixirforum.com/t/devops-ci-cd-cd-for-elixir-phoenix-best-practice/13189)
 * **GO DEEPER:** [Continuous Integration & Delivery](https://hackernoon.com/state-of-the-art-in-deploying-elixir-phoenix-applications-fe72a4563cd8)
