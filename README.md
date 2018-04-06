@@ -28,7 +28,7 @@ At a bare minimum, I'd go through [Learn Elixir](https://elixir-lang.org/getting
 * ["Getting" Relay (GraphQL frontend)](https://www.reindex.io/blog/redux-and-relay/)
   * [Relay over Redux](https://medium.com/@matt.krick/replacing-redux-with-relay-47ed085bfafe)
   * **GO DEEPER:** [Relay Deep Dive](https://www.youtube.com/watch?v=oPSuvaYmXBY)
-* [Relay tutorial](https://www.howtographql.com/react-relay/0-introduction/)
+* [Relay tutorial](https://www.howtographql.com/react-relay/0-introduction/) -- **NOTE:** Skip *Step 5: Authentication*; the strategy used is insecure. *Ch. 8* of the Absinthe book provides secure auth.
   * [Relay docs](http://facebook.github.io/relay/docs/en/introduction-to-relay.html)
   * [`Absinthe.Relay` docs](https://hexdocs.pm/absinthe/relay.html)
   * [Sending a request with variables](https://github.com/absinthe-graphql/absinthe-socket/tree/master/packages/socket#send) (not covered in the book)
