@@ -8,19 +8,34 @@
 #---
 defmodule PlateSlateWeb.Schema do
   use Absinthe.Schema
-  alias PlateSlate.{Menu, Repo}
+  alias PlateSlateWeb.Resolvers
 
-  query do
-    @desc "Gets a list of all available menu items"
-    field :menu_items, list_of(:menu_item) do
-      resolve fn _,_,_ -> {:ok, Repo.all(Menu.Item)} end
-      # could define in `menu_resolver.ex` as `all_items/3`
-    end
+  enum :sort_order do
+    value :asc
+    value :desc
   end
 
   object :menu_item do
     field :id, :id
     field :name, :string
     field :description, :string
+  end
+
+  @desc "Filter query by..."
+  input_object :menu_item_filter do
+    field :name, :string
+    field :category, :string
+    field :tag, :string
+    field :priced_above, :float
+    field :priced_below, :float
+  end
+
+  query do
+    @desc "Gets a list of all available menu items"
+    field :menu_items, list_of(:menu_item) do
+      arg :filter, :menu_item_filter
+      arg :order, type: :sort_order, default_value: :asc
+      resolve &Resolvers.Menu.menu_items/3
+    end
   end
 end
