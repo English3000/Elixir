@@ -30,6 +30,7 @@ At a bare minimum, I'd go through [Learn Elixir](https://elixir-lang.org/getting
   * **GO DEEPER:** [Relay Deep Dive](https://www.youtube.com/watch?v=oPSuvaYmXBY)
 * [Relay tutorial](https://www.howtographql.com/react-relay/0-introduction/) -- **NOTE:** Skip *Step 5: Authentication*; the strategy used is insecure. *Ch. 8* of the Absinthe book provides secure auth.
   * [Relay docs](http://facebook.github.io/relay/docs/en/introduction-to-relay.html)
+    * [Example App](https://github.com/relayjs/relay-examples/blob/master/todo/js/app.js)
   * [`Absinthe.Relay` docs](https://hexdocs.pm/absinthe/relay.html)
   * [Sending a request with variables](https://github.com/absinthe-graphql/absinthe-socket/tree/master/packages/socket#send) (not covered in the book)
   * [`react-native-web`](https://github.com/necolas/react-native-web/blob/master/website/guides/getting-started.md#getting-started) for [cross-platform](https://github.com/necolas/react-native-web#react-native-for-web) React components
