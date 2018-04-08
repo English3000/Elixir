@@ -12,12 +12,10 @@ At a bare minimum, I'd go through [Learn Elixir](https://elixir-lang.org/getting
 
 ### _Phoenix (framework)_
 * [Learn Phoenix](https://www.amazon.com/Programming-Phoenix-Productive-Reliable-Fast-ebook/dp/B01FRIOYEC/ref=sr_1_1)
-* [React setup](https://medium.com/@diamondgfx/phoenix-v1-1-2-and-react-js-3dbd195a880a)
-* [Reph, for server-side rendering in React](https://github.com/reph-stack/reph)
-> My suggestion is to just use HTML on the server-side. Rendering React with SSR uses more server resources. By server-side rendering with HTML, you still get the benefits of faster load time to first byte and an SEO-friendly website. Then, you can client-side hydrate your React for interactivity.
->
-> This isn't a hard rule, just my current thinking.
 * **GO DEEPER:** [Learn Metaprogramming in Elixir](https://www.amazon.com/Metaprogramming-Elixir-Write-Less-Code-ebook/dp/B00U1VU2GA/ref=pd_sim_351_1?_encoding=UTF8&psc=1&refRID=WC6E4JWN3VQF8713QY76)
+
+* [React setup](https://medium.com/@diamondgfx/phoenix-v1-1-2-and-react-js-3dbd195a880a)
+* [`react-native-web`](https://github.com/necolas/react-native-web/blob/master/website/guides/getting-started.md#getting-started) for [cross-platform](https://github.com/necolas/react-native-web#react-native-for-web) React components, with option to server-side render
 
 ### _Absinthe (GraphQL backend)_
 * ["Getting" GraphQL](https://medium.com/@english3000.org/getting-graphql-40dd48dd53a1)
@@ -33,7 +31,6 @@ At a bare minimum, I'd go through [Learn Elixir](https://elixir-lang.org/getting
     * [Example App](https://github.com/relayjs/relay-examples/blob/master/todo/js/app.js)
   * [`Absinthe.Relay` docs](https://hexdocs.pm/absinthe/relay.html)
   * [Sending a request with variables](https://github.com/absinthe-graphql/absinthe-socket/tree/master/packages/socket#send) (not covered in the book)
-  * [`react-native-web`](https://github.com/necolas/react-native-web/blob/master/website/guides/getting-started.md#getting-started) for [cross-platform](https://github.com/necolas/react-native-web#react-native-for-web) React components
 
 ### _Deploying Your App_
 * [Heroku](https://hexdocs.pm/phoenix/heroku.html) has some limitations
@@ -115,6 +112,6 @@ Lastly, there are maps, `%{}`. In a keyword list, the first value of the tuple m
 
 The language has additional datatypes but these are generally the most relevant.
 
-### Logic (SOON)
+### Operations (SOON)
 
-### Operations (AFTER)
+### Logic (AFTER)
