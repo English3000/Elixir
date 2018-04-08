@@ -73,8 +73,8 @@ Units
   * groups machines based on shared resources
 * Layers (of instances)
   * groups machines based on roles
-  * custom recipes per lifecycle event
-* Apps
+  * custom recipes per lifecycle event _(Gene hasn't used undeploy or shutdown scripts)_
+* Apps (a string used in deployment--just another variable passed to the custom JSON; that's basically all this does)
   * deployable identifier--scripts can use app name
 
 > Done w/ whole project (didn't have to do Phase 3 today)
