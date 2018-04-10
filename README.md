@@ -12,6 +12,8 @@ At a bare minimum, I'd go through [Learn Elixir](https://elixir-lang.org/getting
 
 ### _Phoenix (framework)_
 * [Learn Phoenix](https://www.amazon.com/Programming-Phoenix-Productive-Reliable-Fast-ebook/dp/B01FRIOYEC/ref=sr_1_1)
+  * [Webpack setup](http://matthewlehner.net/using-webpack-with-phoenix-and-elixir/)
+  * [JSON API example](https://robots.thoughtbot.com/building-a-phoenix-json-api)
 * **GO DEEPER:** [Learn Metaprogramming in Elixir](https://www.amazon.com/Metaprogramming-Elixir-Write-Less-Code-ebook/dp/B00U1VU2GA/ref=pd_sim_351_1?_encoding=UTF8&psc=1&refRID=WC6E4JWN3VQF8713QY76)
 
 * [React setup](https://medium.com/@diamondgfx/phoenix-v1-1-2-and-react-js-3dbd195a880a)
