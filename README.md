@@ -12,12 +12,10 @@ At a bare minimum, I'd go through [Learn Elixir](https://elixir-lang.org/getting
 
 ### _Phoenix (framework)_
 * [Learn Phoenix](https://www.amazon.com/Programming-Phoenix-Productive-Reliable-Fast-ebook/dp/B01FRIOYEC/ref=sr_1_1)
-* [React setup](https://medium.com/@diamondgfx/phoenix-v1-1-2-and-react-js-3dbd195a880a)
-* [Reph, for server-side rendering in React](https://github.com/reph-stack/reph)
-> My suggestion is to just use HTML on the server-side. Rendering React with SSR uses more server resources. By server-side rendering with HTML, you still get the benefits of faster load time to first byte and an SEO-friendly website. Then, you can client-side hydrate your React for interactivity.
->
-> This isn't a hard rule, just my current thinking.
 * **GO DEEPER:** [Learn Metaprogramming in Elixir](https://www.amazon.com/Metaprogramming-Elixir-Write-Less-Code-ebook/dp/B00U1VU2GA/ref=pd_sim_351_1?_encoding=UTF8&psc=1&refRID=WC6E4JWN3VQF8713QY76)
+
+* [React setup](https://medium.com/@diamondgfx/phoenix-v1-1-2-and-react-js-3dbd195a880a)
+* [`react-native-web`](https://github.com/necolas/react-native-web/blob/master/website/guides/getting-started.md#getting-started) for [cross-platform](https://github.com/necolas/react-native-web#react-native-for-web) React components, with option to server-side render
 
 ### _Absinthe (GraphQL backend)_
 * ["Getting" GraphQL](https://medium.com/@english3000.org/getting-graphql-40dd48dd53a1)
@@ -33,7 +31,6 @@ At a bare minimum, I'd go through [Learn Elixir](https://elixir-lang.org/getting
     * [Example App](https://github.com/relayjs/relay-examples/blob/master/todo/js/app.js)
   * [`Absinthe.Relay` docs](https://hexdocs.pm/absinthe/relay.html)
   * [Sending a request with variables](https://github.com/absinthe-graphql/absinthe-socket/tree/master/packages/socket#send) (not covered in the book)
-  * [`react-native-web`](https://github.com/necolas/react-native-web/blob/master/website/guides/getting-started.md#getting-started) for [cross-platform](https://github.com/necolas/react-native-web#react-native-for-web) React components
 
 ### _Deploying Your App_
 * [Heroku](https://hexdocs.pm/phoenix/heroku.html) has some limitations
@@ -66,4 +63,55 @@ At a bare minimum, I'd go through [Learn Elixir](https://elixir-lang.org/getting
 
 Oh, and a shameless plug, [Object-Oriented vs. Functional Interviewing](https://medium.com/@english3000.org/object-oriented-vs-functional-interviewing-a383cf87bcf8)!
 
-### Cheatsheet SOON...
+## Cheatsheet (in progress)
+
+#### Note: This material is intended as *complementary* to the resources above.
+
+### Intro
+
+Elixir is built on top of the Erlang VM, which powers something like 50% of the phone system. This means Elixir code is compiled into Erlang VM code, which is then transpiled into assembly code for your machine.
+
+Elixir builds upon the Erlang VM. The Erlang VM supports zero-downtime upgrades, runs isolated processes (so if one crashes, none of the others do and the one that crashed is restarted by a *Supervisor* process), and--while not the fastest of all programming languages--is an order of magnitude faster than PHP, Python, Ruby, and Node.js because it leverages multicore processors to run processes in parallel. As of the mid-2000s, computers' processing power has remained stagnant and the trend has been to include more cores in computers. As this trend continues, the speed of concurrent languages like Elixir over single-threaded languages will only grow.
+
+Elixir also emerged out of the Rails community. José Valim, the author/creator of the language, was part of the Rails core team. In my view, he took the best of both Erlang and Ruby on Rails to produce Elixir. Same for Chris McCord's Phoenix framework and the whole ecosystem.
+
+It is important to note Elixir is a functional programming language. This means any data stored in memory is immutable. If you no longer use it, it becomes "garbage" to be cleared. Additionally, developers think in terms of steps of functions rather than aspects of objects. Instead of calling a function on a datum, the datum is passed as an argument to the function.
+
+### Datatypes
+
+Elixir is a server-side scripting language, meaning it handles requests from the browser and returns responses.
+
+Now let's delve into its datatypes:
+
+**Basic**
+* integer
+* float
+* boolean
+* atom
+
+Integers are numbers. Floats are numbers with decimal points. Booleans consist of `true` and `false`. All expressions of code (which are like clauses in sentences) have a `true` boolean value, except `false` (which is a boolean value) and `nil` which is what some functions return on failure. An atom begins (or, as we'll see later, can end) with `:`. It is intended for use as a unique value.
+
+**Advanced**
+* string
+* tuple
+* list
+* keyword list
+* map
+
+You'll notice I did not include strings (words/letters/anything in double-quotes) under Basic.
+
+When code is compiled to assembly (for the machine to understand), everything is converted to binary. Binary means base 2. That means all code is represented as a series of `0`s and `1`s. Why? Computers work because they have transistors which can store a charge. If a transistor is off (it does not have a charge), this can be represented as `0`.
+
+Numbers are simply converted from base 10 to base 2. Booleans are binary. Floats and atoms are more complicated, but each is a single value. By contrast, a series of contiguous values can also be used to represent data. A string is a series of numbers which have been converted into human-readable characters. AKA, all of the characters in a string can be converted into base 10 numbers, which can then be converted to binary (likely implemented with a special leading binary sequence to differentiate them from integers). The series of continguous values can be represented as a tuple or a (linked) list. A tuple is represented as `{}`. A list is represented as `[]`. Tuples are used to store short series. Lists are for series that are long enough that they may not be stored continguously in a computer's memory. Memory comes in units of bytes, which are 8 bits. A bit is a binary unit (a `0` or a `1`). So a short value can fit in a byte. A longer value needs to be split across bytes.
+
+The most common use of tuples in Elixir is pattern-matching. Often, the tuple will have only 2 values. The first is an atom. You set cases for each possible atom where you do something with the second value of the tuple. Linked lists perform the function of arrays in other languages: storing series of values which you can go through or alter via functions.
+
+There is a third data structure called a keyword list, which is a linked list of 2-value tuples: `[{}, {}]`. The first value of the tuple must be an atom (a key). Additionally, keyword lists can be represented as `{key: value, key2: value2}`. Keyword lists are often defined as the last argument of a function. Because a keyword list is a set of values, this means you can pass a ranging number of arguments, each of which has a specific use in the function as identified by its key.
+
+Lastly, there are maps, `%{}`. In a keyword list, the first value of the tuple must be an atom and the list is ordered. A map is unordered and the key of the key-value pair can be any basic datatype (*literals*) or a string. The value can be any datatype.
+
+The language has additional datatypes but these are generally the most relevant.
+
+### Operations (SOON)
+
+### Logic (AFTER)
