@@ -1,4 +1,6 @@
 ## Puppet, Chef, & AWS OpsWorks (fleet mgmt)
+> [Learn Chef on AWS](https://learn.chef.io/modules/learn-the-basics/ubuntu/aws#/)
+
 * also Ansible & SaltStack
 
 (devOps mini-course all about scaling our app)

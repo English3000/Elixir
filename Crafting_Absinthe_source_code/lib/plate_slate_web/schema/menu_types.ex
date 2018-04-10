@@ -8,6 +8,7 @@ defmodule PlateSlateWeb.Schema.MenuTypes do
     field :id, :id
     field :name, :string
     field :description, :string
+    field :price, :decimal #apparently globally accessible once defined
     field :added_on, :date
   end
 
@@ -36,6 +37,13 @@ defmodule PlateSlateWeb.Schema.MenuTypes do
     end
   end
 
+  object :menu_inputs do
+    field :create_menu_item, :menu_item do #imported--returns a :menu_item
+      arg :input, non_null(:menu_item_input)
+      resolve &Resolvers.Menu.create_item/3
+    end
+  end
+
   object :category do
     interfaces [:search_result]
     field :name, :string
@@ -59,5 +67,12 @@ defmodule PlateSlateWeb.Schema.MenuTypes do
       arg :match, non_null(:string)
       resolve &Resolvers.Menu.search/3
     end
+  end
+
+  input_object :menu_item_input do
+    field :name, non_null(:string)
+    field :description, :string
+    field :price, non_null(:decimal) #enforces 2 digits after dot
+    field :category_id, non_null(:id)
   end
 end

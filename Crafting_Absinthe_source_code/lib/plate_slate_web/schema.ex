@@ -8,7 +8,7 @@
 #---
 defmodule PlateSlateWeb.Schema do
   use Absinthe.Schema
-  import_types __MODULE__.MenuTypes #do I still need this?
+  import_types __MODULE__.MenuTypes
 
   scalar :date do
     parse fn input ->
@@ -24,8 +24,21 @@ defmodule PlateSlateWeb.Schema do
     end
   end
 
+  scalar :decimal do
+    parse fn
+      %{value: value}, _ -> Decimal.parse(value)
+                     _,_ -> :error
+    end
+
+    serialize &to_string/1
+  end
+
   query do
     import_fields :menu_queries
     import_fields :search_queries
+  end
+
+  mutation do
+    import_fields :menu_inputs #works!
   end
 end
