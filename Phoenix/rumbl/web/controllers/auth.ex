@@ -9,14 +9,19 @@ defmodule Rumbl.Auth do
     # as in Keyword List
     Keyword.fetch!(options, :repo)
   end
+
+  defp put_current_user(conn, user) do
+    token = Phoenix.Token.sign(conn, "user socket", user.id) #gen's token
+    conn |> assign(:current_user, user) |> assign(:user_token, token)
+  end
   # runtime
   def call(conn, repo) do
     user_id = get_session(conn, :user_id)
     # added (except the middle cond) for testability = 'controversial'
     cond do
-      user = conn.assigns[:current_user] -> conn
+      user = conn.assigns[:current_user] -> put_current_user(conn, user)
       user = user_id && repo.get(Rumbl.User, user_id) ->
-        assign(conn, :current_user, user)
+        put_current_user(conn, user)
       true -> assign(conn, :current_user, nil)
     end
   end
@@ -34,7 +39,7 @@ defmodule Rumbl.Auth do
 
   def sign_up(conn, user) do
     conn
-    |> assign(:current_user, user)
+    |> put_current_user(user)
     |> put_session(:user_id, user.id)
     # gen's a new session id for the cookie--protects from "session fixation" attacks
     |> configure_session(renew: true)

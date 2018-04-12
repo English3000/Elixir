@@ -37,6 +37,8 @@ defmodule Rumbl.Endpoint do
     store: :cookie,
     key: "_rumbl_key",
     signing_salt: "macYgY8r"
+  # added
+  plug CORSPlug, origin: ["http.localhost:4000", "https.www.youtube.com"]
 
   plug Rumbl.Router
 end

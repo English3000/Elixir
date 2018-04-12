@@ -12,6 +12,16 @@ defmodule PlateSlateWeb.Schema.MenuTypes do
     field :added_on, :date
   end
 
+  object :input_error do
+    field :key, non_null(:string)
+    field :message, non_null(:string)
+  end
+
+  object :menu_item_result do
+    field :menu_item, :menu_item
+    field :errors, list_of(:input_error) #handling errors as data
+  end
+
   @desc "Filter query by..."
   input_object :menu_item_filter do
     field :name, :string
@@ -23,11 +33,6 @@ defmodule PlateSlateWeb.Schema.MenuTypes do
     field :added_after, :date
   end
 
-  enum :sort_order do
-    value :asc
-    value :desc
-  end
-
   object :menu_queries do
     @desc "Gets a list of all available menu items"
     field :menu_items, list_of(:menu_item) do
@@ -37,8 +42,15 @@ defmodule PlateSlateWeb.Schema.MenuTypes do
     end
   end
 
+  input_object :menu_item_input do
+    field :name, non_null(:string)
+    field :description, :string
+    field :price, non_null(:decimal) #enforces 2 digits after dot
+    field :category_id, non_null(:id)
+  end
+
   object :menu_inputs do
-    field :create_menu_item, :menu_item do #imported--returns a :menu_item
+    field :create_menu_item, :menu_item_result do #imported--returns a :menu_item
       arg :input, non_null(:menu_item_input)
       resolve &Resolvers.Menu.create_item/3
     end
@@ -67,12 +79,5 @@ defmodule PlateSlateWeb.Schema.MenuTypes do
       arg :match, non_null(:string)
       resolve &Resolvers.Menu.search/3
     end
-  end
-
-  input_object :menu_item_input do
-    field :name, non_null(:string)
-    field :description, :string
-    field :price, non_null(:decimal) #enforces 2 digits after dot
-    field :category_id, non_null(:id)
   end
 end

@@ -10,6 +10,11 @@ defmodule PlateSlateWeb.Schema do
   use Absinthe.Schema
   import_types __MODULE__.MenuTypes
 
+  enum :sort_order do
+    value :asc
+    value :desc
+  end
+
   scalar :date do
     parse fn input ->
       with %Absinthe.Blueprint.Input.String{value: value} <- input,
