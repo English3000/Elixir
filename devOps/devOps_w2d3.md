@@ -1,5 +1,7 @@
 ## CDN Integration
 
+(can be order of magnitude faster to load)
+
 key-value db (Redis)
 relational db
 document db (MongoDB) -- like relational, except can't join

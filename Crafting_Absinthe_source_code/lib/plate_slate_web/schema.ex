@@ -8,7 +8,9 @@
 #---
 defmodule PlateSlateWeb.Schema do
   use Absinthe.Schema
+  alias PlateSlateWeb.Resolvers
   import_types __MODULE__.MenuTypes
+  import_types __MODULE__.OrderingTypes
 
   enum :sort_order do
     value :asc
@@ -45,5 +47,24 @@ defmodule PlateSlateWeb.Schema do
 
   mutation do
     import_fields :menu_inputs #works!
+    import_fields :ordering_inputs
+  end
+
+  subscription do
+    field :new_order, :order do
+      config fn _args, _info -> {:ok, topic: "*"} end
+      # resolve fn root, _,_ -> IO.inspect(root); {:ok, root} end
+    end
+
+    field :update_order, :order do
+      arg :id, non_null(:id)
+      config fn args, _info -> {:ok, topic: args.id} end
+      trigger [:ready_order, :complete_order], topic: fn
+        %{order: order} -> [order.id]
+        # don't push to anything if error (b/c then order wasn't updated)
+                      _ -> []
+      end
+      resolve fn %{order: order}, _,_ -> {:ok, order} end
+    end
   end
 end
