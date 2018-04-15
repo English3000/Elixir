@@ -22,5 +22,23 @@ defmodule PlateSlateWeb.Schema.Subscription.UpdateOrderTest do
 
     {:ok, order2} = Ordering.create_order(%{ customer_number: 124,
                       items: [%{menu_item_id: reuben.id, quantity: 1}] })
+
+    ref = push_doc(socket, @subscription, variables: %{"id" => order1.id})
+    assert_reply ref, :ok, %{subscriptionId: _s_ref1}
+
+    ref = push_doc(socket, @subscription, variables: %{"id" => order2.id})
+    assert_reply ref, :ok, %{subscriptionId: subscription_ref2}
+
+    ref = push_doc(socket, @mutation, variables: %{"id" => order2.id})
+    assert_reply ref, :ok, reply
+
+    refute reply[:errors]
+    refute reply[:data]["readyOrder"]["errors"]
+
+    assert_push "subscription:data", push
+
+    expected = %{ result: %{data: %{"updateOrder" => %{"state" => "ready"}}},
+                  subscriptionId: subscription_ref2 }
+    assert expected == push
   end
 end

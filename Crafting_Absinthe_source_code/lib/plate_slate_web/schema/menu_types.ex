@@ -1,5 +1,6 @@
 defmodule PlateSlateWeb.Schema.MenuTypes do
   use Absinthe.Schema.Notation
+  # alias PlateSlateWeb.Schema.Middleware
   alias PlateSlateWeb.Resolvers
   alias PlateSlate.Menu.{Item, Category}
 
@@ -53,6 +54,7 @@ defmodule PlateSlateWeb.Schema.MenuTypes do
     field :create_menu_item, :menu_item_result do #imported--returns a :menu_item
       arg :input, non_null(:menu_item_input)
       resolve &Resolvers.Menu.create_item/3
+      # middleware Middleware.ChangesetErrors
     end
   end
 

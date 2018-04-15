@@ -25,12 +25,13 @@ defmodule PlateSlateWeb.Schema.Subscription.NewOrderTest do
       %{"quantity" => 2, "menuItemId" => menu_item("Reuben").id}
     ]}
     ref = push_doc socket, @mutation, variables: %{"input" => order_input}
-
+    # No message matching %Phoenix.Socket.Reply{ref: ^ref, status: :ok, payload: reply} after 100ms.
+      # The process mailbox is empty.
     assert_reply ref, :ok, reply
     assert %{data: %{"placeOrder" => %{"order" => %{"id" => _}}}} = reply
 
     expected = %{result: %{ data: %{"newOrder" => %{"customerNumber" => 24}}},
-                            subscriptionId: subscription_id}
+                            subscriptionId: subscription_id }
 
     assert_push "subscription:data", push
     assert expected == push
