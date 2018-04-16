@@ -22,6 +22,7 @@ defmodule PlateSlateWeb.ConnCase do
   """
 
   use ExUnit.CaseTemplate
+  import Plug.Conn, only: [put_req_header: 3]
 
   using do
     quote do
@@ -40,6 +41,11 @@ defmodule PlateSlateWeb.ConnCase do
       Ecto.Adapters.SQL.Sandbox.mode(PlateSlate.Repo, {:shared, self()})
     end
     {:ok, conn: Phoenix.ConnTest.build_conn()}
+  end
+
+  def auth_user(conn, user) do
+    token = PlateSlateWeb.Authentication.sign(%{role: user.role, id: user.id})
+    put_req_header(conn, "authorization", "Bearer #{token}")
   end
 
 end

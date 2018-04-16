@@ -8,15 +8,9 @@
 #---
 defmodule PlateSlateWeb.Schema do
   use Absinthe.Schema
-  alias PlateSlateWeb.Resolvers
-  alias PlateSlateWeb.Schema.Middleware
   import_types __MODULE__.MenuTypes
   import_types __MODULE__.OrderingTypes
-
-  enum :sort_order do
-    value :asc
-    value :desc
-  end
+  import_types __MODULE__.AccountsTypes
 
   scalar :date do
     parse fn input ->
@@ -41,8 +35,13 @@ defmodule PlateSlateWeb.Schema do
     serialize &to_string/1
   end
 
+  def middleware(middleware, field, %{identifier: :allergy_info} = object) do
+    # expect string key instead of atom
+    new_middleware = {Absinthe.Middleware.MapGet, to_string(field.identifier)}
+    middleware |> Absinthe.Schema.replace_default(new_middleware, field, object)
+  end
   def middleware(middleware, _field, %{identifier: :mutation}) do
-    middleware ++ [Middleware.ChangesetErrors]
+    middleware ++ [PlateSlateWeb.Schema.Middleware.ChangesetErrors]
   end
   def middleware(middleware, _field, _object), do: middleware
 
@@ -54,6 +53,7 @@ defmodule PlateSlateWeb.Schema do
   mutation do
     import_fields :menu_inputs #works!
     import_fields :ordering_inputs
+    import_fields :accounts_inputs
   end
 
   subscription do

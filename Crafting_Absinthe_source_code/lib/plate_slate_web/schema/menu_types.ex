@@ -4,6 +4,11 @@ defmodule PlateSlateWeb.Schema.MenuTypes do
   alias PlateSlateWeb.Resolvers
   alias PlateSlate.Menu.{Item, Category}
 
+  enum :sort_order do
+    value :asc
+    value :desc
+  end
+
   object :menu_item do
     interfaces [:search_result]
     field :id, :id
@@ -11,6 +16,16 @@ defmodule PlateSlateWeb.Schema.MenuTypes do
     field :description, :string
     field :price, :decimal #apparently globally accessible once defined
     field :added_on, :date
+    field :allergy_info, list_of(:allergy_info)
+  end
+
+  object :allergy_info do
+    field :allergen, :string #do
+      #resolve fn parent, _,_ -> {:ok, Map.get(parent, "allergen")}
+    #end
+    field :severity, :string #do
+      #resolve fn parent, _,_ -> {:ok, Map.get(parent, "severity")}
+    #end
   end
 
   object :input_error do
