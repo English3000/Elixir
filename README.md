@@ -56,6 +56,12 @@ At a bare minimum, I'd go through [Learn Elixir](https://elixir-lang.org/getting
 * [Intro to Assembly (if accessible)](https://vimeo.com/175634887)
 * **GO DEEPER:** [The Erlang Runtime System](https://happi.github.io/theBeamBook/#P-ERTS)
 
+### _Bleeding Edge_
+* [Dgraph](https://github.com/dgraph-io/dgraph#quick-install)
+  * [Dgraph vs. SQL](https://blog.dgraph.io/post/sql-vs-dgraph/)
+  * [Dgraph vs. Neo4j](https://blog.dgraph.io/post/benchmark-neo4j/)
+* [ExDgraph](https://github.com/ospaarmann/exdgraph)
+
 ### Plugs
 * [SSL](https://spin.atomicobject.com/2018/03/07/force-ssl-phoenix-framework/?utm_campaign=elixir_radar_135&utm_medium=email&utm_source=RD+Station)
 * [OAuth2](https://github.com/scrogson/oauth2)
