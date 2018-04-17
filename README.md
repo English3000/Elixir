@@ -27,6 +27,8 @@ At a bare minimum, I'd go through [Learn Elixir](https://elixir-lang.org/getting
 
 * ["Getting" Relay (GraphQL frontend)](https://www.reindex.io/blog/redux-and-relay/)
   * [Relay over Redux](https://medium.com/@matt.krick/replacing-redux-with-relay-47ed085bfafe)
+* [Thinking in Relay](https://facebook.github.io/relay/docs/en/thinking-in-relay.html)
+  > "Relay only allows components to access data they specifically ask for in GraphQL fragments — nothing more."
   * **GO DEEPER:** [Relay Deep Dive](https://www.youtube.com/watch?v=oPSuvaYmXBY)
 * [Relay tutorial](https://www.howtographql.com/react-relay/0-introduction/) -- **NOTE:** Skip *Step 5: Authentication*; the strategy used is insecure. *Ch. 8* of the Absinthe book provides secure auth.
   * [Relay docs](http://facebook.github.io/relay/docs/en/introduction-to-relay.html)
