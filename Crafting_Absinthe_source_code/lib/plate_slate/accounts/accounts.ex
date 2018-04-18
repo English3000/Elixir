@@ -18,7 +18,5 @@ defmodule PlateSlate.Accounts do
     end
   end
 
-  def lookup(role, id) do
-    Repo.get_by(User, role: to_string(role), id: id)
-  end
+  def lookup(role, id), do: Repo.get_by(User, role: to_string(role), id: id)
 end

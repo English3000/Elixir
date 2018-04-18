@@ -1,4 +1,4 @@
-defmodule PlateSlateWeb.Context do
+defmodule PlateSlateWeb.Context do #doesn't affect sockets
   @behaviour Plug
   import Plug.Conn
 

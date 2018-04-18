@@ -21,9 +21,8 @@ defmodule Rumbl.VideoChannel do
   def handle_in("new_annotation", params, socket) do
     user = Repo.get(Rumbl.User, socket.assigns.user_id)
 
-    changeset = user
-      |> build_assoc(:annotations, video_id: socket.assigns.video_id)
-      |> Rumbl.Annotation.changeset(params)
+    changeset = user |> build_assoc(:annotations, video_id: socket.assigns.video_id)
+                     |> Rumbl.Annotation.changeset(params)
     # persist annotation to db
     case Repo.insert(changeset) do
       # broadcast to subscribers on success

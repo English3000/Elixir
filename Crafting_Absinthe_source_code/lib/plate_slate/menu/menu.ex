@@ -16,6 +16,11 @@ defmodule PlateSlate.Menu do
 
   alias PlateSlate.Menu.Category
 
+  def data(), do: Dataloader.Ecto.new(Repo, query: &query/2)
+
+  def query(Item, filters), do: items_query(filters)
+  def query(queryable, _), do: queryable
+
   @doc """
   Returns the list of categories.
 
@@ -27,6 +32,12 @@ defmodule PlateSlate.Menu do
   """
   def list_categories do
     Repo.all(Category)
+  end
+
+  def categories_by_id(_, ids) do
+    Category |> where([c], c.id in ^Enum.uniq(ids))
+      |> Repo.all
+      |> Map.new(fn categ -> {categ.id, categ} end)
   end
 
   @doc """
@@ -121,15 +132,16 @@ defmodule PlateSlate.Menu do
       [%Item{}, ...]
 
   """
-  def list_items(filters)do
-    IO.puts "Arguments: #{inspect(filters)}"
-    filters
-    |> Enum.reduce(Item, fn
-         {:order, order}, query   -> query |> order_by({^order, :name})
-         {:filter, filter}, query -> query |> filter_by(filter)
-       end)
-    |> Repo.all
+  def list_items(filters), do: filters |> items_query |> Repo.all
+
+  defp items_query(filters) do
+    Enum.reduce(filters, Item, fn
+      {:order,  order},  query -> query |> order_by({^order, :name})
+      {:filter, filter}, query -> query |> filter_by(filter)
+    end)
   end
+    # IO.puts "Arguments: #{inspect(filters)}"
+  # end
 
   defp filter_by(query, filter) do
     Enum.reduce(filter, query, fn
