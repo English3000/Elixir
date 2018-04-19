@@ -13,12 +13,13 @@ defmodule InfoSys.Wolfram do
           |> send_results(ref, owner)
   end
 
+  @http Application.get_env(:info_sys, :wolfram)[:http_client] || :httpc
   defp fetch_xml(query) do
     {:ok, {_,_, body}} = String.to_char_list( #OR, String.to_charlist
       "http://api.wolframalpha.com/v2/query" <>
                         "?appid=#{app_id()}" <>
       "&input=#{URI.encode(query)}&format=plaintext"
-    ) |> :httpc.request
+    ) |> @http.request
 
     body
   end
