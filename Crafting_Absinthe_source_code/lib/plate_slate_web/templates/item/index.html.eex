@@ -5,6 +5,7 @@
     <tr>
       <th>Menu Item</th>
       <th>Category</th>
+      <th>Quantity</th>
       <th></th>
     </tr>
   </thead>
@@ -13,6 +14,7 @@
     <tr>
       <td><%= item.name %></td>
       <td><%= item.category.name %></td>
+      <td><%= item.order_history.quantity %></td>
       <td class="text-right">
         <span><%= link "Show", to: item_path(@conn, :show, item),
                     class: "btn btn-default btn-xs" %></span>

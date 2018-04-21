@@ -23,8 +23,9 @@ defmodule PlateSlateWeb.ItemController do
     }
   }
   """
-  def show(conn, %{data: %{menu_item: nil}}) do
-    conn |> put_flash(:info, "Item not found") |> redirect(to: "/admin/items")
+  def show(conn, %{data: %{menu_item: nil}} = result) do
+    # IO.inspect result
+    conn |> put_flash(:info, "Item not found.") |> redirect(to: "/admin/items")
   end
   def show(conn, %{data: %{menu_item: item}}) do
     since = variables(conn)["since"] || "2018-01-01"

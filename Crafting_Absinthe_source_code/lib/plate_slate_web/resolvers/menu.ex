@@ -38,8 +38,15 @@ defmodule PlateSlateWeb.Resolvers.Menu do
   end
 
   def get_item(_, %{id: id}, %{context: %{loader: loader}}) do
+    # IO.inspect id
+    # IO.inspect loader
     loader |> Dataloader.load(Menu, Menu.Item, id)
-           |> on_load(fn loader -> {:ok, Dataloader.get(loader, Menu, Menu.Item, id)} end)
+           # |> Dataloader.run
+           |> on_load(fn loader ->
+             result = Dataloader.get(loader, Menu, Menu.Item, id)
+             IO.inspect result
+             {:ok, result}
+           end)
   end
 
   def create_item(_, %{input: params}, _) do
