@@ -37,6 +37,11 @@ defmodule PlateSlateWeb.Resolvers.Menu do
     {:ok, Menu.search(term)}
   end
 
+  def get_item(_, %{id: id}, %{context: %{loader: loader}}) do
+    loader |> Dataloader.load(Menu, Menu.Item, id)
+           |> on_load(fn loader -> {:ok, Dataloader.get(loader, Menu, Menu.Item, id)} end)
+  end
+
   def create_item(_, %{input: params}, _) do
     # case context do
     #   %{current_user: %{role: "employee"}} ->

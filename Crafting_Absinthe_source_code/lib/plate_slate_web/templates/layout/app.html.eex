@@ -17,6 +17,10 @@
         <nav role="navigation">
           <ul class="nav nav-pills pull-right">
             <li><a href="http://www.phoenixframework.org/docs">Get Started</a></li>
+            <%= if @conn.assigns[:current_user] do %>
+            <li><%= link "Sign Out", to: session_path(@conn, :delete),
+                      method: :delete, class: "btn btn-danger btn-xs" %></li>
+            <% end %>
           </ul>
         </nav>
         <span class="logo"></span>

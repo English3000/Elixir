@@ -1,8 +1,9 @@
 defmodule PlateSlateWeb.Types.Menu do
   use Absinthe.Schema.Notation
   import Absinthe.Resolution.Helpers
-  # alias PlateSlateWeb.{Middleware, Resolvers}
-  alias PlateSlate.Menu.{Item, Category, Menu}
+  alias PlateSlateWeb.{Middleware, Resolvers}
+  alias PlateSlate.Menu
+  alias PlateSlate.Menu.{Item, Category}
 
   # object :menu_queries do
   #   @desc "Gets a list of all available menu items"
@@ -42,6 +43,11 @@ defmodule PlateSlateWeb.Types.Menu do
       # resolve dataloader(Item, :category)
       # resolve &Resolvers.Menu.item_categories/3
     end
+    field :order_history, :order_history do
+      arg :since, :date
+      middleware Middleware.Authorize, "employee"
+      resolve &Resolvers.Ordering.order_history/3
+    end
   end
 
   object :allergy_info do
@@ -63,6 +69,13 @@ defmodule PlateSlateWeb.Types.Menu do
       resolve dataloader(Menu, :items)
       # resolve &Resolvers.Menu.category_items/3
     end
+  end
+
+  object :order_history do
+    field :orders, list_of(:order), do: resolve &Resolvers.Ordering.orders/3
+    field :quantity, non_null(:integer), do: resolve Resolvers.Ordering.stat(:quantity)
+    @desc "Gross Revenue"
+    field :gross, non_null(:float), do: resolve Resolvers.Ordering.stat(:gross)
   end
 
   @desc "Filter query by..."

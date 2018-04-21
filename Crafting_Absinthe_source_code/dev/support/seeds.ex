@@ -101,6 +101,49 @@ defmodule PlateSlate.Seeds do
       %Menu.Item{name: "Chocolate Milkshake", price: 3.0, category: beverages}
       |> Repo.insert!
 
+    if Mix.env == :dev do
+      fries = Menu.Item |> Repo.get_by!(name: "French Fries")
+      chai = Menu.Item |> Repo.get_by!(name: "Masala Chai")
+      chocolate_milkshake = Menu.Item |> Repo.get_by!(name: "Chocolate Milkshake")
+
+      {:ok, _} = PlateSlate.Ordering.create_order(%{
+        customer_number: 42,
+        ordered_at: "2017-04-17 14:00:00.000000Z",
+        state: "completed",
+        items: [
+          %{menu_item_id: fries.id, quantity: 1},
+          %{menu_item_id: chai.id, quantity: 2},
+        ]
+      })
+
+      {:ok, _} = PlateSlate.Ordering.create_order(%{
+        customer_number: 43,
+        ordered_at: "2017-11-01 14:00:00.000000Z",
+        state: "completed",
+        items: [
+          %{menu_item_id: chocolate_milkshake.id, quantity: 2},
+        ]
+      })
+
+      {:ok, _} = PlateSlate.Ordering.create_order(%{
+        customer_number: 44,
+        ordered_at: "2017-11-01 14:00:00.000000Z",
+        state: "completed",
+        items: [
+          %{menu_item_id: chocolate_milkshake.id, quantity: 2},
+        ]
+      })
+
+      %PlateSlate.Accounts.User{}
+      |> PlateSlate.Accounts.User.changeset(%{
+        email: "user@localhost",
+        password: "12345",
+        name: "Alicia",
+        role: "employee",
+      })
+      |> Repo.insert!
+    end
+
     :ok
   end
 end
