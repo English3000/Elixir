@@ -1,0 +1,12 @@
+{
+  "name": "plainJS-graphql",
+  "version": "1.0.0",
+  "main": "server.js",
+  "license": "MIT",
+  "scripts": {
+    "dev": "node ./"
+  },
+  "devDependencies": {
+    "express": "^4.16.3"
+  }
+}

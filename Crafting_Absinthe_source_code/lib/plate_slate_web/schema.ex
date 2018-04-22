@@ -146,6 +146,10 @@ defmodule PlateSlateWeb.Schema do
       end
       resolve fn %{order: order}, _,_ -> {:ok, order} end
     end
+
+    field :new_menu_item, :menu_item do
+      config fn _args, _info -> {:ok, topic: "*"} end
+    end
   end
 
   scalar :date do
