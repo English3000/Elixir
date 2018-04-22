@@ -3,7 +3,8 @@ defmodule PlateSlateWeb.Resolvers.Menu do
   import Absinthe.Resolution.Helpers, only: [on_load: 2]
 
   def menu_items(_, args, _) do
-    {:ok, Menu.list_items(args)}
+    Absinthe.Relay.Connection.from_query(Menu.items_query(args), &Repo.all/1, args)
+    # {:ok, Menu.list_items(args)}
   end
 
   # def category_items(category, args, %{context: %{loader: loader}}) do

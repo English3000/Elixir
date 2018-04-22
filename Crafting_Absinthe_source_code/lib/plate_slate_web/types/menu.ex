@@ -1,5 +1,6 @@
 defmodule PlateSlateWeb.Types.Menu do
   use Absinthe.Schema.Notation
+  use Absinthe.Relay.Schema.Notation, :modern
   import Absinthe.Resolution.Helpers
   alias PlateSlateWeb.{Middleware, Resolvers}
   alias PlateSlate.Menu
@@ -30,9 +31,10 @@ defmodule PlateSlateWeb.Types.Menu do
   #   end
   # end
 
-  object :menu_item do
+  connection node_type: :menu_item
+
+  node object :menu_item do
     interfaces [:search_result]
-    field :id, :id
     field :name, :string
     field :description, :string
     field :price, :decimal #apparently globally accessible once defined

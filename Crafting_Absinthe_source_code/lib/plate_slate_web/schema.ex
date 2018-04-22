@@ -8,8 +8,9 @@
 #---
 defmodule PlateSlateWeb.Schema do
   use Absinthe.Schema
+  use Absinthe.Relay.Schema, :modern
   alias PlateSlateWeb.Resolvers
-  alias PlateSlate.Menu
+  alias PlateSlate.{Menu, Repo}
   import_types PlateSlateWeb.Types.Menu
   import_types PlateSlateWeb.Types.Ordering
   import_types PlateSlateWeb.Types.Accounts
@@ -53,10 +54,17 @@ defmodule PlateSlateWeb.Schema do
 
   def plugins, do: [Absinthe.Middleware.Dataloader | Absinthe.Plugin.defaults]
 
+  node interface do
+    resolve_type fn
+      %Menu.Item{}, _ -> :menu_item
+                  _,_ -> nil
+    end
+  end
+
   query do
     # import_fields :menu_queries
     @desc "Gets a list of all available menu items"
-    field :menu_items, list_of(:menu_item) do
+    connection field :menu_items, node_type: :menu_item do
       arg :filter, :menu_item_filter #OR, #non_null(:menu_item_filter)
       arg :order, type: :sort_order, default_value: :asc
       resolve &Resolvers.Menu.menu_items/3
@@ -76,6 +84,13 @@ defmodule PlateSlateWeb.Schema do
     field :me, :user do
       middleware PlateSlateWeb.Middleware.Authorize, :any
       resolve &Resolvers.Accounts.me/3
+    end
+
+    node field do
+      resolve fn
+        %{type: :menu_item, id: local_id}, _ -> {:ok, Repo.get(Menu.Item, local_id)}
+                                         _,_ -> {:error, "Unknown node"}
+      end
     end
   end
 

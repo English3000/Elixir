@@ -132,12 +132,13 @@ defmodule PlateSlate.Menu do
       [%Item{}, ...]
 
   """
-  def list_items(filters), do: filters |> items_query |> Repo.all
+  # def list_items(filters), do: filters |> items_query |> Repo.all
 
-  defp items_query(filters) do
-    Enum.reduce(filters, Item, fn
+  def items_query(args) do
+    Enum.reduce(args, Item, fn
       {:order,  order},  query -> query |> order_by({^order, :name})
       {:filter, filter}, query -> query |> filter_by(filter)
+                      _, query -> query
     end)
   end
     # IO.puts "Arguments: #{inspect(filters)}"

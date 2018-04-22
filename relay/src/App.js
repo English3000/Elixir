@@ -1,21 +1,21 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
-import './App.css';
+import { QueryRenderer, graphql } from 'react-relay';
+import environment from "./relay-environment";
+import NewMenuItemSubscription from "./subscriptions/NewMenuItemSubscription";
 
-class App extends Component {
+const query = graphql `query AppQuery { menuItems {id name} }`;
+
+export default class App extends Component {
+  componentDidMount() { NewMenuItemSubscription(); }
+  
+  renderMenuItem(menuItem) { return <li key={menuItem.id}>{menuItem.name}</li>; }
+
   render() {
-    return (
-      <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <h1 className="App-title">Welcome to React</h1>
-        </header>
-        <p className="App-intro">
-          To get started, edit <code>src/App.js</code> and save to reload.
-        </p>
-      </div>
-    );
+    return <QueryRenderer environment={environment} query={query}
+             render={({ error, props }) => {
+        if (error) {      return <div>{error.message}</div>;
+      } else if (props) { return <ul>{props.menuItems.map(this.renderMenuItem)}</ul>;
+      } else {            return <div>Loading...</div>; }
+    }}/>;
   }
 }
-
-export default App;
