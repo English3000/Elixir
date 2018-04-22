@@ -11,10 +11,11 @@ At a bare minimum, I'd go through [Learn Elixir](https://elixir-lang.org/getting
 * **GO DEEPER:** [Learn Functional Programming with Elixir](https://pragprog.com/book/cdc-elixir/learn-functional-programming-with-elixir)
 
 ### _Phoenix (framework)_
-* [Learn Phoenix](https://www.amazon.com/Programming-Phoenix-Productive-Reliable-Fast-ebook/dp/B01FRIOYEC/ref=sr_1_1)
+* [Learn Phoenix](https://pragprog.com/book/phoenix/programming-phoenix)
+  * [Updates to Phoenix](https://medium.com/wemake-services/why-changes-in-phoenix-1-3-are-so-important-2d50c9bdabb9) (just do `⌘ + f` for _Creating schema_--the rest is dated) 
   * [Webpack setup](http://matthewlehner.net/using-webpack-with-phoenix-and-elixir/)
   * [JSON API example](https://robots.thoughtbot.com/building-a-phoenix-json-api)
-* **GO DEEPER:** [Learn Metaprogramming in Elixir](https://www.amazon.com/Metaprogramming-Elixir-Write-Less-Code-ebook/dp/B00U1VU2GA/ref=pd_sim_351_1?_encoding=UTF8&psc=1&refRID=WC6E4JWN3VQF8713QY76)
+* **GO DEEPER:** [Learn Metaprogramming in Elixir](https://pragprog.com/book/cmelixir/metaprogramming-elixir)
 
 * [React setup](https://medium.com/@diamondgfx/phoenix-v1-1-2-and-react-js-3dbd195a880a)
 * [`react-native-web`](https://github.com/necolas/react-native-web/blob/master/website/guides/getting-started.md#getting-started) for [cross-platform](https://github.com/necolas/react-native-web#react-native-for-web) React components, with option to server-side render
