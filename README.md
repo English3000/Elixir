@@ -1,5 +1,5 @@
 ## Ramping up with Elixir/Phoenix & Absinthe/Relay
-At a bare minimum, I'd go through [Learn Elixir](https://elixir-lang.org/getting-started/introduction.html) **(free!)**, [Learn Phoenix](https://www.amazon.com/Programming-Phoenix-Productive-Reliable-Fast-ebook/dp/B01FRIOYEC/ref=sr_1_1) **($24)**, and [Learn Absinthe](https://pragprog.com/book/wwgraphql/craft-graphql-apis-in-elixir-with-absinthe) **($26, Kindle-compatible)**.
+At a bare minimum, I'd go through [Learn Elixir](https://elixir-lang.org/getting-started/introduction.html) **(free!)**, [Learn Phoenix](https://pragprog.com/book/phoenix/programming-phoenix) **($23, Kindle-compatible)**, and [Learn Absinthe](https://pragprog.com/book/wwgraphql/craft-graphql-apis-in-elixir-with-absinthe) **($18, w/ 30% discount code in the back of any PragProg book)**.
 
 ### _Why Elixir?_
 * [Creator José Valim explains...](https://softwareengineeringdaily.com/2016/04/18/elixir-erlang-jose-valim/)
