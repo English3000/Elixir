@@ -12,7 +12,10 @@ At a bare minimum, I'd go through [Learn Elixir](https://elixir-lang.org/getting
 
 ### _Phoenix (framework)_
 * [Learn Phoenix](https://pragprog.com/book/phoenix/programming-phoenix)
-  * [Updates to Phoenix](https://medium.com/wemake-services/why-changes-in-phoenix-1-3-are-so-important-2d50c9bdabb9) (just do `⌘ + f` for _Creating schema_--the rest is dated) 
+  * [Updates to Phoenix](https://medium.com/wemake-services/why-changes-in-phoenix-1-3-are-so-important-2d50c9bdabb9) (just do `⌘ + f` for _Creating schema_--the rest is dated)
+    > Because Elixir is a functional programming language, Phoenix uses schemas rather than models. A schema defines a struct's fields, its relationships to other structs, and changeset(s) for it (which handle validations and constraints). 
+    >
+    > [`mix phx.gen.context`](https://hexdocs.pm/phoenix/Mix.Tasks.Phx.Gen.Context.html) generates a context which holds the API for all schemas within that context (in an object-oriented language, these functions would be defined within each model). For example, instead of defining functions for user authentication within `/lib/<APP>_web/models/user.ex`, one should generate an `Accounts` context and write the functions in `/lib/<APP>/accounts/accounts.ex` (`User` will be passed as an argument).
   * [Webpack setup](http://matthewlehner.net/using-webpack-with-phoenix-and-elixir/)
   * [JSON API example](https://robots.thoughtbot.com/building-a-phoenix-json-api)
 * **GO DEEPER:** [Learn Metaprogramming in Elixir](https://pragprog.com/book/cmelixir/metaprogramming-elixir)
