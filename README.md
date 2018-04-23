@@ -16,10 +16,7 @@ At a bare minimum, I'd go through [Learn Elixir](https://elixir-lang.org/getting
     > Because Elixir is a functional programming language, Phoenix uses schemas rather than models. A schema defines a struct's fields, its relationships to other structs, and changeset(s) for it (which handle validations and constraints). 
     >
     > [`mix phx.gen.context`](https://hexdocs.pm/phoenix/Mix.Tasks.Phx.Gen.Context.html) generates a context which holds the API for all schemas within that context (in an object-oriented language, these functions would be defined within each model). For example, instead of defining functions for user authentication within `/lib/<APP>_web/models/user.ex`, one should generate an `Accounts` context and write the functions in `/lib/<APP>/accounts/accounts.ex` (`User` will be passed as an argument).
-  * [Webpack setup](https://medium.com/@kimlindholm/adding-webpack-3-to-phoenix-e6633dbc2bc4)
-    > I tried using [`react-d3`](http://www.reactd3.org/get_start/) with Brunch and ran into bugs. When I searched online, I couldn't find answers. Additionally, Brunch [does not load images or fonts](http://brunch.io/docs/why-brunch#brunch-vs-webpack), which makes it is a poor candidate for a React Native project.
-    >
-    > Brunch itself admits that Webpack is the fuller tool. Also, it seems like Webpack has better documentation (even if some of it is hard to parse).
+  * [Webpack setup](https://medium.com/@kimlindholm/adding-webpack-3-to-phoenix-e6633dbc2bc4) (if you need to process [images or fonts...](https://vuejsdevelopers.com/2017/08/20/vue-js-brunch/))
   * [JSON API example](https://robots.thoughtbot.com/building-a-phoenix-json-api)
 * **GO DEEPER:** [Learn Metaprogramming in Elixir](https://pragprog.com/book/cmelixir/metaprogramming-elixir)
 
