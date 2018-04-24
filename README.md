@@ -17,6 +17,7 @@ At a bare minimum, I'd go through [Learn Elixir](https://elixir-lang.org/getting
     >
     > [`mix phx.gen.context`](https://hexdocs.pm/phoenix/Mix.Tasks.Phx.Gen.Context.html) generates a context which holds the API for all schemas within that context (in an object-oriented language, these functions would be defined within each model). For example, instead of defining functions for user authentication within `/lib/<APP>_web/models/user.ex`, one should generate an `Accounts` context and write the functions in `/lib/<APP>/accounts/accounts.ex` (`User` will be passed as an argument).
   * [Webpack setup](https://medium.com/@kimlindholm/adding-webpack-3-to-phoenix-e6633dbc2bc4) _(if you need to process [images or fonts...](https://vuejsdevelopers.com/2017/08/20/vue-js-brunch/))_
+  * [`babel-brunch`](https://github.com/babel/babel-brunch#babel-brunch) setup for React
   * [`hmr-brunch`](https://github.com/brunch/hmr-brunch)
     * [Hot Module Replacement API](https://webpack.js.org/api/hot-module-replacement/)
   * [JSON API example](https://robots.thoughtbot.com/building-a-phoenix-json-api)
