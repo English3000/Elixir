@@ -1,5 +1,6 @@
 ## Ramp up with the WRAP Stack!
 ### `react-native-`[`W`](https://github.com/necolas/react-native-web)`eb` + Relay + Absinthe + PostgreSQL
+#### (+ Jest + [Brunch](http://brunch.io/))
 At a bare minimum, I'd go through:
 1. [Learn Elixir](https://elixir-lang.org/getting-started/introduction.html) (**free!**)
 2. [Learn Phoenix](https://pragprog.com/book/phoenix/programming-phoenix) (**$23**, Kindle-compatible)
