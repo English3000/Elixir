@@ -1,10 +1,20 @@
-## Ramping up with Elixir/Phoenix & Absinthe/Relay
+## Ramp up with the WRAP Stack!
+### `react-native-`[`W`](https://github.com/necolas/react-native-web)`eb` + Relay + Absinthe + PostgreSQL
 At a bare minimum, I'd go through:
 1. [Learn Elixir](https://elixir-lang.org/getting-started/introduction.html) (**free!**)
 2. [Learn Phoenix](https://pragprog.com/book/phoenix/programming-phoenix) (**$23**, Kindle-compatible)
 3. [Learn Absinthe](https://pragprog.com/book/wwgraphql/craft-graphql-apis-in-elixir-with-absinthe) (**$18**, w/ 30% discount code in the back of any PragProg book)
 4. [WRAP Stack Walkthrough](https://medium.com/@english3000.org/starting-a-new-project-with-absinthe-relay-be9a127b8f63) (**free**; how to put all of these technologies--[react-native-Web](https://github.com/necolas/react-native-web/blob/master/website/guides/getting-started.md), Relay, Absinthe, & Postgres--together for your first project with this stack)
 5. [Learn Relay](https://www.howtographql.com/react-relay/0-introduction/) (**free**; skip Step 5--use Ch. 8 of *Learn Absinthe* instead)
+
+### _Why WRAP?_
+1. **performance _(backend)_:** Absinthe is ~10x faster than NodeJS, Python, Ruby, and (probably even more for) PHP because it can use multiple cores concurrently
+2. **performance _(API)_:** GraphQL (Relay + Absinthe) allows for more efficient communication between your frontend and backend than REST
+3. **productivity _(backend)_:** Absinthe is built on top of Phoenix, Elixir's main framework, which provides a Rails-like developer experience for the backend
+4. **productivity _(frontend)_:** `react-native-web` will save you time with cross-platform apps and make it easier to reason about your component hierarchy; Relay allows you to put your API with its component--a dramatic timesaver and bug-reducer compared with Redux
+5. **platform:** Elixir _(Absinthe is an implementation of GraphQL written in Elixir)_ is built on top of the Erlang VM, which allows for fault-tolerant apps using the OTP API and live uploads to your production app; Phoenix's channels make setting up websockets easy--Absinthe leverages this to allow for real-time apps via subscriptions
+
+Love every part of your stack! Try WRAP:
 
 ### _Why Elixir?_
 * [Creator José Valim explains...](https://softwareengineeringdaily.com/2016/04/18/elixir-erlang-jose-valim/)
@@ -95,7 +105,7 @@ At a bare minimum, I'd go through:
 
 Oh, and a shameless plug, [Object-Oriented vs. Functional Interviewing](https://medium.com/@english3000.org/object-oriented-vs-functional-interviewing-a383cf87bcf8)!
 
-## Cheatsheet (in progress)
+## Elixir Cheatsheet (in progress)
 
 #### Note: This material is intended as *complementary* to the resources above.
 
