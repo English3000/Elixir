@@ -19,8 +19,12 @@ defmodule HackernewsWeb.Router do
     get "/", PageController, :index
   end
 
-  # Other scopes may use custom stacks.
-  # scope "/api", HackernewsWeb do
-  #   pipe_through :api
-  # end
+  scope "/" do
+    pipe_through :api
+
+    forward "/api", Absinthe.Plug, schema: HackernewsWeb.Schema
+
+    forward "/graphiql", Absinthe.Plug.GraphiQL, schema: HackernewsWeb.Schema,
+      interface: :simple
+  end
 end

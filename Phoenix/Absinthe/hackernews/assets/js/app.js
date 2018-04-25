@@ -20,9 +20,30 @@ import "phoenix_html";
 
 // import socket from "./socket"
 import React from "react";
-import { AppRegistry, View, Text } from "react-native";
+import { AppRegistry, View, Text, Platform } from "react-native";
+import { QueryRenderer, graphql } from "react-relay";
+import environment from "./environment";
+import ErrorBoundary from "./components/ErrorBoundary";
 
-const App = () => <View><Text>ROOT COMPONENT HERE</Text></View>;
+if (Platform.OS === "web") {
+  import { BrowserRouter as Router } from "react-router-dom";
+  import Index from "./pages";
+} else {
+  import { NativeRouter as Router } from "react-router-native";
+  import Index from "./screens";
+}
 
-AppRegistry.registerComponent("App", () => App);
-AppRegistry.runApplication("App", {rootTag: document.getElementById("replace-with-js")});
+const Root = () => (
+  <ErrorBoundary>
+    <Router>
+      <QueryRenderer environment={environment} render={({ errors, props }) => {
+        if (error)      { return <View><Text>{error.message}</Text></View>; }
+        else if (props) { return <ErrorBoundary><Index /></ErrorBoundary>; }
+        else            { return <View><Text>Loading...</Text></View>; }
+      }}/>
+    </Router>
+  </ErrorBoundary>
+);
+
+AppRegistry.registerComponent("Root", () => Root);
+AppRegistry.runApplication("Root", {rootTag: document.getElementById("replace-with-js")});
