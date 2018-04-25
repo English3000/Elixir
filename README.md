@@ -1,5 +1,10 @@
 ## Ramping up with Elixir/Phoenix & Absinthe/Relay
-At a bare minimum, I'd go through [Learn Elixir](https://elixir-lang.org/getting-started/introduction.html) **(free!)**, [Learn Phoenix](https://pragprog.com/book/phoenix/programming-phoenix) **($23, Kindle-compatible)**, and [Learn Absinthe](https://pragprog.com/book/wwgraphql/craft-graphql-apis-in-elixir-with-absinthe) **($18, w/ 30% discount code in the back of any PragProg book)**.
+At a bare minimum, I'd go through
+1. [Learn Elixir](https://elixir-lang.org/getting-started/introduction.html) (**free!**)
+2. [Learn Phoenix](https://pragprog.com/book/phoenix/programming-phoenix) (**$23**, Kindle-compatible)
+3. [Learn Absinthe](https://pragprog.com/book/wwgraphql/craft-graphql-apis-in-elixir-with-absinthe) (**$18**, w/ 30% discount code in the back of any PragProg book)
+4. [Learn Relay](https://www.howtographql.com/react-relay/0-introduction/) (**free**; skip Step 5--use Ch. 8 of *Learn Absinthe* instead)
+5. [WRAP Stack Walkthrough](https://medium.com/@english3000.org/starting-a-new-project-with-absinthe-relay-be9a127b8f63) (**free**; how to put all of these technologies--[react-native-Web](https://github.com/necolas/react-native-web/blob/master/website/guides/getting-started.md), Relay, Absinthe, & Postgres--together for your first project with this stack)
 
 ### _Why Elixir?_
 * [Creator José Valim explains...](https://softwareengineeringdaily.com/2016/04/18/elixir-erlang-jose-valim/)
@@ -42,6 +47,9 @@ At a bare minimum, I'd go through [Learn Elixir](https://elixir-lang.org/getting
     * [Example App](https://github.com/relayjs/relay-examples/blob/master/todo/js/app.js)
   * [`Absinthe.Relay` docs](https://hexdocs.pm/absinthe/relay.html)
   * [Sending a request with variables](https://github.com/absinthe-graphql/absinthe-socket/tree/master/packages/socket#send) (not covered in the book)
+  
+* **[Putting it all together ("WRAP" stack)](https://medium.com/@english3000.org/starting-a-new-project-with-absinthe-relay-be9a127b8f63)**
+  > WRAP = react-native-Web + Relay + Absinthe + Postgres
 
 ### _Deploying Your App_
 * [Heroku](https://hexdocs.pm/phoenix/heroku.html) has some limitations
