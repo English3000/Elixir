@@ -50,6 +50,8 @@ At a bare minimum, I'd go through:
     * [Example App](https://github.com/relayjs/relay-examples/blob/master/todo/js/app.js)
   * [`Absinthe.Relay` docs](https://hexdocs.pm/absinthe/relay.html)
   * [Sending a request with variables](https://github.com/absinthe-graphql/absinthe-socket/tree/master/packages/socket#send) (not covered in the book)
+* [Testing Relay Components I](https://medium.com/entria/relay-integration-test-with-jest-71236fb36d44) & [II](https://medium.com/@mikaelberg/writing-simple-unit-tests-with-relay-707f19e90129)
+* [Mocking a GraphQL server](http://graphql.org/blog/mocking-with-graphql/#mocking-is-easy-with-a-type-system)
 
 ### _Deploying Your App_
 * [Heroku](https://hexdocs.pm/phoenix/heroku.html) has some limitations
