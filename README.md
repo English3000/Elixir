@@ -1,5 +1,21 @@
-## Ramping up with Elixir/Phoenix & Absinthe/Relay
-At a bare minimum, I'd go through [Learn Elixir](https://elixir-lang.org/getting-started/introduction.html) **(free!)**, [Learn Phoenix](https://www.amazon.com/Programming-Phoenix-Productive-Reliable-Fast-ebook/dp/B01FRIOYEC/ref=sr_1_1) **($24)**, and [Learn Absinthe](https://pragprog.com/book/wwgraphql/craft-graphql-apis-in-elixir-with-absinthe) **($26, Kindle-compatible)**.
+## Ramp up with the WRAP Stack!
+### `react-native-`[`W`](https://github.com/necolas/react-native-web)`eb` + Relay + Absinthe + PostgreSQL
+#### (+ Jest + [Brunch](http://brunch.io/))
+At a bare minimum, I'd go through:
+1. [Learn Elixir](https://elixir-lang.org/getting-started/introduction.html) (**free!**)
+2. [Learn Phoenix](https://pragprog.com/book/phoenix/programming-phoenix) (**$23**, Kindle-compatible)
+3. [Learn Absinthe](https://pragprog.com/book/wwgraphql/craft-graphql-apis-in-elixir-with-absinthe) (**$18**, w/ 30% discount code in the back of any PragProg book)
+4. [WRAP Stack Walkthrough](https://medium.com/@english3000.org/starting-a-new-project-with-absinthe-relay-be9a127b8f63) (**free**; how to put all of these technologies--[react-native-Web](https://github.com/necolas/react-native-web/blob/master/website/guides/getting-started.md), Relay, Absinthe, & Postgres--together for your first project with this stack)
+5. [Learn Relay](https://www.howtographql.com/react-relay/0-introduction/) (**free**; skip Step 5--use Ch. 8 of *Learn Absinthe* instead)
+
+### _Why WRAP?_
+1. **performance _(backend)_:** Absinthe is ~10x faster than NodeJS, Python, Ruby, and (probably even more for) PHP because it can use multiple cores concurrently
+2. **performance _(API)_:** GraphQL (Relay + Absinthe) allows for more efficient communication between your frontend and backend than REST
+3. **productivity _(backend)_:** Absinthe is built on top of Phoenix, Elixir's main framework, which provides a Rails-like developer experience for the backend
+4. **productivity _(frontend)_:** `react-native-web` will save you time with cross-platform apps and make it easier to reason about your component hierarchy; Relay allows you to put your API with its component--a dramatic timesaver and bug-reducer compared with Redux
+5. **platform:** Elixir _(Absinthe is an implementation of GraphQL written in Elixir)_ is built on top of the Erlang VM, which allows for fault-tolerant apps using the OTP API and live uploads to your production app; Phoenix's channels make setting up websockets easy--Absinthe leverages this to allow for real-time apps via subscriptions
+
+Love every part of your stack! Try WRAP:
 
 ### _Why Elixir?_
 * [Creator José Valim explains...](https://softwareengineeringdaily.com/2016/04/18/elixir-erlang-jose-valim/)
@@ -11,19 +27,34 @@ At a bare minimum, I'd go through [Learn Elixir](https://elixir-lang.org/getting
 * **GO DEEPER:** [Learn Functional Programming with Elixir](https://pragprog.com/book/cdc-elixir/learn-functional-programming-with-elixir)
 
 ### _Phoenix (framework)_
-* [Learn Phoenix](https://www.amazon.com/Programming-Phoenix-Productive-Reliable-Fast-ebook/dp/B01FRIOYEC/ref=sr_1_1)
-  * [Webpack setup](http://matthewlehner.net/using-webpack-with-phoenix-and-elixir/)
-  * [JSON API example](https://robots.thoughtbot.com/building-a-phoenix-json-api)
-* **GO DEEPER:** [Learn Metaprogramming in Elixir](https://www.amazon.com/Metaprogramming-Elixir-Write-Less-Code-ebook/dp/B00U1VU2GA/ref=pd_sim_351_1?_encoding=UTF8&psc=1&refRID=WC6E4JWN3VQF8713QY76)
+* [Learn Phoenix](https://pragprog.com/book/phoenix/programming-phoenix)
+  * [Updates to Phoenix](https://medium.com/wemake-services/why-changes-in-phoenix-1-3-are-so-important-2d50c9bdabb9) (just do `⌘ + f` for _Creating schema_--the rest is dated)
+    > Because Elixir is a functional programming language, Phoenix uses schemas rather than models. A schema defines a struct's fields, its relationships to other structs, and changeset(s) for it (which handle validations and constraints). 
+    >
+    > [`mix phx.gen.context`](https://hexdocs.pm/phoenix/Mix.Tasks.Phx.Gen.Context.html) generates a context which holds the API for all schemas within that context (in an object-oriented language, these functions would be defined within each model). For example, instead of defining functions for user authentication within `/lib/<APP>_web/models/user.ex`, one should generate an `Accounts` context and write the functions in `/lib/<APP>/accounts/accounts.ex` (`User` will be passed as an argument).
+  * [Webpack setup](https://medium.com/@kimlindholm/adding-webpack-3-to-phoenix-e6633dbc2bc4) _(if you need to process [images or fonts...](https://vuejsdevelopers.com/2017/08/20/vue-js-brunch/))_
+  * [`babel-brunch`](https://github.com/babel/babel-brunch#babel-brunch) setup for React
+  * [`hmr-brunch`](https://github.com/brunch/hmr-brunch)
+    * [Hot Module Replacement API](https://webpack.js.org/api/hot-module-replacement/)
+> ["`dependencies` are used for direct usage in your codebase, things that usually end up in the production code, or chunks of code](https://stackoverflow.com/questions/18875674/whats-the-difference-between-dependencies-devdependencies-and-peerdependencies)
+>
+> ["`devDependencies` are used for the build process, tools that help you manage how the end code will end up, third party test modules, (ex. webpack stuff)"](https://stackoverflow.com/questions/18875674/whats-the-difference-between-dependencies-devdependencies-and-peerdependencies)
 
-* [React setup](https://medium.com/@diamondgfx/phoenix-v1-1-2-and-react-js-3dbd195a880a)
+  * [JSON API example](https://robots.thoughtbot.com/building-a-phoenix-json-api)
+* **GO DEEPER:** [Learn Metaprogramming in Elixir](https://pragprog.com/book/cmelixir/metaprogramming-elixir)
+
+* [React setup](https://medium.com/@diamondgfx/phoenix-v1-1-2-and-react-js-3dbd195a880a) _(you can skip the [whitelist](https://github.com/brunch/brunch/blob/master/CHANGELOG.md#brunch-22-jan-22-2016) &_ `$ brunch build` _steps)_
 * [`react-native-web`](https://github.com/necolas/react-native-web/blob/master/website/guides/getting-started.md#getting-started) for [cross-platform](https://github.com/necolas/react-native-web#react-native-for-web) React components, with option to server-side render
+  > **Note:** I haven't found clear/explicit [documentation](http://phoenixframework.org/blog/static-assets) for using `react-native-web` SSR with Phoenix.
 
 ### _Absinthe (GraphQL backend)_
 * ["Getting" GraphQL](https://medium.com/@english3000.org/getting-graphql-40dd48dd53a1)
 * [Intro to Absinthe](https://www.howtographql.com/graphql-elixir/0-introduction/)
   * [another free tutorial](https://hexdocs.pm/absinthe/start.html#content)
 * [Learn Absinthe](https://pragprog.com/book/wwgraphql/craft-graphql-apis-in-elixir-with-absinthe)
+
+* **[Putting it all together ("WRAP" stack)](https://medium.com/@english3000.org/starting-a-new-project-with-absinthe-relay-be9a127b8f63)**
+  > WRAP = react-native-Web + Relay + Absinthe + Postgres
 
 * ["Getting" Relay (GraphQL frontend)](https://www.reindex.io/blog/redux-and-relay/)
   * [Relay over Redux](https://medium.com/@matt.krick/replacing-redux-with-relay-47ed085bfafe)
@@ -35,6 +66,8 @@ At a bare minimum, I'd go through [Learn Elixir](https://elixir-lang.org/getting
     * [Example App](https://github.com/relayjs/relay-examples/blob/master/todo/js/app.js)
   * [`Absinthe.Relay` docs](https://hexdocs.pm/absinthe/relay.html)
   * [Sending a request with variables](https://github.com/absinthe-graphql/absinthe-socket/tree/master/packages/socket#send) (not covered in the book)
+* [Testing Relay Components I](https://medium.com/entria/relay-integration-test-with-jest-71236fb36d44) & [II](https://medium.com/@mikaelberg/writing-simple-unit-tests-with-relay-707f19e90129)
+* [Mocking a GraphQL server](http://graphql.org/blog/mocking-with-graphql/#mocking-is-easy-with-a-type-system)
 
 ### _Deploying Your App_
 * [Heroku](https://hexdocs.pm/phoenix/heroku.html) has some limitations
@@ -73,7 +106,7 @@ At a bare minimum, I'd go through [Learn Elixir](https://elixir-lang.org/getting
 
 Oh, and a shameless plug, [Object-Oriented vs. Functional Interviewing](https://medium.com/@english3000.org/object-oriented-vs-functional-interviewing-a383cf87bcf8)!
 
-## Cheatsheet (in progress)
+## Elixir Cheatsheet (in progress)
 
 #### Note: This material is intended as *complementary* to the resources above.
 
