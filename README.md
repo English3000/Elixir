@@ -95,6 +95,7 @@ _More fundamentals:_
 * **GO DEEPER:** [The Erlang Runtime System](https://happi.github.io/theBeamBook/#P-ERTS)
 
 * [Even more...](https://blog.bradfieldcs.com/learn-how-computers-work-e7d33dba0238)
+  > ["At the end of a good comp sci program you should be able to explain how a computer works starting from a transistor in the processor all the way up to how your web browser engine parses a web page into a DOM tree.  (and somewhere in the middle, how the packets from that server got to your web browser)"](https://www.quora.com/What-does-a-degree-in-computer-science-teach-you-that-a-coding-bootcamp-does-not)
   * [_The Elements of Computing Systems_ course](https://www.coursera.org/learn/build-a-computer)
   * [Berkeley's "Great Ideas in Computer Architecture](http://inst.eecs.berkeley.edu/~cs61c/sp15/)
     * [lecture videos](https://www.youtube.com/watch?v=9y_sUqHeyy8&list=PLhMnuBfGeCDM8pXLpqib90mDFJI-e1lpk)
