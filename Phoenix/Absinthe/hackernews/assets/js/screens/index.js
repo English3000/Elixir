@@ -1,6 +1,6 @@
 import React from "react";
 import { AppRegistry, View, Text } from "react-native";
-import Router from "../components/Router";
+import Router from "./Router";
 
 export default class Screen extends React.Component {
   render() {

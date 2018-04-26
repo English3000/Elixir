@@ -25,25 +25,38 @@ import { QueryRenderer, graphql } from "react-relay";
 import environment from "./environment";
 import ErrorBoundary from "./components/ErrorBoundary";
 
-if (Platform.OS === "web") {
-  import { BrowserRouter as Router } from "react-router-dom";
-  import Index from "./pages";
-} else {
-  import { NativeRouter as Router } from "react-router-native";
-  import Index from "./screens";
-}
+import { BrowserRouter } from "react-router-dom";
+import Page from "./pages";
+import { NativeRouter } from "react-router-native";
+import Screen from "./screens";
 
-const Root = () => (
-  <ErrorBoundary>
-    <Router>
-      <QueryRenderer environment={environment} render={({ errors, props }) => {
-        if (error)      { return <View><Text>{error.message}</Text></View>; }
-        else if (props) { return <ErrorBoundary><Index /></ErrorBoundary>; }
-        else            { return <View><Text>Loading...</Text></View>; }
-      }}/>
-    </Router>
-  </ErrorBoundary>
-);
+const Root = () => {
+  if (Platform.OS === "web") {
+    return (
+      <ErrorBoundary>
+        <BrowserRouter>
+          <QueryRenderer environment={environment} render={({ errors, props }) => {
+            if (error)      { return <View><Text>{error.message}</Text></View>; }
+            else if (props) { return <ErrorBoundary><Page /></ErrorBoundary>; }
+            else            { return <View><Text>Loading...</Text></View>; }
+          }}/>
+        </BrowserRouter>
+      </ErrorBoundary>
+    );
+  } else {
+    return (
+      <ErrorBoundary>
+        <NativeRouter>
+          <QueryRenderer environment={environment} render={({ errors, props }) => {
+            if (error)      { return <View><Text>{error.message}</Text></View>; }
+            else if (props) { return <ErrorBoundary><Screen /></ErrorBoundary>; }
+            else            { return <View><Text>Loading...</Text></View>; }
+          }}/>
+        </NativeRouter>
+      </ErrorBoundary>
+    );
+  }
+}
 
 AppRegistry.registerComponent("Root", () => Root);
 AppRegistry.runApplication("Root", {rootTag: document.getElementById("replace-with-js")});

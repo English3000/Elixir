@@ -2,7 +2,10 @@ import React from "react";
 import { View, Text } from "react-native";
 
 export class ErrorBoundary extends React.Component {
-  state = {error: null}
+  constructor() {
+    super();
+    this.state = {error: null};
+  }
 
   componentDidCatch(error) { this.setState({error}); }
 
