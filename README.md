@@ -27,6 +27,10 @@ Love every part of your stack! Try WRAP:
 * [Practice problems](http://exercism.io/languages/elixir/about)
 * **GO DEEPER:** [Learn Functional Programming with Elixir](https://pragprog.com/book/cdc-elixir/learn-functional-programming-with-elixir)
 
+_More fundamentals:_
+  * [Exercises for Programmers](https://www.amazon.com/Exercises-Programmers-Challenges-Develop-Coding-ebook/dp/B0170Q50LK/ref=mt_kindle?_encoding=UTF8&me=) (**$15.50, refundable**)
+  * [A Common-Sense Guide to Data Structures and Algorithms](https://pragprog.com/book/jwdsal/a-common-sense-guide-to-data-structures-and-algorithms) (**$17.50**, w/ aforementioned 30% discount)
+
 ### _Phoenix (framework)_
 * [Learn Phoenix](https://pragprog.com/book/phoenix/programming-phoenix)
   * [Updates to Phoenix](https://medium.com/wemake-services/why-changes-in-phoenix-1-3-are-so-important-2d50c9bdabb9) (just do `⌘ + f` for _Creating schema_--the rest is dated)
@@ -89,6 +93,11 @@ Love every part of your stack! Try WRAP:
 * **GO DEEPER:** [Erlang VM Garbage Collection](https://www.erlang-solutions.com/blog/erlang-garbage-collector.html)
 * [Intro to Assembly (if accessible)](https://vimeo.com/175634887)
 * **GO DEEPER:** [The Erlang Runtime System](https://happi.github.io/theBeamBook/#P-ERTS)
+
+* [Even more...](https://blog.bradfieldcs.com/learn-how-computers-work-e7d33dba0238)
+  * [_The Elements of Computing Systems_ course](https://www.coursera.org/learn/build-a-computer)
+  * [Berkeley's "Great Ideas in Computer Architecture](http://inst.eecs.berkeley.edu/~cs61c/sp15/)
+    * [lecture videos](https://www.youtube.com/watch?v=9y_sUqHeyy8&list=PLhMnuBfGeCDM8pXLpqib90mDFJI-e1lpk)
 
 ### _Bleeding Edge_
 * [Dgraph](https://github.com/dgraph-io/dgraph#quick-install)
