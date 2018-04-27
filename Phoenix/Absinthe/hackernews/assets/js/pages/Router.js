@@ -4,7 +4,7 @@ import { withRouter, Switch, Route } from "react-router-dom";
 import ErrorBoundary from "../components/ErrorBoundary";
 import Home from "./Home";
 
-const WebRouter = () => (
+const PageRouter = () => (
   <ErrorBoundary>
     <Switch>
       <Route exact path="/" component={Home}/>
@@ -12,5 +12,5 @@ const WebRouter = () => (
   </ErrorBoundary>
 );
 
-AppRegistry.registerComponent("WebRouter", () => WebRouter);
-export default withRouter(WebRouter);
+AppRegistry.registerComponent("PageRouter", () => PageRouter);
+export default withRouter(PageRouter);

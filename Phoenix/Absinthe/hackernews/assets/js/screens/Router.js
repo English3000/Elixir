@@ -4,7 +4,7 @@ import { withRouter, Switch, Route } from "react-router-native";
 import ErrorBoundary from "../components/ErrorBoundary";
 import Home from "./Home";
 
-const MobileRouter = () => (
+const ScreenRouter = () => (
   <ErrorBoundary>
     <Switch>
       <Route exact path="/" component={Home}/>
@@ -12,5 +12,5 @@ const MobileRouter = () => (
   </ErrorBoundary>
 );
 
-AppRegistry.registerComponent("MobileRouter", () => MobileRouter);
-export default withRouter(MobileRouter);
+AppRegistry.registerComponent("ScreenRouter", () => ScreenRouter);
+export default withRouter(ScreenRouter);

@@ -1,8 +1,9 @@
 import React from "react";
-import { AppRegistry, View, Text } from "react-native-web";
+import { AppRegistry } from "react-native-web";
+import List from "../components/List";
 
-export default class WebHome extends React.Component {
-  render() { return <View><Text>WEB HOME PAGE</Text></View>; }
+export default class HomePage extends React.Component {
+  render() { return <List/>; }
 }
 
-AppRegistry.registerComponent("WebHome", () => WebHome);
+AppRegistry.registerComponent("HomePage", () => HomePage);

@@ -4,11 +4,11 @@ import Router from "./Router";
 
 export default class Page extends React.Component {
   render() {
-    return [
-      <View key="header"><Text>WEB HEADER</Text></View>,
-      <Router key="router"/>,
-      <View key="footer"><Text>WEB FOOTER</Text></View>,
-    ];
+    return <View>
+             <Text>WEB HEADER</Text>
+             <Router/>
+             <Text>WEB FOOTER</Text>
+           </View>;
   }
 }
 

@@ -38,6 +38,8 @@ defmodule PlateSlateWeb.Schema do
   end
   defp apply(middleware, _,_,_), do: middleware
 
+  def plugins, do: [Absinthe.Middleware.Dataloader | Absinthe.Plugin.defaults]
+
   # def middleware(middleware, field, %{identifier: :allergy_info} = object) do
     # expect string key instead of atom
   #   new_middleware = {Absinthe.Middleware.MapGet, to_string(field.identifier)}
@@ -48,11 +50,8 @@ defmodule PlateSlateWeb.Schema do
   # end
   # def middleware(middleware, _field, _object), do: middleware
 
-  def dataloader(), do: Dataloader.new |> Dataloader.add_source(Menu, Menu.data())
-
   def context(ctx), do: Map.put(ctx, :loader, dataloader())
-
-  def plugins, do: [Absinthe.Middleware.Dataloader | Absinthe.Plugin.defaults]
+  def dataloader(), do: Dataloader.new |> Dataloader.add_source(Menu, Menu.data())
 
   node interface do
     resolve_type fn

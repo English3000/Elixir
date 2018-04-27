@@ -6,7 +6,7 @@ defmodule Hackernews.Accounts.Link do
   schema "links" do
     field :url, :string
     field :description, :string
-    belongs_to :user, Hackernews.Accounts.User
+    belongs_to :posted_by, Hackernews.Accounts.User, foreign_key: :user_id
     has_many :votes, Hackernews.Accounts.Vote
 
     timestamps()

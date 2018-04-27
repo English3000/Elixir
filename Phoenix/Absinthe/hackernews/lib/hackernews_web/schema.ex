@@ -1,6 +1,9 @@
 defmodule HackernewsWeb.Schema do
   use Absinthe.Schema
+  use Absinthe.Relay.Schema, :modern #
+  import Absinthe.Resolution.Helpers #incl's dataloader/2
   alias HackernewsWeb.Resolvers
+  alias Hackernews.Accounts
 
   def middleware(middleware, field, object) do
     middleware |> apply(:errors, field, object)
@@ -18,6 +21,11 @@ defmodule HackernewsWeb.Schema do
     end
   end
   defp apply(middleware, _,_,_), do: middleware
+
+  def plugins, do: [Absinthe.Middleware.Dataloader | Absinthe.Plugin.defaults]
+
+  def context(ctx), do: Map.put(ctx, :loader, dataloader())
+  def dataloader(), do: Dataloader.new |> Dataloader.add_source(Accounts, Accounts.data())
 
   query do
     @desc "Lists all links"
@@ -48,8 +56,8 @@ defmodule HackernewsWeb.Schema do
     field :id, non_null(:id)
     field :url, non_null(:string)
     field :description, :string
-    field :posted_by, :user #returning null #how do I access `dataloader/1`?
-  end #also `get-graphql-schema http://localhost:4000/api` fails to connect
+    field :posted_by, :user, resolve: dataloader(Accounts)
+  end 
 
   object :link_result do
     field :link, :link

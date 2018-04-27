@@ -1,7 +1,7 @@
 import React from "react";
 import { View, Text } from "react-native";
 
-export class ErrorBoundary extends React.Component {
+export default class ErrorBoundary extends React.Component {
   constructor() {
     super();
     this.state = {error: null};
@@ -9,8 +9,9 @@ export class ErrorBoundary extends React.Component {
 
   componentDidCatch(error) { this.setState({error}); }
 
-  render() { return this.state.error ?
-    <View><Text>{this.state.error.toString()}</Text></View> : this.props.children;
+  render() {
+    return this.state.error ? <View><Text>{this.state.error.toString()}</Text></View> :
+      this.props.children;
   }
 }
 

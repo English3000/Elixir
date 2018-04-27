@@ -8,6 +8,10 @@ defmodule Hackernews.Accounts do
 
   alias Hackernews.Accounts.User
 
+  def data(), do: Dataloader.Ecto.new(Repo, query: &query/2)
+
+  def query(queryable, _), do: queryable
+
   @doc """
   Returns the list of users.
 

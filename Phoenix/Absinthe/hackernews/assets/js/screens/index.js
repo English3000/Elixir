@@ -4,11 +4,11 @@ import Router from "./Router";
 
 export default class Screen extends React.Component {
   render() {
-    return [
-      <View key="header"><Text>MOBILE HEADER</Text></View>,
-      <Router key="router"/>,
-      <View key="footer"><Text>MOBILE FOOTER</Text></View>,
-    ];
+    return <View>
+             <Text>MOBILE HEADER</Text>
+             <Router/>
+             <Text>MOBILE FOOTER</Text>
+           </View>;
   }
 }
 

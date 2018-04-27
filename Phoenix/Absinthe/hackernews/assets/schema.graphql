@@ -1,0 +1,43 @@
+# server must be running to get-graphql-schema
+schema {
+  query: RootQueryType
+  mutation: RootMutationType
+}
+
+type InputError {
+  key: String!
+  message: String!
+}
+
+type Link {
+  description: String
+  id: ID!
+  postedBy: User
+  url: String!
+}
+
+input LinkInput {
+  description: String
+  url: String!
+  userId: ID!
+}
+
+type LinkResult {
+  errors: [InputError]
+  link: Link
+}
+
+type RootMutationType {
+  # Creates a new link
+  createLink(input: LinkInput!): LinkResult
+}
+
+type RootQueryType {
+  # Lists all links
+  allLinks: [Link!]!
+}
+
+type User {
+  id: ID!
+  name: String!
+}

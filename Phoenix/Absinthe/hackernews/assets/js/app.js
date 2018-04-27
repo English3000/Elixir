@@ -23,37 +23,32 @@ import React from "react";
 import { AppRegistry, View, Text, Platform } from "react-native";
 import { QueryRenderer, graphql } from "react-relay";
 import environment from "./environment";
-import ErrorBoundary from "./components/ErrorBoundary";
 
 import { BrowserRouter } from "react-router-dom";
 import Page from "./pages";
 import { NativeRouter } from "react-router-native";
 import Screen from "./screens";
 
-const Root = () => {
+const Root = () => { //SyntaxError: export declarations may only appear at top level of a module
   if (Platform.OS === "web") {
     return (
-      <ErrorBoundary>
-        <BrowserRouter>
-          <QueryRenderer environment={environment} render={({ errors, props }) => {
-            if (error)      { return <View><Text>{error.message}</Text></View>; }
-            else if (props) { return <ErrorBoundary><Page /></ErrorBoundary>; }
-            else            { return <View><Text>Loading...</Text></View>; }
-          }}/>
-        </BrowserRouter>
-      </ErrorBoundary>
+      <BrowserRouter>
+        <QueryRenderer environment={environment} render={({ errors, props }) => {
+          if (error)      { return <View><Text>{error.message}</Text></View>; }
+          else if (props) { return <ErrorBoundary><Page /></ErrorBoundary>; }
+          else            { return <View><Text>Loading...</Text></View>; }
+        }}/>
+      </BrowserRouter>
     );
   } else {
     return (
-      <ErrorBoundary>
-        <NativeRouter>
-          <QueryRenderer environment={environment} render={({ errors, props }) => {
-            if (error)      { return <View><Text>{error.message}</Text></View>; }
-            else if (props) { return <ErrorBoundary><Screen /></ErrorBoundary>; }
-            else            { return <View><Text>Loading...</Text></View>; }
-          }}/>
-        </NativeRouter>
-      </ErrorBoundary>
+      <NativeRouter>
+        <QueryRenderer environment={environment} render={({ errors, props }) => {
+          if (error)      { return <View><Text>{error.message}</Text></View>; }
+          else if (props) { return <ErrorBoundary><Screen /></ErrorBoundary>; }
+          else            { return <View><Text>Loading...</Text></View>; }
+        }}/>
+      </NativeRouter>
     );
   }
 }

@@ -1,8 +1,9 @@
 import React from "react";
-import { AppRegistry, View, Text } from "react-native-web";
+import { AppRegistry } from "react-native-web";
+import List from "../components/List";
 
-export default class MobileHome extends React.Component {
-  render() { return <View><Text>MOBILE HOME SCREEN</Text></View>; }
+export default class HomeScreen extends React.Component {
+  render() { return <List/>; }
 }
 
-AppRegistry.registerComponent("MobileHome", () => MobileHome);
+AppRegistry.registerComponent("HomeScreen", () => HomeScreen);
