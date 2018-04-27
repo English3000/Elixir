@@ -3,7 +3,7 @@ import { AppRegistry, Text } from "react-native";
 import ErrorBoundary from "./ErrorBoundary";
 
 export default class Link extends React.Component {
-  async vote() {}
+  // async vote() {}
 
   render() {
     const {description, url} = this.props.data;

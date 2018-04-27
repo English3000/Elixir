@@ -7,13 +7,13 @@ const query = graphql `query AppQuery { menuItems {id name} }`;
 
 export default class App extends Component {
   componentDidMount() { NewMenuItemSubscription(); }
-  
+
   renderMenuItem(menuItem) { return <li key={menuItem.id}>{menuItem.name}</li>; }
 
   render() {
     return <QueryRenderer environment={environment} query={query}
              render={({ error, props }) => {
-        if (error) {      return <div>{error.message}</div>;
+        if (error) {     console.log(error); return <div>{error.message}</div>;
       } else if (props) { return <ul>{props.menuItems.map(this.renderMenuItem)}</ul>;
       } else {            return <div>Loading...</div>; }
     }}/>;
