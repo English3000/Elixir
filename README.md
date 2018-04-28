@@ -61,6 +61,8 @@ _More fundamentals:_
 * **[Putting it all together ("WRAP" stack)](https://medium.com/@english3000.org/starting-a-new-project-with-absinthe-relay-be9a127b8f63)**
   > WRAP = react-native-Web + Relay + Absinthe + Postgres
 
+### _Relay (GraphQL frontend)_
+
 * ["Getting" Relay (GraphQL frontend)](https://www.reindex.io/blog/redux-and-relay/)
   * [Relay over Redux](https://medium.com/@matt.krick/replacing-redux-with-relay-47ed085bfafe)
 * [Thinking in Relay](https://facebook.github.io/relay/docs/en/thinking-in-relay.html)
@@ -73,6 +75,12 @@ _More fundamentals:_
   * [Sending a request with variables](https://github.com/absinthe-graphql/absinthe-socket/tree/master/packages/socket#send) (not covered in the book)
 * [Testing Relay Components I](https://medium.com/entria/relay-integration-test-with-jest-71236fb36d44) & [II](https://medium.com/@mikaelberg/writing-simple-unit-tests-with-relay-707f19e90129)
 * [Mocking a GraphQL server](http://graphql.org/blog/mocking-with-graphql/#mocking-is-easy-with-a-type-system)
+
+* [Routing](https://facebook.github.io/relay/docs/en/routing.html)
+  > "Found Relay runs queries for matched routes in parallel, and supports fetching Relay data in parallel with downloading async bundles from code splitting when using Relay Modern."
+  * [On routing](https://medium.com/@wonderboymusic/upgrading-to-relay-modern-or-apollo-ffa58d3a5d59)
+    > "Found Relay has a naive approach to client rehydration that is less than ideal."
+  * [`found-relay`](https://github.com/4Catalyzer/found-relay/blob/master/examples/todomvc-modern/src/routes.js)
 
 ### _Deploying Your App_
 * [Heroku](https://hexdocs.pm/phoenix/heroku.html) has some limitations
