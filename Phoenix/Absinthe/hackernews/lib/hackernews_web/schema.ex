@@ -57,7 +57,7 @@ defmodule HackernewsWeb.Schema do
     field :url, non_null(:string)
     field :description, :string
     field :posted_by, :user, resolve: dataloader(Accounts)
-  end 
+  end
 
   object :link_result do
     field :link, :link
@@ -67,7 +67,7 @@ defmodule HackernewsWeb.Schema do
   input_object :link_input do
     field :url, non_null(:string)
     field :description, :string
-    field :user_id, non_null(:id)
+    field :user_id, non_null(:id) #insert via middleware
   end
 
   object :vote do

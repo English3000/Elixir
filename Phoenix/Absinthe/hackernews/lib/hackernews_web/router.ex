@@ -17,6 +17,7 @@ defmodule HackernewsWeb.Router do
     pipe_through :browser # Use the default browser stack
 
     get "/", PageController, :index
+    get "/create", PageController, :index
   end
 
   scope "/" do

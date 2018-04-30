@@ -1,8 +1,9 @@
 import React from "react";
 import { AppRegistry, Text } from "react-native";
+import { createFragmentContainer, graphql } from "react-relay";
 import ErrorBoundary from "./ErrorBoundary";
 
-export default class Link extends React.Component {
+class Link extends React.Component {
   // async vote() {}
 
   render() {
@@ -18,3 +19,11 @@ export default class Link extends React.Component {
 }
 
 AppRegistry.registerComponent("Link", () => Link);
+
+export default createFragmentContainer(Link, graphql`
+  fragment Link on Link {
+    id
+    description
+    url
+  }
+`);

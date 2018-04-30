@@ -29,14 +29,16 @@ import Page from "./pages";
 // import { NativeRouter } from "react-router-native";
 import Screen from "./screens";
 //SyntaxError: export declarations may only appear at top level of a module
-// * "@absinthe/scoket-relay"
 // * "react-router-native"
+const query = graphql `query appQuery { ...List }`;
+
 const Root = () => {
   if (Platform.OS === "web") { //book Relay app suddenly not working either...
     return (
       <ErrorBoundary>
         <BrowserRouter>
-          <QueryRenderer environment={environment} render={({ error, props }) => {
+          <QueryRenderer environment={environment} query={query}
+            render={({ error, props }) => {
             if (error)      { return <View><Text>{error.message}</Text></View>; }
             else if (props) { return <ErrorBoundary><Page /></ErrorBoundary>; }
             else            { return <View><Text>Loading...</Text></View>; }

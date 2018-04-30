@@ -1,5 +1,6 @@
 defmodule HackernewsWeb.UserSocket do
   use Phoenix.Socket
+  use Absinthe.Phoenix.Socket, schema: HackernewsWeb.Schema
 
   ## Channels
   # channel "room:*", HackernewsWeb.RoomChannel

@@ -1,9 +1,9 @@
 import React from "react";
 import { AppRegistry } from "react-native-web";
-import List from "../components/List";
+import Form from "../components/Form";
 
 export default class HomePage extends React.Component {
-  render() { return <List/>; }
+  render() { return <Form/>; }
 }
 
 AppRegistry.registerComponent("HomePage", () => HomePage);
