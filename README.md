@@ -5,8 +5,8 @@ At a bare minimum, I'd go through:
 1. [Learn Elixir](https://elixir-lang.org/getting-started/introduction.html) (**free!**)
 2. [Learn Phoenix](https://pragprog.com/book/phoenix/programming-phoenix) (**$23**, Kindle-compatible)
 3. [Learn Absinthe](https://pragprog.com/book/wwgraphql/craft-graphql-apis-in-elixir-with-absinthe) (**$18**, w/ 30% discount code in the back of any PragProg book)
-4. [WRAP Stack Walkthrough](https://medium.com/@english3000.org/starting-a-new-project-with-absinthe-relay-be9a127b8f63) (**free**; how to put all of these technologies--[react-native-Web](https://github.com/necolas/react-native-web/blob/master/website/guides/getting-started.md), Relay, Absinthe, & Postgres--together for your first project with this stack)
-5. [Learn Relay](https://www.howtographql.com/react-relay/0-introduction/) (**free**; skip Step 5--use Ch. 8 of *Learn Absinthe* instead)
+4. [WRAP Stack Walkthrough](https://medium.com/@english3000.org/starting-a-new-project-with-absinthe-relay-be9a127b8f63) (**free**; how to put all of these technologies together for your first project)
+5. [Learn Relay](https://www.howtographql.com/react-relay/0-introduction/) (**free**; implement with an Absinthe backend; skip to _Implementing the Login Mutations_ for Step 5, and use Ch. 8 of *Learn Absinthe* for authentication)
 
 ### _Why WRAP?_
 1. **performance _(backend)_:** Absinthe is ~10x faster than NodeJS, Python, Ruby, and (probably even more for) PHP because it can use multiple cores concurrently
@@ -59,7 +59,6 @@ _More fundamentals:_
 * [Learn Absinthe](https://pragprog.com/book/wwgraphql/craft-graphql-apis-in-elixir-with-absinthe)
 
 * **[Putting it all together ("WRAP" stack)](https://medium.com/@english3000.org/starting-a-new-project-with-absinthe-relay-be9a127b8f63)**
-  > WRAP = react-native-Web + Relay + Absinthe + Postgres
 
 ### _Relay (GraphQL frontend)_
 
@@ -68,10 +67,9 @@ _More fundamentals:_
 * [Thinking in Relay](https://facebook.github.io/relay/docs/en/thinking-in-relay.html)
   > "Relay only allows components to access data they specifically ask for in GraphQL fragments — nothing more."
   * **GO DEEPER:** [Relay Deep Dive](https://www.youtube.com/watch?v=oPSuvaYmXBY)
-* [Relay tutorial](https://www.howtographql.com/react-relay/0-introduction/) -- **NOTE:** Skip *Step 5: Authentication*; the strategy used is insecure. *Ch. 8* of the Absinthe book provides secure auth.
+* [Relay tutorial](https://www.howtographql.com/react-relay/0-introduction/) -- **NOTE:** Skip to _Implementing the Login Mutations_ for *Step 5: Authentication*; the strategy used is insecure. *Ch. 8* of the Absinthe book provides secure auth on the backend.
   * [Relay docs](http://facebook.github.io/relay/docs/en/introduction-to-relay.html)
-    * [Example App](https://github.com/relayjs/relay-examples/blob/master/todo/js/app.js)
-  * [`Absinthe.Relay` docs](https://hexdocs.pm/absinthe/relay.html)
+    * [`Absinthe.Relay` docs](https://hexdocs.pm/absinthe/relay.html)
   * [Sending a request with variables](https://github.com/absinthe-graphql/absinthe-socket/tree/master/packages/socket#send) (not covered in the book)
 * [Testing Relay Components I](https://medium.com/entria/relay-integration-test-with-jest-71236fb36d44) & [II](https://medium.com/@mikaelberg/writing-simple-unit-tests-with-relay-707f19e90129)
 * [Mocking a GraphQL server](http://graphql.org/blog/mocking-with-graphql/#mocking-is-easy-with-a-type-system)
