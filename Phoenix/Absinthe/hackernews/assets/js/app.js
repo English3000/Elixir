@@ -26,38 +26,24 @@ import environment from "./environment";
 import ErrorBoundary from "./components/ErrorBoundary";
 import { BrowserRouter } from "react-router-dom";
 import Page from "./pages";
-// import { NativeRouter } from "react-router-native";
 import Screen from "./screens";
-//SyntaxError: export declarations may only appear at top level of a module
-// * "react-router-native"
+
 const query = graphql `query appQuery { ...List }`;
 
-const Root = () => {
-  if (Platform.OS === "web") {
-    return (
-      <ErrorBoundary>
-        <BrowserRouter>
-          <QueryRenderer environment={environment} query={query}
-            render={({ error, props }) => { //console.log(props);
-            if (error)      { return <View><Text>{error.message}</Text></View>; }
-            else if (props) { return <ErrorBoundary><Page data={props}/></ErrorBoundary>; }
-            else            { return <View><Text>Loading...</Text></View>; }
-          }}/>
-        </BrowserRouter>
-      </ErrorBoundary>
-    );
-  } else {
-    // return (
-    //   <NativeRouter>
-    //     <QueryRenderer environment={environment} render={({ errors, props }) => {
-    //       if (error)      { return <View><Text>{error.message}</Text></View>; }
-    //       else if (props) { return <ErrorBoundary><Screen data={props}/></ErrorBoundary>; }
-    //       else            { return <View><Text>Loading...</Text></View>; }
-    //     }}/>
-    //   </NativeRouter>
-    // );
-  }
-}
+const Root = () => (
+  <ErrorBoundary>
+    <BrowserRouter>
+      <QueryRenderer environment={environment} query={query}
+        render={({ error, props }) => { //console.log(props);
+        if (error)      { return <View><Text>{error.message}</Text></View>; }
+        else if (props && Platform.OS === "web")
+                        { return <ErrorBoundary><Page data={props}/></ErrorBoundary>; }
+        else if (props) { return <ErrorBoundary><Screen data={props}/></ErrorBoundary>; }
+        else            { return <View><Text>Loading...</Text></View>; }
+      }}/>
+    </BrowserRouter>
+  </ErrorBoundary>
+);
 
 AppRegistry.registerComponent("Root", () => Root);
 AppRegistry.runApplication("Root", {rootTag: document.getElementById("replace-with-js")});

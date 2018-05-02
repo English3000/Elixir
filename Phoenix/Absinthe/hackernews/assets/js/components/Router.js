@@ -1,11 +1,11 @@
 import React from "react";
 import { AppRegistry } from "react-native";
 import { withRouter, Switch, Route } from "react-router-dom";
-import ErrorBoundary from "../components/ErrorBoundary";
-import List from "../components/List";
-import Form from "../components/Form";
+import ErrorBoundary from "./ErrorBoundary";
+import List from "./List";
+import Form from "./Form";
 
-const PageRouter = ({data}) => (
+const Router = ({data}) => (
   <ErrorBoundary>
     <Switch>
       <Route exact path="/" render={() => <List data={data}/>}/>
@@ -14,6 +14,6 @@ const PageRouter = ({data}) => (
   </ErrorBoundary>
 );
 
-AppRegistry.registerComponent("PageRouter", () => PageRouter);
+AppRegistry.registerComponent("Router", () => Router);
 
-export default withRouter(PageRouter);
+export default withRouter(Router);
