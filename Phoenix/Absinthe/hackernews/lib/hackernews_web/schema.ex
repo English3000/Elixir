@@ -27,27 +27,10 @@ defmodule HackernewsWeb.Schema do
   def context(ctx), do: Map.put(ctx, :loader, dataloader())
   def dataloader(), do: Dataloader.new |> Dataloader.add_source(Accounts, Accounts.data())
 
+  #=======
   query do
-    @desc "Lists all links"
-    field :all_links, non_null(list_of(non_null(:link))) do
-      resolve &Resolvers.Accounts.list_links/3
-    end
-  end
-
-  mutation do
-    field :sign_in, :session do
-      arg :email, non_null(:string)
-      arg :password, non_null(:string)
-      resolve &Resolvers.Accounts.sign_in/3
-      middleware fn resolution, _ -> #persists user sign_in
-        with %{value: %{user: user}} <- resolution do
-          %{resolution | context: Map.put(resolution.context, :current_user, user)}
-        end
-      end
-    end
-
     field :me, :user do #to access current_user data
-      middleware HackernewsWeb.Middleware.Authorize #for CSR wouldn't `:error` crash the app?
+      middleware HackernewsWeb.Middleware.Authorize
       resolve &Resolvers.Accounts.me/3
     end
     # {
@@ -57,6 +40,49 @@ defmodule HackernewsWeb.Schema do
      # ​   }
      # ​   menuItems { name } ​  
     # }
+
+    @desc "Lists all links"
+    field :all_links, non_null(list_of(non_null(:link))) do
+      resolve &Resolvers.Accounts.list_links/3
+    end
+  end
+
+  object :user do
+    field :id, non_null(:id)
+    field :name, non_null(:string)
+    field :email, non_null(:string)
+    field :password, non_null(:string)
+  end
+
+  object :link do
+    field :id, non_null(:id)
+    field :url, non_null(:string)
+    field :description, :string
+    field :posted_by, :user, resolve: dataloader(Accounts)
+  end
+
+  #==========
+  mutation do
+    field :sign_up, :session_result do
+      arg :input, non_null(:user_input)
+      resolve &Resolvers.Accounts.sign_up/3
+      middleware fn resolution, _ -> #persists :current_user
+        with %{value: %{user: user}} <- resolution do
+          %{resolution | context: Map.put(resolution.context, :current_user, user)}
+        end
+      end
+    end
+
+    field :sign_in, :session do
+      arg :email, non_null(:string)
+      arg :password, non_null(:string)
+      resolve &Resolvers.Accounts.sign_in/3
+      middleware fn resolution, _ -> #persists :current_user
+        with %{value: %{user: user}} <- resolution do
+          %{resolution | context: Map.put(resolution.context, :current_user, user)}
+        end
+      end
+    end
 
     @desc "Creates a new link"
     field :create_link, :link_result do
@@ -68,25 +94,20 @@ defmodule HackernewsWeb.Schema do
     # field :create_vote, :vote
   end
 
-  # subscription do
-    #
-  # end
+  object :session_result do
+    field :session, :session
+    field :errors, list_of(:input_error)
+  end
 
   object :session do
     field :token, :string
     field :user, :user
   end
 
-  object :user do
-    field :id, non_null(:id)
+  input_object :user_input do
     field :name, non_null(:string)
-  end
-
-  object :link do
-    field :id, non_null(:id)
-    field :url, non_null(:string)
-    field :description, :string
-    field :posted_by, :user, resolve: dataloader(Accounts)
+    field :email, non_null(:string)
+    field :password, non_null(:string)
   end
 
   object :link_result do
@@ -100,14 +121,19 @@ defmodule HackernewsWeb.Schema do
     field :user_id, non_null(:id) #insert via middleware
   end
 
+  object :input_error do
+    field :key, non_null(:string)
+    field :message, non_null(:string)
+  end
+
+  # #==============
+  # subscription do
+    #
+  # end
+
   object :vote do
     field :id, non_null(:id)
     field :user, non_null(:user)
     field :link, non_null(:link)
-  end
-
-  object :input_error do
-    field :key, non_null(:string)
-    field :message, non_null(:string)
   end
 end

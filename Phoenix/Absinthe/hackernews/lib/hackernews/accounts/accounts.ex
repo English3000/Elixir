@@ -9,12 +9,12 @@ defmodule Hackernews.Accounts do
   alias Comeonin.Ecto.Password
 
   def authenticate(email, password) do
-    user = Repo.get_by(User, email: email)
+    user = Repo.get_by!(User, email: email) #would generate changeset error
 
     with %{password: digest} <- user, true <- Password.valid?(password, digest) do
       {:ok, user}
     else
-      _ -> :error
+      _ -> {:error, "incorrect email/password"}
     end
   end
 
