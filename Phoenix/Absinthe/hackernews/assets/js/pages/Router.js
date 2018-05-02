@@ -5,10 +5,10 @@ import ErrorBoundary from "../components/ErrorBoundary";
 import List from "../components/List";
 import Form from "../components/Form";
 
-const PageRouter = () => (
+const PageRouter = ({data}) => (
   <ErrorBoundary>
     <Switch>
-      <Route exact path="/" component={List}/>
+      <Route exact path="/" render={() => <List data={data}/>}/>
       <Route exact path="/create" component={Form}/>
     </Switch>
   </ErrorBoundary>

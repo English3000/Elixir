@@ -1,5 +1,5 @@
 import React from "react";
-import { AppRegistry, Text } from "react-native";
+import { AppRegistry, View, Text } from "react-native";
 import { createFragmentContainer, graphql } from "react-relay";
 import ErrorBoundary from "./ErrorBoundary";
 
@@ -11,8 +11,10 @@ class Link extends React.Component {
 
     return (
       <ErrorBoundary>
-        <Text>{url}</Text>
-        {description ? <Text>{description}</Text> : null}
+        <View style={{marginVertical: 5}}>
+          <Text>{url}</Text>
+          {description ? <Text>{description}</Text> : null}
+        </View>
       </ErrorBoundary>
     );
   }

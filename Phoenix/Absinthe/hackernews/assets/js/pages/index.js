@@ -4,11 +4,13 @@ import Router from "./Router";
 
 export default class Page extends React.Component {
   render() {
-    return <View>
-             <Text>WEB HEADER</Text>
-             <Router/>
-             <Text>WEB FOOTER</Text>
-           </View>;
+    return (
+      <View>
+        <Text style={{fontWeight: "700"}}>WEB HEADER</Text>
+        <Router data={this.props.data}/>
+        <Text style={{fontWeight: "700"}}>WEB FOOTER</Text>
+      </View>
+    );
   }
 }
 

@@ -33,14 +33,14 @@ import Screen from "./screens";
 const query = graphql `query appQuery { ...List }`;
 
 const Root = () => {
-  if (Platform.OS === "web") { //book Relay app suddenly not working either...
+  if (Platform.OS === "web") {
     return (
       <ErrorBoundary>
         <BrowserRouter>
           <QueryRenderer environment={environment} query={query}
-            render={({ error, props }) => {
+            render={({ error, props }) => { //console.log(props);
             if (error)      { return <View><Text>{error.message}</Text></View>; }
-            else if (props) { return <ErrorBoundary><Page /></ErrorBoundary>; }
+            else if (props) { return <ErrorBoundary><Page data={props}/></ErrorBoundary>; }
             else            { return <View><Text>Loading...</Text></View>; }
           }}/>
         </BrowserRouter>
@@ -51,7 +51,7 @@ const Root = () => {
     //   <NativeRouter>
     //     <QueryRenderer environment={environment} render={({ errors, props }) => {
     //       if (error)      { return <View><Text>{error.message}</Text></View>; }
-    //       else if (props) { return <ErrorBoundary><Screen /></ErrorBoundary>; }
+    //       else if (props) { return <ErrorBoundary><Screen data={props}/></ErrorBoundary>; }
     //       else            { return <View><Text>Loading...</Text></View>; }
     //     }}/>
     //   </NativeRouter>

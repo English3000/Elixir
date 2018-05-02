@@ -4,28 +4,10 @@ import { createFragmentContainer, graphql } from "react-relay";
 import Link from "./Link";
 
 const List = ({data}) => (
-  <View>{data ?
-    data.allLinks.map(link => <Link key={link.id}/>) : null
+  <View style={{marginVertical: 5}}>{data ?
+    data.allLinks.map(link => <Link key={link["__id"]} data={link}/>) : null
   }</View>
 );
-
-// class List extends React.Component {
-//   render() {
-//     console.log(this.props);
-//     //mock data
-//     // const links = [{
-//     //   id: '1',
-//     //   description: 'The coolest GraphQL backend 😎',
-//     //   url: 'https://www.graph.cool'
-//     // }, {
-//     //   id: '2',
-//     //   description: 'Highly performant GraphQL client from Facebook',
-//     //   url: 'https://facebook.github.io/relay/'
-//     // }]
-//     const {data} = this.props;
-//     return <View>{data ? data.allLinks.map(link => <Link key={link.id} data={link}/>) : null}</View>;
-//   }
-// }
 
 AppRegistry.registerComponent("List", () => List);
 
@@ -35,4 +17,4 @@ export default createFragmentContainer(List, graphql`
       ...Link
     }
   }
-`); //not working; query & fragments are valid
+`);

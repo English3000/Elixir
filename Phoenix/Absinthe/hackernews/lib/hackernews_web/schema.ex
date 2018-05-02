@@ -40,14 +40,14 @@ defmodule HackernewsWeb.Schema do
       arg :password, non_null(:string)
       resolve &Resolvers.Accounts.sign_in/3
       middleware fn resolution, _ -> #persists user sign_in
-        with %{value: %{user: user}} <- res do
+        with %{value: %{user: user}} <- resolution do
           %{resolution | context: Map.put(resolution.context, :current_user, user)}
         end
       end
     end
 
     field :me, :user do #to access current_user data
-      middleware HackernewsWeb.Middleware.Authorize
+      middleware HackernewsWeb.Middleware.Authorize #for CSR wouldn't `:error` crash the app?
       resolve &Resolvers.Accounts.me/3
     end
     # {
