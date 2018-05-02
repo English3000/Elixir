@@ -35,17 +35,47 @@ defmodule HackernewsWeb.Schema do
   end
 
   mutation do
+    field :sign_in, :session do
+      arg :email, non_null(:string)
+      arg :password, non_null(:string)
+      resolve &Resolvers.Accounts.sign_in/3
+      middleware fn resolution, _ -> #persists user sign_in
+        with %{value: %{user: user}} <- res do
+          %{resolution | context: Map.put(resolution.context, :current_user, user)}
+        end
+      end
+    end
+
+    field :me, :user do #to access current_user data
+      middleware HackernewsWeb.Middleware.Authorize
+      resolve &Resolvers.Accounts.me/3
+    end
+    # {
+     # ​   me {
+        # ​   name
+        # ​   ... ​ on ​ Customer { orders { id } }
+     # ​   }
+     # ​   menuItems { name } ​  
+    # }
+
     @desc "Creates a new link"
     field :create_link, :link_result do
       arg :input, non_null(:link_input)
+      middleware HackernewsWeb.Middleware.Authorize
       resolve &Resolvers.Accounts.create_link/3
     end
+
     # field :create_vote, :vote
   end
 
   # subscription do
     #
   # end
+
+  object :session do
+    field :token, :string
+    field :user, :user
+  end
 
   object :user do
     field :id, non_null(:id)

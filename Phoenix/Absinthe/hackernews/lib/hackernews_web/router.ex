@@ -11,12 +11,22 @@ defmodule HackernewsWeb.Router do
 
   pipeline :api do
     plug :accepts, ["json"]
+    plug HackernewsWeb.Context
+  end
+
+  pipeline :session_auth do
+    plug HackernewsWeb.SessionAuth
   end
 
   scope "/", HackernewsWeb do
     pipe_through :browser # Use the default browser stack
 
     get "/", PageController, :index
+  end
+
+  scope "/", HackernewsWeb do
+    pipe_through [:browser, :session_auth]
+
     get "/create", PageController, :index
   end
 
@@ -26,6 +36,6 @@ defmodule HackernewsWeb.Router do
     forward "/api", Absinthe.Plug, schema: HackernewsWeb.Schema
 
     forward "/graphiql", Absinthe.Plug.GraphiQL, schema: HackernewsWeb.Schema,
-      interface: :simple
+      socket: HackernewsWeb.UserSocket
   end
 end

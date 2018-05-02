@@ -5,8 +5,18 @@ defmodule Hackernews.Accounts do
 
   import Ecto.Query, warn: false
   alias Hackernews.Repo
-
   alias Hackernews.Accounts.User
+  alias Comeonin.Ecto.Password
+
+  def authenticate(email, password) do
+    user = Repo.get_by(User, email: email)
+
+    with %{password: digest} <- user, true <- Password.valid?(password, digest) do
+      {:ok, user}
+    else
+      _ -> :error
+    end
+  end
 
   def data(), do: Dataloader.Ecto.new(Repo, query: &query/2)
 

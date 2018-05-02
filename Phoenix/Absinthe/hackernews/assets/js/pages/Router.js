@@ -1,5 +1,5 @@
 import React from "react";
-import { Platform, AppRegistry } from "react-native";
+import { AppRegistry } from "react-native";
 import { withRouter, Switch, Route } from "react-router-dom";
 import ErrorBoundary from "../components/ErrorBoundary";
 import List from "../components/List";
@@ -15,4 +15,5 @@ const PageRouter = () => (
 );
 
 AppRegistry.registerComponent("PageRouter", () => PageRouter);
+
 export default withRouter(PageRouter);
