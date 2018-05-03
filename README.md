@@ -51,6 +51,7 @@ _More fundamentals:_
 * [React setup](https://medium.com/@diamondgfx/phoenix-v1-1-2-and-react-js-3dbd195a880a) _(you can skip the [whitelist](https://github.com/brunch/brunch/blob/master/CHANGELOG.md#brunch-22-jan-22-2016) &_ `$ brunch build` _steps)_
 * [`react-native-web`](https://github.com/necolas/react-native-web/blob/master/website/guides/getting-started.md#getting-started) for [cross-platform](https://github.com/necolas/react-native-web#react-native-for-web) React components, with option to server-side render
   * [Creating a link](https://reactnativecode.com/open-website-url-in-default-browser/)
+  * [Making an `absolute` element pressable](https://stackoverflow.com/questions/36938742/touchablehighlight-not-clickable-if-position-absolute?rq=1)
   > **Note:** I haven't found clear/explicit [documentation](http://phoenixframework.org/blog/static-assets) for using `react-native-web` SSR with Phoenix.
   * [Alternative way to SSR](https://medium.com/@chvanikoff/phoenix-react-love-story-reph-1-c68512cfe18)
 
