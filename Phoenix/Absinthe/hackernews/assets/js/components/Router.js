@@ -1,6 +1,6 @@
 import React from "react";
 import { AppRegistry } from "react-native";
-import { withRouter, Switch, Route } from "react-router-dom";
+import { Switch, Route } from "react-router-dom";
 import ErrorBoundary from "./ErrorBoundary";
 import List from "./List";
 import Form from "./Form";
@@ -16,4 +16,4 @@ const Router = ({data}) => (
 
 AppRegistry.registerComponent("Router", () => Router);
 
-export default withRouter(Router);
+export default Router;

@@ -25,7 +25,8 @@ defmodule HackernewsWeb.Router do
   end
 
   scope "/", HackernewsWeb do
-    pipe_through [:browser, :session_auth]
+    # pipe_through [:browser, :session_auth]
+    pipe_through [:browser] #for styling
 
     get "/create", PageController, :index
   end

@@ -17,8 +17,7 @@ defmodule Hackernews.Accounts.User do
   def changeset(user, attrs) do
     user
     |> cast(attrs, [:name, :email, :password])
-    |> validate_required([:name, :email, :password])
-    |> unique_constraint(:name)
+    |> validate_required([:email, :password])
     |> unique_constraint(:email)
   end
 end

@@ -1,5 +1,5 @@
 import React from "react";
-import { AppRegistry, View, Text } from "react-native";
+import { AppRegistry, View, Text, Linking } from "react-native";
 import { createFragmentContainer, graphql } from "react-relay";
 import ErrorBoundary from "./ErrorBoundary";
 
@@ -11,9 +11,9 @@ class Link extends React.Component {
 
     return (
       <ErrorBoundary>
-        <View style={{marginVertical: 5}}>
-          <Text>{url}</Text>
-          {description ? <Text>{description}</Text> : null}
+        <View style={{flexDirection: "row", marginVertical: 5}}>
+          <Text style={{color: "#0000cc"}} onPress={() => Linking.openURL(url)}>{url}</Text>
+          {description ? <Text> ~ {description}</Text> : null}
         </View>
       </ErrorBoundary>
     );

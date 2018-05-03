@@ -20,15 +20,13 @@ import "phoenix_html";
 
 // import socket from "./socket"
 import React from "react";
-import { AppRegistry, View, Text, Platform } from "react-native";
+import { AppRegistry, View, Text, Platform, Dimensions, StyleSheet } from "react-native";
 import { QueryRenderer, graphql } from "react-relay";
 import environment from "./environment";
 import ErrorBoundary from "./components/ErrorBoundary";
 import { BrowserRouter } from "react-router-dom";
 import Page from "./pages";
 import Screen from "./screens";
-
-const query = graphql `query appQuery { ...List }`;
 
 const Root = () => (
   <ErrorBoundary>
@@ -45,5 +43,15 @@ const Root = () => (
   </ErrorBoundary>
 );
 
+const query = graphql `query appQuery { ...List }`;
+
 AppRegistry.registerComponent("Root", () => Root);
 AppRegistry.runApplication("Root", {rootTag: document.getElementById("replace-with-js")});
+//==================
+
+const { width, height } = Dimensions.get("window");
+
+export const styles = StyleSheet.create({
+  central:  { alignItems: "center", justifyContent: "center" },
+  absolute: { position: "absolute", width, height, zIndex: 2 },
+});

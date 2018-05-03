@@ -1,5 +1,6 @@
 import React from "react";
 import { AppRegistry, View, TextInput, Button } from "react-native";
+import ErrorBoundary from "./ErrorBoundary";
 import { commitMutation, graphql } from "react-relay";
 import environment from "../environment";
 
@@ -25,7 +26,7 @@ export default class Form extends React.Component {
 
   render() {
     return (
-      <View>
+      <ErrorBoundary>
         <TextInput onChangeText={description => this.setState({description})}
                    placeholder="Link Description"
                    value={this.state.description}/>
@@ -35,7 +36,7 @@ export default class Form extends React.Component {
         <View style={{width: "20%"}}>
           <Button title="Create Link" onPress={this.createLink}/>
         </View>
-      </View>
+      </ErrorBoundary>
     );
   }
 
