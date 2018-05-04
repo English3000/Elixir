@@ -1,8 +1,8 @@
 import React from "react";
 import { AppRegistry, View, TextInput, Button } from "react-native";
-import ErrorBoundary from "./ErrorBoundary";
+import ErrorBoundary from "../ErrorBoundary";
 import { commitMutation, graphql } from "react-relay";
-import environment from "../environment";
+import environment from "../../environment";
 
 const mutation = graphql`
   mutation FormMutation($input: LinkInput!) {

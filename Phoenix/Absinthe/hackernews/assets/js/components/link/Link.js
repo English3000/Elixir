@@ -1,7 +1,7 @@
 import React from "react";
 import { AppRegistry, View, Text, Linking } from "react-native";
 import { createFragmentContainer, graphql } from "react-relay";
-import ErrorBoundary from "./ErrorBoundary";
+import ErrorBoundary from "../ErrorBoundary";
 
 class Link extends React.Component {
   // async vote() {}

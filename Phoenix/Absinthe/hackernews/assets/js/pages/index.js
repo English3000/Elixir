@@ -8,7 +8,7 @@ const Page = ({data}) => (
     <Header />
     <Router data={data}/>
     <Text style={{fontWeight: "700"}}>WEB FOOTER</Text>
-  </View>
+  </View> // ^extract & style in Footer.js
 );
 
 AppRegistry.registerComponent("Page", () => Page);

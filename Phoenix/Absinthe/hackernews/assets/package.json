@@ -34,6 +34,7 @@
     "jest": "^22.4.3",
     "regenerator-runtime": "^0.11.1",
     "relay-compiler": "^1.6.0",
+    "relay-devtools": "^1.4.0",
     "relay-runtime": "^1.6.0",
     "uglify-js-brunch": "2.10.0"
   },
@@ -41,14 +42,6 @@
     "snapshotSerializers": [
       "enzyme-to-json/serializer",
       "react-native-web/jest/serializer"
-    ]
-  },
-  "babel": {
-    "presets": [
-      "react-app"
-    ],
-    "plugins": [
-      "relay"
     ]
   }
 }

@@ -2,8 +2,8 @@ import React from "react";
 import { AppRegistry } from "react-native";
 import { Switch, Route } from "react-router-dom";
 import ErrorBoundary from "./ErrorBoundary";
-import List from "./List";
-import Form from "./Form";
+import List from "./link/List";
+import Form from "./link/Form";
 
 const Router = ({data}) => (
   <ErrorBoundary>

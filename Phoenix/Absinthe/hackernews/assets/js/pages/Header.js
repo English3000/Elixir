@@ -1,5 +1,6 @@
 import React from "react";
-import { AppRegistry, View, Text, TextInput, Button, Dimensions, StyleSheet } from "react-native";
+import { AppRegistry, View, Text, StyleSheet } from "react-native";
+import Form from "../components/user/Form";
 import ErrorBoundary from "../components/ErrorBoundary";
 import { styles } from "../app";
 import { webStyles } from "./index";
@@ -7,31 +8,20 @@ import { webStyles } from "./index";
 export default class Header extends React.Component {
   constructor() {
     super();
-    this.state = {auth: false, email: "", password: ""};
+    this.state = {visible: false};
   }
 
   render() {
-    const { auth, email, password } = this.state
-
     return (
       <ErrorBoundary>
         <View style={custom.header}>
-          <Text style={{color: "white", textTransform: "uppercase"}} onPress={() => this.setState({auth: true})}>Authenticate</Text>
+          <Text style={{color: "white", textTransform: "uppercase"}}
+                onPress={() => this.setState({visible: true})}>Authenticate</Text>
         </View>
-        {auth ? (
+        {this.state.visible ? (
           <View style={[styles.absolute, styles.central]}>
-            <View style={[webStyles.modal, styles.central]}>
-              <TextInput onChangeText={email => this.setState({email})}
-                         placeholder="email"
-                         value={email}/>
-              <TextInput onChangeText={password => this.setState({password})}
-                         placeholder="password"
-                         value={password}/>
-              <View style={{width: "20%"}}>
-                <Button title="ENTER"/>
-              </View>
-            </View>
-            <Text style={custom.x} onPress={() => this.setState({auth: false})}>&times;</Text>
+            <Form style={webStyles.modal}/>
+            <Text style={custom.x} onPress={() => this.setState({visible: false})}>&times;</Text>
           </View>
         ) : null}
       </ErrorBoundary>
@@ -41,7 +31,7 @@ export default class Header extends React.Component {
 
 const custom = StyleSheet.create({
   header: { alignItems: "center", backgroundColor: "#e00082", paddingVertical: 12.5 },
-  x: {position: "absolute", zIndex: 3, marginTop: "-20%", marginLeft: "45%", fontWeight: "700"}
+  x: {position: "absolute", zIndex: 3, marginTop: "-20%", marginLeft: "45%", fontWeight: "700"},
 });
 
 AppRegistry.registerComponent("WebHeader", () => Header);
