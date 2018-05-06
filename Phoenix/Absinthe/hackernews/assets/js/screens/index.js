@@ -1,5 +1,5 @@
 import React from "react";
-import { AppRegistry, View, Text } from "react-native";
+import { AppRegistry, View, Text, StyleSheet } from "react-native";
 import Router from "../components/Router";
 
 export default class Screen extends React.Component {
@@ -15,3 +15,5 @@ export default class Screen extends React.Component {
 }
 
 AppRegistry.registerComponent("Screen", () => Screen);
+
+export const screenStyles = StyleSheet.create({});

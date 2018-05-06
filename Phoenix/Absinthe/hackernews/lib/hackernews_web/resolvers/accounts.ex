@@ -23,6 +23,11 @@ defmodule HackernewsWeb.Resolvers.Accounts do
     end
   end
 
+  def update_user(_, args, %{context: %{current_user: current_user}}) do
+    current_user.id |> Accounts.get_user!
+                    |> Accounts.update_user(args)
+  end
+
   defp generate_token(user) do
     token = HackernewsWeb.TokenAuth.sign(%{id: user.id})
     {:ok, %{token: token, user: user}}

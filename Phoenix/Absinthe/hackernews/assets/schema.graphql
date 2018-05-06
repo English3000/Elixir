@@ -1,4 +1,3 @@
-# server must be running to get-graphql-schema
 schema {
   query: RootQueryType
   mutation: RootMutationType
@@ -30,14 +29,31 @@ type LinkResult {
 type RootMutationType {
   # Creates a new link
   createLink(input: LinkInput!): LinkResult
+  signIn(email: String!, password: String!): SessionResult
+  signUp(email: String!, password: String!): SessionResult
+  updateUser(name: String!): User
 }
 
 type RootQueryType {
   # Lists all links
   allLinks: [Link!]!
+  me: User
+}
+
+type Session {
+  token: String
+  user: User
+}
+
+type SessionResult {
+  errors: [InputError]
+  session: Session
 }
 
 type User {
+  email: String!
   id: ID!
-  name: String!
+  name: String
+  password: String!
 }
+

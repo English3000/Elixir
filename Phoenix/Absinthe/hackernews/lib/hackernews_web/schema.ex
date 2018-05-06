@@ -29,10 +29,7 @@ defmodule HackernewsWeb.Schema do
 
   #=======
   query do
-    field :me, :user do #to access current_user data
-      middleware HackernewsWeb.Middleware.Authorize
-      resolve &Resolvers.Accounts.me/3
-    end
+    field :me, :user, resolve: &Resolvers.Accounts.me/3 #
     # {
      # ​   me {
         # ​   name
@@ -49,7 +46,7 @@ defmodule HackernewsWeb.Schema do
 
   object :user do
     field :id, non_null(:id)
-    field :name, non_null(:string)
+    field :name, :string
     field :email, non_null(:string)
     field :password, non_null(:string)
   end
@@ -64,24 +61,23 @@ defmodule HackernewsWeb.Schema do
   #==========
   mutation do
     field :sign_up, :session_result do
-      arg :input, non_null(:user_input)
+      arg :email, non_null(:string)
+      arg :password, non_null(:string)
       resolve &Resolvers.Accounts.sign_up/3
-      middleware fn resolution, _ -> #persists :current_user
-        with %{value: %{user: user}} <- resolution do
-          %{resolution | context: Map.put(resolution.context, :current_user, user)}
-        end
-      end
+      middleware HackernewsWeb.Middleware.CurrentUser
     end
 
-    field :sign_in, :session do
+    field :sign_in, :session_result do
       arg :email, non_null(:string)
       arg :password, non_null(:string)
       resolve &Resolvers.Accounts.sign_in/3
-      middleware fn resolution, _ -> #persists :current_user
-        with %{value: %{user: user}} <- resolution do
-          %{resolution | context: Map.put(resolution.context, :current_user, user)}
-        end
-      end
+      middleware HackernewsWeb.Middleware.CurrentUser
+    end #error may be handled improperly for wrong password
+
+    field :update_user, :user do
+      arg :name, non_null(:string)
+      resolve &Resolvers.Accounts.update_user/3
+      middleware HackernewsWeb.Middleware.CurrentUser
     end
 
     @desc "Creates a new link"
@@ -102,12 +98,6 @@ defmodule HackernewsWeb.Schema do
   object :session do
     field :token, :string
     field :user, :user
-  end
-
-  input_object :user_input do
-    field :name, non_null(:string)
-    field :email, non_null(:string)
-    field :password, non_null(:string)
   end
 
   object :link_result do

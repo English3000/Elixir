@@ -5,7 +5,7 @@ defmodule HackernewsWeb.SessionAuth do
   def init(options), do: options
 
   def call(conn, _) do
-    with id when not is_nil(id) <- get_session(conn, :current_user_id),
+    with id when not is_nil(id) <- get_session(conn, :current_user_id), #adjust?
                      %{} = user <-  Hackernews.Accounts.get_user!(id) do
       conn |> Plug.Conn.assign(:current_user, user)
            |> Absinthe.Plug.put_options(context: %{current_user: user})

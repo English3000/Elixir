@@ -1,6 +1,6 @@
 /**
  * @flow
- * @relayHash 0703f58d3d5bf720e5430d8efcf6f723
+ * @relayHash 7ad641de773a3d4e455207926e8d330b
  */
 
 /* eslint-disable */
@@ -9,10 +9,11 @@
 
 /*::
 import type { ConcreteRequest } from 'relay-runtime';
+type HeaderSession$ref = any;
 type List$ref = any;
 export type appQueryVariables = {||};
 export type appQueryResponse = {|
-  +$fragmentRefs: List$ref
+  +$fragmentRefs: List$ref & HeaderSession$ref
 |};
 */
 
@@ -20,6 +21,7 @@ export type appQueryResponse = {|
 /*
 query appQuery {
   ...List
+  ...HeaderSession
 }
 
 fragment List on RootQueryType {
@@ -29,19 +31,34 @@ fragment List on RootQueryType {
   }
 }
 
+fragment HeaderSession on RootQueryType {
+  me {
+    id
+    name
+    email
+  }
+}
+
 fragment Link on Link {
-  id
   description
   url
 }
 */
 
-const node/*: ConcreteRequest*/ = {
+const node/*: ConcreteRequest*/ = (function(){
+var v0 = {
+  "kind": "ScalarField",
+  "alias": null,
+  "name": "id",
+  "args": null,
+  "storageKey": null
+};
+return {
   "kind": "Request",
   "operationKind": "query",
   "name": "appQuery",
   "id": null,
-  "text": "query appQuery {\n  ...List\n}\n\nfragment List on RootQueryType {\n  allLinks {\n    ...Link\n    id\n  }\n}\n\nfragment Link on Link {\n  id\n  description\n  url\n}\n",
+  "text": "query appQuery {\n  ...List\n  ...HeaderSession\n}\n\nfragment List on RootQueryType {\n  allLinks {\n    ...Link\n    id\n  }\n}\n\nfragment HeaderSession on RootQueryType {\n  me {\n    id\n    name\n    email\n  }\n}\n\nfragment Link on Link {\n  description\n  url\n}\n",
   "metadata": {},
   "fragment": {
     "kind": "Fragment",
@@ -53,6 +70,11 @@ const node/*: ConcreteRequest*/ = {
       {
         "kind": "FragmentSpread",
         "name": "List",
+        "args": null
+      },
+      {
+        "kind": "FragmentSpread",
+        "name": "HeaderSession",
         "args": null
       }
     ]
@@ -74,13 +96,6 @@ const node/*: ConcreteRequest*/ = {
           {
             "kind": "ScalarField",
             "alias": null,
-            "name": "id",
-            "args": null,
-            "storageKey": null
-          },
-          {
-            "kind": "ScalarField",
-            "alias": null,
             "name": "description",
             "args": null,
             "storageKey": null
@@ -91,12 +106,40 @@ const node/*: ConcreteRequest*/ = {
             "name": "url",
             "args": null,
             "storageKey": null
+          },
+          v0
+        ]
+      },
+      {
+        "kind": "LinkedField",
+        "alias": null,
+        "name": "me",
+        "storageKey": null,
+        "args": null,
+        "concreteType": "User",
+        "plural": false,
+        "selections": [
+          v0,
+          {
+            "kind": "ScalarField",
+            "alias": null,
+            "name": "name",
+            "args": null,
+            "storageKey": null
+          },
+          {
+            "kind": "ScalarField",
+            "alias": null,
+            "name": "email",
+            "args": null,
+            "storageKey": null
           }
         ]
       }
     ]
   }
 };
+})();
 // prettier-ignore
-(node/*: any*/).hash = 'd3a8c02cbef6b596d20a4d4abb4b3356';
+(node/*: any*/).hash = '620776a9a4fdcf80349eac4fd61cd100';
 module.exports = node;

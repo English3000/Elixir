@@ -25,14 +25,18 @@ export default class Form extends React.Component {
   }
 
   render() {
-    return (
+    const {format} = this.props;
+
+    return ( //style
       <ErrorBoundary>
         <TextInput onChangeText={description => this.setState({description})}
                    placeholder="Link Description"
-                   value={this.state.description}/>
+                   value={this.state.description}
+                   style={format.textInput}/>
         <TextInput onChangeText={url => this.setState({url})}
                    placeholder="Link URL"
-                   value={this.state.url}/>
+                   value={this.state.url}
+                   style={format.textInput}/>
         <View style={{width: "20%"}}>
           <Button title="Create Link" onPress={this.createLink}/>
         </View>
@@ -41,12 +45,12 @@ export default class Form extends React.Component {
   }
 
   createLink() {
-    const {description, url} = this.state;
+    const { description, url } = this.state;
     const variables = {input: {description, url, clientMutationId: ""}};
 
-    commitMutation( environment, { mutation, variables,
-                    onCompleted: () => this.props.history.push("/"),
-                    onError: err => console.error(err) } )
+    commitMutation(environment, { mutation, variables,
+                   onCompleted: () => this.props.history.push("/"),
+                   onError: err => console.error(err) });
   }
 }
 

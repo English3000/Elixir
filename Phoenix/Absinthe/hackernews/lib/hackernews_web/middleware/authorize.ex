@@ -1,4 +1,4 @@
-defmodule HackernewsWeb.Authorize do
+defmodule HackernewsWeb.Middleware.Authorize do
   @behaviour Absinthe.Middleware
 
   def call(%{context: %{current_user: current_user}} = resolution, _) do
