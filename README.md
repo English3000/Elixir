@@ -115,6 +115,7 @@ _More fundamentals:_
   * [Dgraph vs. SQL](https://blog.dgraph.io/post/sql-vs-dgraph/)
   * [Dgraph vs. Neo4j](https://blog.dgraph.io/post/benchmark-neo4j/)
 * [ExDgraph](https://github.com/ospaarmann/exdgraph)
+* [Exthereum](https://github.com/exthereum/blockchain)
 
 ### Plugs
 * [SSL](https://spin.atomicobject.com/2018/03/07/force-ssl-phoenix-framework/?utm_campaign=elixir_radar_135&utm_medium=email&utm_source=RD+Station)
