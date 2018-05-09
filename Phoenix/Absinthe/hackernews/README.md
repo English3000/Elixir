@@ -1,3 +1,5 @@
+![relay-components](https://github.com/English3000/Elixir/blob/master/Phoenix/Absinthe/hackernews/Relay%20Components.png)
+
 # Hackernews
 
 To start your Phoenix server:
