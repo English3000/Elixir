@@ -26,6 +26,8 @@ Love every part of your stack! Try WRAP:
   * [On performance](https://medium.com/learn-elixir/speed-up-data-access-in-elixir-842617030514)
 * [Practice problems](http://exercism.io/languages/elixir/about)
 * **GO DEEPER:** [Learn Functional Programming with Elixir](https://pragprog.com/book/cdc-elixir/learn-functional-programming-with-elixir)
+* [Create your own `mix` task](https://mfeckie.github.io/Seeding-DB-Using-Raw-SQL-Phoenix/)
+ * [`Mix.Task`](https://hexdocs.pm/mix/Mix.Task.html#content)
 
 _More fundamentals:_
   * [Exercises for Programmers](https://www.amazon.com/Exercises-Programmers-Challenges-Develop-Coding-ebook/dp/B0170Q50LK/ref=mt_kindle?_encoding=UTF8&me=) (**$15.50, refundable**)
@@ -94,7 +96,9 @@ _More fundamentals:_
   * [Travis CI](https://medium.com/@devenney/phoenix-framework-travis-ci-a46a0dbfecd7)
   * [Semaphore CI](https://semaphoreci.com/docs/languages/elixir/setting-up-continuous-integration-for-an-elixir-project-on-semaphore.html)
     * [Semaphore + Docker](https://semaphoreci.com/docs/docker.html)
-  * Docker [tutorial](https://docker-curriculum.com/) & [resources](https://github.com/veggiemonk/awesome-docker#what-is-docker)
+    * [Docker container tutorial](https://semaphoreci.com/community/tutorials/dockerizing-elixir-and-phoenix-applications)
+  * [Learn Docker](https://docker-curriculum.com/)
+    * [More resources](https://github.com/veggiemonk/awesome-docker#what-is-docker)
 > ["Ansible isn't meant to be a continuous integration engine."](https://stackoverflow.com/questions/25842718/is-ansible-a-replacement-for-a-ci-tool-like-hudson-jenkins?utm_medium=organic&utm_source=google_rich_qa&utm_campaign=google_rich_qa)
 * [DevOps 2.0](https://leanpub.com/the-devops-2-toolkit) (check out the free sample)
 
