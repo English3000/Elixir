@@ -26,12 +26,18 @@ Love every part of your stack! Try WRAP:
   * [On performance](https://medium.com/learn-elixir/speed-up-data-access-in-elixir-842617030514)
 * [Practice problems](http://exercism.io/languages/elixir/about)
 * **GO DEEPER:** [Learn Functional Programming with Elixir](https://pragprog.com/book/cdc-elixir/learn-functional-programming-with-elixir)
-* [Create your own `mix` task](https://mfeckie.github.io/Seeding-DB-Using-Raw-SQL-Phoenix/)
-  * [`Mix.Task`](https://hexdocs.pm/mix/Mix.Task.html#content)
 
 _More fundamentals:_
   * [Exercises for Programmers](https://www.amazon.com/Exercises-Programmers-Challenges-Develop-Coding-ebook/dp/B0170Q50LK/ref=mt_kindle?_encoding=UTF8&me=) (**$15.50, refundable**)
   * [A Common-Sense Guide to Data Structures and Algorithms](https://pragprog.com/book/jwdsal/a-common-sense-guide-to-data-structures-and-algorithms) (**$17.50**, w/ aforementioned 30% discount)
+
+#### Advanced
+* [Create your own `mix` task](https://mfeckie.github.io/Seeding-DB-Using-Raw-SQL-Phoenix/) & [publish it](https://hashrocket.com/blog/posts/create-and-publish-your-own-elixir-mix-archives)
+  * [**Example**](https://github.com/reph-stack/reph/blob/master/lib/mix/tasks/reph.new.ex)
+  * [`Mix.Task`](https://hexdocs.pm/mix/Mix.Task.html#content)
+  * [`Mix.Shell`](https://hexdocs.pm/mix/Mix.Shell.html#content)
+  * [`File`](https://hexdocs.pm/elixir/File.html)
+* [Publish your own Hex package](https://hex.pm/docs/publish)
 
 ### _Phoenix (framework)_
 * [Learn Phoenix](https://pragprog.com/book/phoenix/programming-phoenix)
