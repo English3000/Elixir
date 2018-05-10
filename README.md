@@ -27,7 +27,7 @@ Love every part of your stack! Try WRAP:
 * [Practice problems](http://exercism.io/languages/elixir/about)
 * **GO DEEPER:** [Learn Functional Programming with Elixir](https://pragprog.com/book/cdc-elixir/learn-functional-programming-with-elixir)
 * [Create your own `mix` task](https://mfeckie.github.io/Seeding-DB-Using-Raw-SQL-Phoenix/)
- * [`Mix.Task`](https://hexdocs.pm/mix/Mix.Task.html#content)
+  * [`Mix.Task`](https://hexdocs.pm/mix/Mix.Task.html#content)
 
 _More fundamentals:_
   * [Exercises for Programmers](https://www.amazon.com/Exercises-Programmers-Challenges-Develop-Coding-ebook/dp/B0170Q50LK/ref=mt_kindle?_encoding=UTF8&me=) (**$15.50, refundable**)
