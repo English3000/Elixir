@@ -65,6 +65,7 @@ _More fundamentals:_
 
 ### _Absinthe (GraphQL backend)_
 * ["Getting" GraphQL](https://medium.com/@english3000.org/getting-graphql-40dd48dd53a1)
+* **GO DEEPER:** [GraphQL server overview](https://blog.graph.cool/graphql-server-basics-the-schema-ac5e2950214e) _(NOTE: Absinthe's implementation is slightly different)_
 * [Intro to Absinthe](https://www.howtographql.com/graphql-elixir/0-introduction/)
   * [another free tutorial](https://hexdocs.pm/absinthe/start.html#content)
 * [Learn Absinthe](https://pragprog.com/book/wwgraphql/craft-graphql-apis-in-elixir-with-absinthe)
