@@ -1,6 +1,6 @@
 ## Ramp up with the WRAP Stack!
 ### `react-native-`[`W`](https://github.com/necolas/react-native-web)`eb` + Relay + Absinthe + PostgreSQL
-#### (+ Jest + [Brunch](http://brunch.io/))
+#### (+ Jest)
 At a bare minimum, I'd go through:
 1. [Learn Elixir](https://elixir-lang.org/getting-started/introduction.html) (**free!**)
 2. [Learn Phoenix](https://pragprog.com/book/phoenix/programming-phoenix) (**$23**, Kindle-compatible)
@@ -62,6 +62,7 @@ _More fundamentals:_
   * [Making an `absolute` element pressable](https://stackoverflow.com/questions/36938742/touchablehighlight-not-clickable-if-position-absolute?rq=1)
   > **Note:** I haven't found clear/explicit [documentation](http://phoenixframework.org/blog/static-assets) for using `react-native-web` SSR with Phoenix.
   * [Alternative way to SSR](https://medium.com/@chvanikoff/phoenix-react-love-story-reph-1-c68512cfe18)
+  * [Add type-checking with Flow](https://flow.org/en/docs/install/)
 
 ### _Absinthe (GraphQL backend)_
 * ["Getting" GraphQL](https://medium.com/@english3000.org/getting-graphql-40dd48dd53a1)
