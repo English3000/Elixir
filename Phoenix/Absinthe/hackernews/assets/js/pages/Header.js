@@ -22,7 +22,8 @@ class Header extends React.Component {
         {this.state.visible ? (
           <View style={[styles.absolute, styles.central]}>
             <Form />
-            <Text style={custom.x} onPress={() => this.setState({visible: false})}>&times;</Text>
+            <Text style={custom.x}
+                  onPress={() => this.setState({visible: false})}>&times;</Text>
           </View>
         ) : null}
       </ErrorBoundary>
@@ -31,7 +32,11 @@ class Header extends React.Component {
 }
 
 const custom = StyleSheet.create({
-  x: {position: "absolute", zIndex: 1, marginTop: "-17.5%", marginLeft: "45%", fontWeight: "700"},
+  x: { position: "absolute",
+       zIndex: 1,
+       marginTop: "-17.5%",
+       marginLeft: "45%",
+       fontWeight: "700" },
 });
 
 AppRegistry.registerComponent("PageHeader", () => Header);

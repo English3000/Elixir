@@ -25,7 +25,6 @@
     "babel-plugin-relay": "^1.6.0",
     "babel-preset-env": "^1.6.1",
     "babel-preset-react": "^6.24.1",
-    "babel-preset-react-app": "^3.1.1",
     "brunch": "^2.10.9",
     "clean-css-brunch": "^2.10.0",
     "enzyme": "^3.3.0",

@@ -46,11 +46,14 @@ export default class Form extends React.Component {
 
   createLink() {
     const { description, url } = this.state;
-    const variables = {input: {description, url, clientMutationId: ""}};
+    const variables = {input: { description, url, clientMutationId: "" }};
 
-    commitMutation(environment, { mutation, variables,
-                   onCompleted: () => this.props.history.push("/"),
-                   onError: err => console.error(err) });
+    commitMutation(environment, {
+      mutation,
+      variables,
+      onCompleted: () => this.props.history.push("/"),
+      onError: err => console.error(err)
+    });
   }
 }
 

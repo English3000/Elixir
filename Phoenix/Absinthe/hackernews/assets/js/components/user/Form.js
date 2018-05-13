@@ -10,7 +10,7 @@ import { screenStyles } from "../../screens";
 export default class Form extends React.Component {
   constructor() {
     super();
-    this.state = {email: "", password: ""};
+    this.state = { email: "", password: "" };
   }
 
   render() {
@@ -23,7 +23,7 @@ export default class Form extends React.Component {
           <Button title="Sign Up"
                   style={{width: 75}}
                   onPress={() => this.createSession(signUpMutation)}/>
-{/* Sign Up prints "signed in" w/ empty fields... */}
+          {/* Sign Up prints "signed in" w/ empty fields... */}
           <View style={custom.fields}>
             <TextInput onChangeText={email => this.setState({email})}
                        placeholder="email"
@@ -47,14 +47,20 @@ export default class Form extends React.Component {
     const { email, password } = this.state;
     const variables = {email, password};
 
-    commitMutation(environment, { mutation, variables,
-                   onCompleted: () => console.log("signed in"),
-                   onError: err => console.log(err) });
+    commitMutation(environment, {
+      mutation,
+      variables,
+      onCompleted: () => console.log("signed in"),
+      onError: err => console.log(err)
+    });
   }
 }
 
 const custom = StyleSheet.create({
-  fields: { width: 125, marginHorizontal: 10, backgroundColor: "white", borderRadius: 5 }
+  fields: { width: 125,
+            marginHorizontal: 10,
+            backgroundColor: "white",
+            borderRadius: 5 },
 });
 
 const signUpMutation = graphql`
