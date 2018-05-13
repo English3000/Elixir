@@ -10,8 +10,8 @@ export default class ErrorBoundary extends React.Component {
   componentDidCatch(error) { this.setState({error}); }
 
   render() {
-    return this.state.error ? <View><Text>{this.state.error.toString()}</Text></View> :
-      this.props.children;
+    const {error} = this.state;
+    return error ? <View><Text>{error.toString()}</Text></View> : this.props.children;
   }
 }
 

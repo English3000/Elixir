@@ -46,7 +46,7 @@ exports.config = {
   // Configure your plugins
   plugins: {
     babel: {
-      presets: ["env", "react"],
+      // presets: ["env", "react"],
       // plugins: ["relay"],
       // Do not use ES6 compiler in vendor code
       ignore: [/vendor/, /^node_modules/]

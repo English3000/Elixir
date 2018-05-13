@@ -59,7 +59,7 @@ const { width, height } = Dimensions.get("window");
 export const styles = StyleSheet.create({
   central:  { alignItems: "center", justifyContent: "center" },
   absolute: { position: "absolute", width, height },
-  header: { backgroundColor: "#e00082", alignItems: "center", paddingVertical: 12.5 },
   topRound: {borderTopLeftRadius: 5, borderTopRightRadius: 5, borderBottomWidth: 0.85},
   bottomRound: {borderBottomLeftRadius: 5, borderBottomRightRadius: 5, borderTopWidth: 0.85},
+  header: { backgroundColor: "#e00082", alignItems: "center", paddingVertical: 12.5 },
 });
