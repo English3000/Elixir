@@ -26,8 +26,8 @@
     "babel-preset-env": "^1.6.1",
     "babel-preset-react": "^6.24.1",
     "babel-preset-react-app": "^3.1.1",
-    "brunch": "2.10.9",
-    "clean-css-brunch": "2.10.0",
+    "brunch": "^2.10.9",
+    "clean-css-brunch": "^2.10.0",
     "enzyme": "^3.3.0",
     "enzyme-adapter-react-16": "^1.1.1",
     "graphql": "^0.13.2",
@@ -36,7 +36,7 @@
     "relay-compiler": "^1.6.0",
     "relay-devtools": "^1.4.0",
     "relay-runtime": "^1.6.0",
-    "uglify-js-brunch": "2.10.0"
+    "uglify-js-brunch": "^2.10.0"
   },
   "jest": {
     "snapshotSerializers": [
