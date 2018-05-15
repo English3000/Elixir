@@ -6,7 +6,7 @@ defmodule ChallengesTest do
     def gets(_prompt), do: "10"
   end
 
-  describe "Challenges.calc_tip/2" do
+  describe "Challenges.calc_tip/3" do
     test "works with valid inputs" do
       assert Challenges.calc_tip(10, 15) == [tip: 1.5, sum: 11.5]
     end
@@ -24,7 +24,8 @@ defmodule ChallengesTest do
     end
 
     test "handles invalid inputs" do
-      assert Challenges.calc_tip(-10, "10", TestIO) == [tip: 1.0, sum: 11.0]
+      assert Challenges.calc_tip(-5, "5", TestIO) == [tip: 1.0, sum: 11.0]
+      assert Challenges.calc_tip(-5, 20, TestIO) == [tip: 2.0, sum: 12.0]
     end
   end
 end

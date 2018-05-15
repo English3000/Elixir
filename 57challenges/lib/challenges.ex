@@ -3,7 +3,8 @@ defmodule Challenges do
     @tip_prompt "What % are you tipping? "
   @prompt_error "Please enter a positive number."
   # FURTHER STEPS: implement as GUI w/ % slider; could try w/ Absinthe...
-  @spec calc_tip(number, number) :: [tip: number, sum: number]
+  @type device :: atom | pid
+  @spec calc_tip(number, number, device) :: [tip: number, sum: number]
   def calc_tip(bill \\ nil, tip_rate \\ nil, io \\ IO) do
           bill = bill
                  |> prompt(@bill_prompt, io)
