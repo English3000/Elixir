@@ -45,9 +45,9 @@ _More fundamentals:_
     > Because Elixir is a functional programming language, Phoenix uses schemas rather than models. A schema defines a struct's fields, its relationships to other structs, and changeset(s) for it (which handle validations and constraints). 
     >
     > [`mix phx.gen.context`](https://hexdocs.pm/phoenix/Mix.Tasks.Phx.Gen.Context.html) generates a context which holds the API for all schemas within that context (in an object-oriented language, these functions would be defined within each model). For example, instead of defining functions for user authentication within `/lib/<APP>_web/models/user.ex`, one should generate an `Accounts` context and write the functions in `/lib/<APP>/accounts/accounts.ex` (`User` will be passed as an argument).
-  * [`hmr-brunch`](https://github.com/brunch/hmr-brunch)
-  * [Hot Module Replacement API](https://webpack.js.org/api/hot-module-replacement/)
-  * [On testing](http://blog.plataformatec.com.br/2015/10/mocks-and-explicit-contracts/)
+  * [Hot Module Replacement API](https://webpack.js.org/api/hot-module-replacement/) & [`hmr-brunch`](https://github.com/brunch/hmr-brunch)
+  * [Mox](https://hexdocs.pm/mox/Mox.html)
+  * [Property-based testing](http://whatdidilearn.info/2018/04/22/property-based-testing.html)
 > ["`dependencies` are used for direct usage in your codebase, things that usually end up in the production code, or chunks of code](https://stackoverflow.com/questions/18875674/whats-the-difference-between-dependencies-devdependencies-and-peerdependencies)
 >
 > ["`devDependencies` are used for the build process, tools that help you manage how the end code will end up, third party test modules, (ex. webpack stuff)"](https://stackoverflow.com/questions/18875674/whats-the-difference-between-dependencies-devdependencies-and-peerdependencies)
