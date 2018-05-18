@@ -83,7 +83,8 @@ _More fundamentals:_
   * [Relay docs](http://facebook.github.io/relay/docs/en/introduction-to-relay.html)
     * [`Absinthe.Relay` docs](https://hexdocs.pm/absinthe/relay.html)
   * [Sending a request with variables](https://github.com/absinthe-graphql/absinthe-socket/tree/master/packages/socket#send) (not covered in the book)
-* [Relay DevTools](https://www.npmjs.com/package/relay-devtools)
+  * [Relay DevTools](https://www.npmjs.com/package/relay-devtools)
+* **GO DEEPER:** [Relay Subscription strategies](https://hackernoon.com/the-hybrid-strategy-for-graphql-subscriptions-dd5471c45755)
 * [Testing Relay Components I](https://medium.com/entria/relay-integration-test-with-jest-71236fb36d44) & [II](https://medium.com/@mikaelberg/writing-simple-unit-tests-with-relay-707f19e90129)
 * [Mocking a GraphQL server](http://graphql.org/blog/mocking-with-graphql/#mocking-is-easy-with-a-type-system)
 
