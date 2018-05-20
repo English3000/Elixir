@@ -124,6 +124,7 @@ _More fundamentals:_
     * [Intro to Transistors](https://learn.sparkfun.com/tutorials/transistors)
   * [Berkeley's "Great Ideas in Computer Architecture](http://inst.eecs.berkeley.edu/~cs61c/sp15/)
     * [lecture videos](https://www.youtube.com/watch?v=9y_sUqHeyy8&list=PLhMnuBfGeCDM8pXLpqib90mDFJI-e1lpk)
+  * [Build a browser](https://www.udacity.com/course/programming-languages--cs262)
 
 ### _Bleeding Edge_
 * [Dgraph](https://github.com/dgraph-io/dgraph#quick-install)
