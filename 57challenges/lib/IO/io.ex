@@ -8,8 +8,7 @@ defmodule Challenges.IO do
   Prints a greeting using your name
   """
   # FURTHER STEPS: After Ch. 4, write a version of the program that displays different greetings for different people.
-  @type device :: atom | pid
-  @spec greeting(String.t, device) :: String.t
+  @spec greeting(String.t, atom) :: String.t
   def greeting(name \\ nil, io \\ IO) do
     name = case !!name do
               true -> name
@@ -26,7 +25,7 @@ defmodule Challenges.IO do
     its number of characters
   """
   # FURTHER STEPS: could count # of unique characters
-  @spec string_stats(String.t) :: [input: String.t, size: number, chars: String.t, char_count: number]
+  @spec string_stats(String.t, atom) :: [input: String.t, size: number, chars: String.t, char_count: number]
   def string_stats(input \\ nil, io \\ IO) do
          input = case !!input do
                     true -> input
@@ -41,8 +40,22 @@ defmodule Challenges.IO do
     IO.puts "#{input} is #{size} characters long and contains #{char_count} characters."
     [input: input, size: size, chars: chars, char_count: char_count]
   end
-
   # SKIP: print_quote
+
+  def mad_lib(noun \\ nil, verb \\ nil, adj \\ nil, adverb \\ nil, io \\ IO) do
+      noun = get_word("a noun", noun, io)
+      verb = get_word("a verb", verb, io)
+       adj = get_word("an adjective", adj, io)
+    adverb = get_word("an adverb", adverb, io)
+
+    IO.puts "Do you #{verb} your #{adj} #{noun} #{adverb}?"
+  end
+
+  defp get_word(part_of_speech, nil, io) do
+    io.gets("Enter #{part_of_speech}: ") |> String.trim
+  end
+  defp get_word(_, word, _), do: word
+
   # DO: mad_lib
   # DO: math_display
   # SKIP: Ch. 3
