@@ -1,5 +1,5 @@
 defmodule OutcoTest do
-  use ExUnit.Case
+  use ExUnit.Case, async: true
   doctest Outco
 
   test "valid_palindrome/1 works" do

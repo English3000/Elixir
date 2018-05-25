@@ -1,8 +1,9 @@
 defmodule GoogleTest do
-  use ExUnit.Case
+  use ExUnit.Case, async: true
   doctest Google
 
-  test "" do
-    assert Google.hello() == :world
+  test "split_string_into_words/2 works" do
+    assert Google.split_string_into_words("peanutbutter", ["peanut", "butter"]) == "peanut butter"
+    assert Google.split_string_into_words("peanutbutter", []) == ""
   end
 end
