@@ -3,7 +3,7 @@
 #### (+ Jest)
 At a bare minimum, I'd go through:
 1. [Learn Elixir](https://elixir-lang.org/getting-started/introduction.html) (**free!**)
-2. [Learn Phoenix](https://pragprog.com/book/phoenix/programming-phoenix) (**$23**, Kindle-compatible)
+2. [Learn Phoenix](https://pragprog.com/book/phoenix14/programming-phoenix-1-4) (**$23**, Kindle-compatible)
 3. [Learn Absinthe](https://pragprog.com/book/wwgraphql/craft-graphql-apis-in-elixir-with-absinthe) (**$18**, w/ 30% discount code in the back of any PragProg book)
 4. [WRAP Stack Walkthrough](https://medium.com/@english3000.org/starting-a-new-project-with-absinthe-relay-be9a127b8f63) (**free**; how to put all of these technologies together for your first project)
 5. [Learn Relay](https://www.howtographql.com/react-relay/0-introduction/) (**free**; implement with an Absinthe backend; skip to _Implementing the Login Mutations_ for Step 5, and use Ch. 8 of *Learn Absinthe* for authentication)
@@ -47,9 +47,11 @@ _More fundamentals:_
     > Because Elixir is a functional programming language, Phoenix uses schemas rather than models. A schema defines a struct's fields, its relationships to other structs, and changeset(s) for it (which handle validations and constraints). 
     >
     > [`mix phx.gen.context`](https://hexdocs.pm/phoenix/Mix.Tasks.Phx.Gen.Context.html) generates a context which holds the API for all schemas within that context (in an object-oriented language, these functions would be defined within each model). For example, instead of defining functions for user authentication within `/lib/<APP>_web/models/user.ex`, one should generate an `Accounts` context and write the functions in `/lib/<APP>/accounts/accounts.ex` (`User` will be passed as an argument).
+  * [Phoenix Presence](http://whatdidilearn.info/2018/03/11/using-phoenix-presence.html)
   * [Hot Module Replacement API](https://webpack.js.org/api/hot-module-replacement/) & [`hmr-brunch`](https://github.com/brunch/hmr-brunch)
   * [Mox](https://hexdocs.pm/mox/Mox.html)
   * [Property-based testing](http://whatdidilearn.info/2018/04/22/property-based-testing.html)
+  * [Testing database interface concurrently](https://hexdocs.pm/ecto/Ecto.Adapters.SQL.Sandbox.html)
 > ["`dependencies` are used for direct usage in your codebase, things that usually end up in the production code, or chunks of code](https://stackoverflow.com/questions/18875674/whats-the-difference-between-dependencies-devdependencies-and-peerdependencies)
 >
 > ["`devDependencies` are used for the build process, tools that help you manage how the end code will end up, third party test modules, (ex. webpack stuff)"](https://stackoverflow.com/questions/18875674/whats-the-difference-between-dependencies-devdependencies-and-peerdependencies)
