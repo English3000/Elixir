@@ -1,5 +1,5 @@
 import React from "react";
-import { AppRegistry, View, Text, TextInput, Button, StyleSheet, Platform } from "react-native";
+import { AppRegistry, View, Text, TextInput, Button, TouchableOpacity, StyleSheet, Platform } from "react-native";
 import ErrorBoundary from "../ErrorBoundary";
 import { commitMutation, graphql } from "react-relay";
 import environment from "../../environment";
@@ -19,11 +19,13 @@ export default class Form extends React.Component {
 
     return (
       <ErrorBoundary>
-        <View style={[styles.central, format.modal]}>
-          <Button title="Sign Up"
-                  style={{width: 75}}
-                  onPress={() => this.createSession(signUpMutation)}/>
-          {/* Sign Up prints "signed in" w/ empty fields... */}
+        <View style={[format.modal, styles.central]}>
+          <TouchableOpacity style={styles.central}
+                            onPress={() => this.createSession(signUpMutation)}>
+            <TouchableOpacity style={[custom.button, custom.signUp]}></TouchableOpacity>
+            <Text style={[styles.text, {position: "absolute", marginTop: 19.5, textAlign: "center"}]}>{`Sign\nUp`}</Text>
+          </TouchableOpacity>
+
           <View style={custom.fields}>
             <TextInput onChangeText={email => this.setState({email})}
                        placeholder="email"
@@ -35,9 +37,11 @@ export default class Form extends React.Component {
                        style={[format.textInput, styles.bottomRound]}/>
           </View>
 
-          <Button title="Sign In"
-                  style={{width: 75}}
-                  onPress={() => this.createSession(signInMutation)}/>
+          <TouchableOpacity style={styles.central}
+                            onPress={() => this.createSession(signInMutation)}>
+            <TouchableOpacity style={[custom.button, custom.signIn]}></TouchableOpacity>
+            <Text style={[styles.text, {position: "absolute", marginLeft: -7.5}]}>Sign In</Text>
+          </TouchableOpacity>
         </View>
       </ErrorBoundary>
     );
@@ -46,11 +50,12 @@ export default class Form extends React.Component {
   createSession(mutation) {
     const { email, password } = this.state;
     const variables = {email, password};
+    console.log("pressed");
 
     commitMutation(environment, {
       mutation,
       variables,
-      onCompleted: () => console.log("signed in"),
+      onCompleted: (resp, err) => console.log(resp, err),
       onError: err => console.log(err)
     });
   }
@@ -58,15 +63,49 @@ export default class Form extends React.Component {
 
 const custom = StyleSheet.create({
   fields: { width: 125,
-            marginHorizontal: 10,
-            backgroundColor: "white",
+            marginLeft: 10.25,
+            marginRight: 13.75,
             borderRadius: 5 },
+
+  button: { width: 0,
+            height: 0,
+            borderStyle: "solid",
+            padding: 0,
+            margin: 0,
+            borderRadius: 0,
+            backgroundColor: "transparent" },
+
+  signUp: { borderTopWidth: 0,
+            borderRightWidth: 35,
+            borderBottomWidth: 55,
+            borderLeftWidth: 35,
+            borderColor: "transparent",
+            borderBottomColor: "royalblue" },
+
+  signIn: { borderTopWidth: 32,
+            borderRightWidth: 0,
+            borderBottomWidth: 32,
+            borderLeftWidth: 55,
+            borderColor: "transparent",
+            borderLeftColor: "royalblue" },
 });
 
 const signUpMutation = graphql`
   mutation FormSignUpMutation($email: String!, $password: String!) {
     signUp(email: $email, password: $password) {
-      ...FormSession
+      # ...FormSession
+      session {
+        user {
+          id
+          name
+          email
+        }
+      }
+
+      errors {
+        key
+        message
+      }
     }
   }
 `;
@@ -74,7 +113,19 @@ const signUpMutation = graphql`
 const signInMutation = graphql`
   mutation FormSignInMutation($email: String!, $password: String!) {
     signIn(email: $email, password: $password) {
-      ...FormSession
+      # ...FormSession
+      session {
+        user {
+          id
+          name
+          email
+        }
+      }
+
+      errors {
+        key
+        message
+      }
     }
   }
 `;
@@ -87,6 +138,11 @@ const fragment = graphql`
         name
         email
       }
+    }
+
+    errors {
+      key
+      message
     }
   }
 `;

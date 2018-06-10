@@ -1,10 +1,10 @@
 defmodule HackernewsWeb.Middleware.ChangesetErrors do
   @behaviour Absinthe.Middleware
 
-  def call(resolution, _config) do #receives %Absinthe.Resolution{} struct & options
+  def call(resolution, _config) do
     with %{errors: [%Ecto.Changeset{} = changeset]} <- resolution do
       %{resolution | value: %{errors: transform_errors(changeset)}, errors: []}
-    end# %{map | key: new_value}
+    end
   end
 
   defp transform_errors(changeset) do

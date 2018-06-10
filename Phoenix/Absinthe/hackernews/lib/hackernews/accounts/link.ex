@@ -15,9 +15,8 @@ defmodule Hackernews.Accounts.Link do
   @doc false
   def changeset(link, attrs) do
     link
-    |> cast(attrs, [:url])
+    |> cast(attrs, [:url, :description])
     |> validate_required([:url])
-    |> unique_constraint(:url)
     |> foreign_key_constraint(:user)
   end
 end

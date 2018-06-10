@@ -34,9 +34,10 @@ class Header extends React.Component {
 const custom = StyleSheet.create({
   x: { position: "absolute",
        zIndex: 1,
-       marginTop: "-17.5%",
-       marginLeft: "45%",
-       fontWeight: "700" },
+       marginTop: "-10%",
+       marginLeft: "41.5%",
+       fontWeight: "700",
+       fontSize: 16 },
 });
 
 AppRegistry.registerComponent("PageHeader", () => Header);

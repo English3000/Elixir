@@ -51,8 +51,6 @@ const query = graphql`
 `;
 
 AppRegistry.registerComponent("Root", () => Root);
-AppRegistry.runApplication("Root", {rootTag: document.getElementById("replace-with-js")});
-//==================
 
 const { width, height } = Dimensions.get("window");
 
@@ -71,4 +69,11 @@ export const styles = StyleSheet.create({
        header: { backgroundColor: "#e00082",
                  alignItems: "center",
                  paddingVertical: 12.5 },
+
+         text: { color: "white",
+                 fontSize: 12,
+                 textTransform: "uppercase",
+                 cursor: "pointer" }
 });
+
+AppRegistry.runApplication("Root", {rootTag: document.getElementById("replace-with-js")});

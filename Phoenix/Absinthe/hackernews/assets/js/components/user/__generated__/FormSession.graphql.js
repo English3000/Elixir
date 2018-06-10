@@ -18,6 +18,10 @@ export type FormSession = {|
       +email: string,
     |}
   |},
+  +errors: ?$ReadOnlyArray<?{|
+    +key: string,
+    +message: string,
+  |}>,
   +$refType: FormSession$ref,
 |};
 */
@@ -72,9 +76,34 @@ const node/*: ConcreteFragment*/ = {
           ]
         }
       ]
+    },
+    {
+      "kind": "LinkedField",
+      "alias": null,
+      "name": "errors",
+      "storageKey": null,
+      "args": null,
+      "concreteType": "InputError",
+      "plural": true,
+      "selections": [
+        {
+          "kind": "ScalarField",
+          "alias": null,
+          "name": "key",
+          "args": null,
+          "storageKey": null
+        },
+        {
+          "kind": "ScalarField",
+          "alias": null,
+          "name": "message",
+          "args": null,
+          "storageKey": null
+        }
+      ]
     }
   ]
 };
 // prettier-ignore
-(node/*: any*/).hash = 'b81e10aab3b45319f3e5322c28273336';
+(node/*: any*/).hash = 'aec5f0578a6ec9eede7a8ee4086076ea';
 module.exports = node;

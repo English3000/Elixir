@@ -3,7 +3,7 @@ import { AppRegistry, View } from "react-native";
 import { createFragmentContainer, graphql } from "react-relay";
 import Link from "./Link";
 
-const List = ({data}) => (
+const List = ({ data }) => (
   <View style={{marginVertical: 5}}>{data ?
     data.allLinks.map(link => <Link key={link["__id"]} data={link}/>) : null
   }</View>

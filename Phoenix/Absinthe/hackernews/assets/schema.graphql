@@ -3,6 +3,12 @@ schema {
   mutation: RootMutationType
 }
 
+# The `DateTime` scalar type represents a date and time in the UTC
+# timezone. The DateTime appears in a JSON response as an ISO8601 formatted
+# string, including UTC timezone ("Z"). The parsed date and time string will
+# be converted to UTC and any UTC offset other than 0 will be rejected.
+scalar DateTime
+
 type InputError {
   key: String!
   message: String!
@@ -11,14 +17,14 @@ type InputError {
 type Link {
   description: String
   id: ID!
+  insertedAt: DateTime
   postedBy: User
   url: String!
 }
 
 input LinkInput {
   description: String
-  url: String!
-  userId: ID!
+  url: String
 }
 
 type LinkResult {
@@ -56,4 +62,3 @@ type User {
   name: String
   password: String!
 }
-

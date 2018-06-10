@@ -2,6 +2,7 @@ defmodule HackernewsWeb.Schema do
   use Absinthe.Schema
   use Absinthe.Relay.Schema, :modern #
   import Absinthe.Resolution.Helpers #incl's dataloader/2
+  import_types Absinthe.Type.Custom
   alias HackernewsWeb.Resolvers
   alias Hackernews.Accounts
 
@@ -56,6 +57,13 @@ defmodule HackernewsWeb.Schema do
     field :url, non_null(:string)
     field :description, :string
     field :posted_by, :user, resolve: dataloader(Accounts)
+    field :inserted_at, :datetime #triggering bug
+  end
+
+  object :vote do
+    field :id, non_null(:id)
+    field :user, non_null(:user)
+    field :link, non_null(:link)
   end
 
   #==========
@@ -80,7 +88,6 @@ defmodule HackernewsWeb.Schema do
       middleware HackernewsWeb.Middleware.CurrentUser
     end
 
-    @desc "Creates a new link"
     field :create_link, :link_result do
       arg :input, non_null(:link_input)
       middleware HackernewsWeb.Middleware.Authorize
@@ -106,9 +113,8 @@ defmodule HackernewsWeb.Schema do
   end
 
   input_object :link_input do
-    field :url, non_null(:string)
+    field :url, :string
     field :description, :string
-    field :user_id, non_null(:id) #insert via middleware
   end
 
   object :input_error do
@@ -120,10 +126,4 @@ defmodule HackernewsWeb.Schema do
   # subscription do
     #
   # end
-
-  object :vote do
-    field :id, non_null(:id)
-    field :user, non_null(:user)
-    field :link, non_null(:link)
-  end
 end

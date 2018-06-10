@@ -1,6 +1,6 @@
 /**
  * @flow
- * @relayHash 79b7e6540ff7da037fde0de0923c52eb
+ * @relayHash a2c78ed88ba5c2c550a333f838b12a3f
  */
 
 /* eslint-disable */
@@ -11,8 +11,7 @@
 import type { ConcreteRequest } from 'relay-runtime';
 export type LinkInput = {
   description?: ?string,
-  url: string,
-  userId: string,
+  url?: ?string,
 };
 export type FormMutationVariables = {|
   input: LinkInput
@@ -23,7 +22,11 @@ export type FormMutationResponse = {|
       +id: string,
       +description: ?string,
       +url: string,
-    |}
+    |},
+    +errors: ?$ReadOnlyArray<?{|
+      +key: string,
+      +message: string,
+    |}>,
   |}
 |};
 */
@@ -38,6 +41,10 @@ mutation FormMutation(
       id
       description
       url
+    }
+    errors {
+      key
+      message
     }
   }
 }
@@ -100,6 +107,31 @@ v1 = [
             "storageKey": null
           }
         ]
+      },
+      {
+        "kind": "LinkedField",
+        "alias": null,
+        "name": "errors",
+        "storageKey": null,
+        "args": null,
+        "concreteType": "InputError",
+        "plural": true,
+        "selections": [
+          {
+            "kind": "ScalarField",
+            "alias": null,
+            "name": "key",
+            "args": null,
+            "storageKey": null
+          },
+          {
+            "kind": "ScalarField",
+            "alias": null,
+            "name": "message",
+            "args": null,
+            "storageKey": null
+          }
+        ]
       }
     ]
   }
@@ -109,7 +141,7 @@ return {
   "operationKind": "mutation",
   "name": "FormMutation",
   "id": null,
-  "text": "mutation FormMutation(\n  $input: LinkInput!\n) {\n  createLink(input: $input) {\n    link {\n      id\n      description\n      url\n    }\n  }\n}\n",
+  "text": "mutation FormMutation(\n  $input: LinkInput!\n) {\n  createLink(input: $input) {\n    link {\n      id\n      description\n      url\n    }\n    errors {\n      key\n      message\n    }\n  }\n}\n",
   "metadata": {},
   "fragment": {
     "kind": "Fragment",
@@ -128,5 +160,5 @@ return {
 };
 })();
 // prettier-ignore
-(node/*: any*/).hash = '373fb9e8a98264f020851417f145da17';
+(node/*: any*/).hash = '897afa21e4947eae035715ac3871e930';
 module.exports = node;

@@ -7,7 +7,7 @@ import Form from "./link/Form";
 import { pageStyles } from "../pages";
 import { screenStyles } from "../screens";
 
-const Router = ({data}) => {
+const Router = ({ data }) => {
   const format = (Platform.OS === "web") ? pageStyles : screenStyles;
 
   return (

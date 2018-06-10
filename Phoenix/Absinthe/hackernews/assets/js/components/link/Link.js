@@ -3,7 +3,7 @@ import { AppRegistry, View, Text, Linking } from "react-native";
 import { createFragmentContainer, graphql } from "react-relay";
 import ErrorBoundary from "../ErrorBoundary";
 
-const Link = ({data}) => (
+const Link = ({ data }) => (
   <ErrorBoundary>
     <View style={{flexDirection: "row", marginVertical: 5}}>
       <Text style={{color: "#0000cc"}}

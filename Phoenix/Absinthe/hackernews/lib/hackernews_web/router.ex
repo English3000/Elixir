@@ -15,6 +15,7 @@ defmodule HackernewsWeb.Router do
   end
 
   pipeline :session_auth do
+    plug HackernewsWeb.Context
     plug HackernewsWeb.SessionAuth
   end
 
@@ -24,13 +25,6 @@ defmodule HackernewsWeb.Router do
     get "/", PageController, :index
   end
 
-  scope "/", HackernewsWeb do
-    # pipe_through [:browser, :session_auth]
-    pipe_through [:browser] #for styling
-
-    get "/create", PageController, :index
-  end
-
   scope "/" do
     pipe_through :api
 
@@ -38,5 +32,12 @@ defmodule HackernewsWeb.Router do
 
     forward "/graphiql", Absinthe.Plug.GraphiQL, schema: HackernewsWeb.Schema,
       socket: HackernewsWeb.UserSocket
+  end
+
+  scope "/", HackernewsWeb do
+    pipe_through [:browser, :session_auth]
+    # pipe_through [:browser] #for styling
+
+    get "/create", PageController, :index
   end
 end

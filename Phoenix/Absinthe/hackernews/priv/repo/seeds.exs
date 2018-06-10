@@ -11,7 +11,7 @@
 # and so on) as they will fail if something goes wrong.
 
 alias Hackernews.Repo
-alias Hackernews.Accounts.{Link, User}
+alias Hackernews.Accounts.{User, Link}
 
 Repo.delete_all(User)
 

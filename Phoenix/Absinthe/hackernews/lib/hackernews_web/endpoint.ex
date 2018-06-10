@@ -1,6 +1,6 @@
 defmodule HackernewsWeb.Endpoint do
   use Phoenix.Endpoint, otp_app: :hackernews
-  use Absinthe.Phoenix.Endpoint #
+  use Absinthe.Phoenix.Endpoint
 
   socket "/socket", HackernewsWeb.UserSocket
 
