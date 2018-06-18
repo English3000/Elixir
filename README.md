@@ -26,13 +26,9 @@ Love every part of your stack! Try WRAP:
 ### _Getting Started_
 * [Learn Elixir](https://elixir-lang.org/getting-started/introduction.html)
   * [On performance](https://medium.com/learn-elixir/speed-up-data-access-in-elixir-842617030514)
+* [Intro to Functional Programming Design](https://fsharpforfunandprofit.com/fppatterns/)
+  * **GO DEEPER:** [Learn Functional Programming with Elixir](https://pragprog.com/book/cdc-elixir/learn-functional-programming-with-elixir)
 * [Practice problems](http://exercism.io/languages/elixir/about)
-* **GO DEEPER:** [Learn Functional Programming with Elixir](https://pragprog.com/book/cdc-elixir/learn-functional-programming-with-elixir)
-  * [Function composition](https://www.bignerdranch.com/blog/composing-elixir-functions/)
-
-_More fundamentals:_
-  * [Exercises for Programmers](https://www.amazon.com/Exercises-Programmers-Challenges-Develop-Coding-ebook/dp/B0170Q50LK/ref=mt_kindle?_encoding=UTF8&me=) (**$15.50, refundable**)
-  * [A Common-Sense Guide to Data Structures and Algorithms](https://pragprog.com/book/jwdsal/a-common-sense-guide-to-data-structures-and-algorithms) (**$17.50**, w/ aforementioned 30% discount)
 
 #### Advanced
 * [Create your own `mix` task](https://mfeckie.github.io/Seeding-DB-Using-Raw-SQL-Phoenix/) & [publish it](https://hashrocket.com/blog/posts/create-and-publish-your-own-elixir-mix-archives)
