@@ -28,6 +28,7 @@ Love every part of your stack! Try WRAP:
   * [On performance](https://medium.com/learn-elixir/speed-up-data-access-in-elixir-842617030514)
 * [Intro to Functional Programming Design](https://fsharpforfunandprofit.com/fppatterns/)
   * **GO DEEPER:** [Learn Functional Programming with Elixir](https://pragprog.com/book/cdc-elixir/learn-functional-programming-with-elixir)
+  * [Error handling with MonadEx](https://blog.danielberkompas.com/2015/09/03/better-pipelines-with-monadex/)
 * [Practice problems](http://exercism.io/languages/elixir/about)
 
 #### Advanced
