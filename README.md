@@ -26,9 +26,9 @@ Love every part of your stack! Try WRAP:
 ### _Getting Started_
 * [Learn Elixir](https://elixir-lang.org/getting-started/introduction.html)
   * [On performance](https://medium.com/learn-elixir/speed-up-data-access-in-elixir-842617030514)
-* [Intro to Functional Programming Design](https://fsharpforfunandprofit.com/fppatterns/)
-  * **GO DEEPER:** [Learn Functional Programming with Elixir](https://pragprog.com/book/cdc-elixir/learn-functional-programming-with-elixir)
-  * [Error handling with MonadEx](https://blog.danielberkompas.com/2015/09/03/better-pipelines-with-monadex/)
+* [Learn Functional Programming with Elixir](https://pragprog.com/book/cdc-elixir/learn-functional-programming-with-elixir)
+  * **GO DEEPER:** [Functional Programming Design](https://fsharpforfunandprofit.com/video/)
+    * [Error handling with MonadEx](https://blog.danielberkompas.com/2015/09/03/better-pipelines-with-monadex/)
 * [Practice problems](http://exercism.io/languages/elixir/about)
 
 #### Advanced
@@ -117,6 +117,8 @@ Love every part of your stack! Try WRAP:
 * **GO DEEPER:** [Erlang VM Garbage Collection](https://www.erlang-solutions.com/blog/erlang-garbage-collector.html)
 * [Intro to Assembly (if accessible)](https://vimeo.com/175634887)
 * **GO DEEPER:** [The Erlang Runtime System](https://happi.github.io/theBeamBook/#P-ERTS)
+* [System design](https://github.com/donnemartin/system-design-primer)
+  * [Observer vs. PubSub](https://hackernoon.com/observer-vs-pub-sub-pattern-50d3b27f838c)
 
 * [Even more...](https://blog.bradfieldcs.com/learn-how-computers-work-e7d33dba0238)
   > ["At the end of a good comp sci program you should be able to explain how a computer works starting from a transistor in the processor all the way up to how your web browser engine parses a web page into a DOM tree.  (and somewhere in the middle, how the packets from that server got to your web browser)"](https://www.quora.com/What-does-a-degree-in-computer-science-teach-you-that-a-coding-bootcamp-does-not)
