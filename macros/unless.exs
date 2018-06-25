@@ -20,11 +20,12 @@ defmodule ControlFlow do
   iex(8)> Code.eval_quoted ast
   {50, []}
   """
-  defmacro unless(expression, do: block) do
+  defmacro unless(expression, do: block, else: block2) do
     # quote do: if !unquote(expression), do: unquote(block)
     quote do
       case unquote(expression) do
-        false -> unquote(block)
+        result when result in [false, nil] -> unquote(block)
+                                         _ -> unquote(block2)
       end
     end
   end
