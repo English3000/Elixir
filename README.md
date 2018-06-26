@@ -26,13 +26,12 @@ Love every part of your stack! Try WRAP:
 ### _Getting Started_
 * [Learn Elixir](https://elixir-lang.org/getting-started/introduction.html)
   * [On performance](https://medium.com/learn-elixir/speed-up-data-access-in-elixir-842617030514)
+* [Learn Functional Programming with Elixir](https://pragprog.com/book/cdc-elixir/learn-functional-programming-with-elixir)
+  * **GO DEEPER:** [Functional Programming Design](https://fsharpforfunandprofit.com/video/)
+    * [Error handling with MonadEx](https://blog.danielberkompas.com/2015/09/03/better-pipelines-with-monadex/)
+* [Intro to Domain-Driven Design](https://techbeacon.com/get-your-feet-wet-domain-driven-design-3-guiding-principles)
+  * **GO DEEPER:** [Domain Modeling Made Functional](https://pragprog.com/book/swdddf/domain-modeling-made-functional)
 * [Practice problems](http://exercism.io/languages/elixir/about)
-* **GO DEEPER:** [Learn Functional Programming with Elixir](https://pragprog.com/book/cdc-elixir/learn-functional-programming-with-elixir)
-  * [Function composition](https://www.bignerdranch.com/blog/composing-elixir-functions/)
-
-_More fundamentals:_
-  * [Exercises for Programmers](https://www.amazon.com/Exercises-Programmers-Challenges-Develop-Coding-ebook/dp/B0170Q50LK/ref=mt_kindle?_encoding=UTF8&me=) (**$15.50, refundable**)
-  * [A Common-Sense Guide to Data Structures and Algorithms](https://pragprog.com/book/jwdsal/a-common-sense-guide-to-data-structures-and-algorithms) (**$17.50**, w/ aforementioned 30% discount)
 
 #### Advanced
 * [Create your own `mix` task](https://mfeckie.github.io/Seeding-DB-Using-Raw-SQL-Phoenix/) & [publish it](https://hashrocket.com/blog/posts/create-and-publish-your-own-elixir-mix-archives)
@@ -120,6 +119,8 @@ _More fundamentals:_
 * **GO DEEPER:** [Erlang VM Garbage Collection](https://www.erlang-solutions.com/blog/erlang-garbage-collector.html)
 * [Intro to Assembly (if accessible)](https://vimeo.com/175634887)
 * **GO DEEPER:** [The Erlang Runtime System](https://happi.github.io/theBeamBook/#P-ERTS)
+* [System design](https://github.com/donnemartin/system-design-primer)
+  * [Observer vs. PubSub](https://hackernoon.com/observer-vs-pub-sub-pattern-50d3b27f838c)
 
 * [Even more...](https://blog.bradfieldcs.com/learn-how-computers-work-e7d33dba0238)
   > ["At the end of a good comp sci program you should be able to explain how a computer works starting from a transistor in the processor all the way up to how your web browser engine parses a web page into a DOM tree.  (and somewhere in the middle, how the packets from that server got to your web browser)"](https://www.quora.com/What-does-a-degree-in-computer-science-teach-you-that-a-coding-bootcamp-does-not)
