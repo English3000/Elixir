@@ -26,12 +26,14 @@ Love every part of your stack! Try WRAP:
 ### _Getting Started_
 * [Learn Elixir](https://elixir-lang.org/getting-started/introduction.html)
   * [On performance](https://medium.com/learn-elixir/speed-up-data-access-in-elixir-842617030514)
+* [Practice problems](http://exercism.io/languages/elixir/about)
+
 * [Learn Functional Programming with Elixir](https://pragprog.com/book/cdc-elixir/learn-functional-programming-with-elixir)
-  * **GO DEEPER:** [Functional Programming Design](https://fsharpforfunandprofit.com/video/)
     * [Error handling with MonadEx](https://blog.danielberkompas.com/2015/09/03/better-pipelines-with-monadex/)
+* [Intro to Functional Programming Design](https://fsharpforfunandprofit.com/video/)
+  * **GO DEEPER:** [Functional Development with Elixir](https://pragprog.com/book/lhelph/functional-web-development-with-elixir-otp-and-phoenix)
 * [Intro to Domain-Driven Design](https://techbeacon.com/get-your-feet-wet-domain-driven-design-3-guiding-principles)
   * **GO DEEPER:** [Domain Modeling Made Functional](https://pragprog.com/book/swdddf/domain-modeling-made-functional)
-* [Practice problems](http://exercism.io/languages/elixir/about)
 
 #### Advanced
 * [Create your own `mix` task](https://mfeckie.github.io/Seeding-DB-Using-Raw-SQL-Phoenix/) & [publish it](https://hashrocket.com/blog/posts/create-and-publish-your-own-elixir-mix-archives)
