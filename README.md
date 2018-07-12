@@ -24,18 +24,21 @@ Love every part of your stack! Try WRAP:
   * [WhatsApp Engineering at scale](https://developers.facebook.com/videos/f8-2016/a-look-at-whatsapp-engineering-for-success-at-scale/)
 
 ### _Getting Started_
+#### Intro
 * [Learn Elixir](https://elixir-lang.org/getting-started/introduction.html)
   * [On performance](https://medium.com/learn-elixir/speed-up-data-access-in-elixir-842617030514)
 * [Practice problems](http://exercism.io/languages/elixir/about)
-
 * [Learn Functional Programming with Elixir](https://pragprog.com/book/cdc-elixir/learn-functional-programming-with-elixir)
-    * [Error handling with MonadEx](https://blog.danielberkompas.com/2015/09/03/better-pipelines-with-monadex/)
+  * [Error handling with MonadEx](https://blog.danielberkompas.com/2015/09/03/better-pipelines-with-monadex/)
+* **GO DEEPER:** [Learn Metaprogramming in Elixir](https://pragprog.com/book/cmelixir/metaprogramming-elixir)
+
+#### Design patterns
 * [Intro to Functional Programming Design](https://fsharpforfunandprofit.com/video/)
   * **GO DEEPER:** [Functional Development with Elixir](https://pragprog.com/book/lhelph/functional-web-development-with-elixir-otp-and-phoenix)
 * [Intro to Domain-Driven Design](https://techbeacon.com/get-your-feet-wet-domain-driven-design-3-guiding-principles)
   * **GO DEEPER:** [Domain Modeling Made Functional](https://pragprog.com/book/swdddf/domain-modeling-made-functional)
 
-#### Advanced
+#### `Mix` tasks
 * [Create your own `mix` task](https://mfeckie.github.io/Seeding-DB-Using-Raw-SQL-Phoenix/) & [publish it](https://hashrocket.com/blog/posts/create-and-publish-your-own-elixir-mix-archives)
   * [**Example**](https://github.com/reph-stack/reph/blob/master/lib/mix/tasks/reph.new.ex)
   * [`Mix.Task`](https://hexdocs.pm/mix/Mix.Task.html#content)
@@ -43,7 +46,7 @@ Love every part of your stack! Try WRAP:
   * [`File`](https://hexdocs.pm/elixir/File.html)
 * [Publish your own Hex package](https://hex.pm/docs/publish)
 
-### _Phoenix (framework)_
+### _Phoenix (backend framework)_
 * [Learn Phoenix](https://pragprog.com/book/phoenix/programming-phoenix)
   * [Updates to Phoenix](https://medium.com/wemake-services/why-changes-in-phoenix-1-3-are-so-important-2d50c9bdabb9) (just do `⌘ + f` for _Creating schema_--the rest is dated)
     > Because Elixir is a functional programming language, Phoenix uses schemas rather than models. A schema defines a struct's fields, its relationships to other structs, and changeset(s) for it (which handle validations and constraints). 
@@ -59,8 +62,8 @@ Love every part of your stack! Try WRAP:
 > ["`devDependencies` are used for the build process, tools that help you manage how the end code will end up, third party test modules, (ex. webpack stuff)"](https://stackoverflow.com/questions/18875674/whats-the-difference-between-dependencies-devdependencies-and-peerdependencies)
 
   * [JSON API example](https://robots.thoughtbot.com/building-a-phoenix-json-api)
-* **GO DEEPER:** [Learn Metaprogramming in Elixir](https://pragprog.com/book/cmelixir/metaprogramming-elixir)
 
+### _React (frontend framework)_
 * [React setup](https://medium.com/@diamondgfx/phoenix-v1-1-2-and-react-js-3dbd195a880a) _(you can skip the [whitelist](https://github.com/brunch/brunch/blob/master/CHANGELOG.md#brunch-22-jan-22-2016) &_ `$ brunch build` _steps)_
 * [`react-native-web`](https://github.com/necolas/react-native-web/blob/master/website/guides/getting-started.md#getting-started) for [cross-platform](https://github.com/necolas/react-native-web#react-native-for-web) React components, with option to server-side render
   * [Creating a link](https://reactnativecode.com/open-website-url-in-default-browser/)
@@ -79,7 +82,6 @@ Love every part of your stack! Try WRAP:
 * **[Putting it all together ("WRAP" stack)](https://medium.com/@english3000.org/starting-a-new-project-with-absinthe-relay-be9a127b8f63)**
 
 ### _Relay (GraphQL frontend)_
-
 * ["Getting" Relay (GraphQL frontend)](https://www.reindex.io/blog/redux-and-relay/)
   * [Relay over Redux](https://medium.com/@matt.krick/replacing-redux-with-relay-47ed085bfafe)
 * [Thinking in Relay](https://facebook.github.io/relay/docs/en/thinking-in-relay.html)
@@ -143,12 +145,7 @@ Love every part of your stack! Try WRAP:
 * [SSL](https://spin.atomicobject.com/2018/03/07/force-ssl-phoenix-framework/?utm_campaign=elixir_radar_135&utm_medium=email&utm_source=RD+Station)
 * [OAuth2](https://github.com/scrogson/oauth2)
 * [Arc **(uploading)**](https://github.com/stavro/arc)
-
 * [Dialxyr](https://github.com/jeremyjh/dialyxir)
-* [MonadEx](https://github.com/rob-brown/MonadEx)
-
-
-Oh, and a shameless plug, [Object-Oriented vs. Functional Interviewing](https://medium.com/@english3000.org/object-oriented-vs-functional-interviewing-a383cf87bcf8)!
 
 ## Elixir Cheatsheet (in progress)
 
@@ -199,6 +196,6 @@ Lastly, there are maps, `%{}`. In a keyword list, the first value of the tuple m
 
 The language has additional datatypes but these are generally the most relevant.
 
-### Operations (SOON)
+### Operations
 
-### Logic (AFTER)
+### Logic
