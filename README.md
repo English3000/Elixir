@@ -18,7 +18,8 @@ At a bare minimum, I'd go through:
 Love every part of your stack! Try WRAP:
 
 ### _Why Elixir?_
-* [Creator José Valim explains...](https://softwareengineeringdaily.com/2016/04/18/elixir-erlang-jose-valim/)
+* [Meet creator of Elixir, José Valim](http://doc.honeypot.io/elixir-documentary-2018/)
+  * [Valim explains...](https://softwareengineeringdaily.com/2016/04/18/elixir-erlang-jose-valim/)
 * **GO DEEPER:** [Elixir vs. Go](https://blog.codeship.com/comparing-elixir-go/)
   * [Erlang and WhatsApp](https://www.wired.com/2015/09/whatsapp-serves-900-million-users-50-engineers/)
   * [WhatsApp Engineering at scale](https://developers.facebook.com/videos/f8-2016/a-look-at-whatsapp-engineering-for-success-at-scale/)
