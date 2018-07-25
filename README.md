@@ -36,6 +36,7 @@ Love every part of your stack! Try WRAP:
 
 #### Design patterns
 * [Intro to Functional Programming Design](https://fsharpforfunandprofit.com/video/)
+* ["Phoenix is Not Your Application"](https://www.youtube.com/watch?v=lDKCSheBc-8) (speaks a bit slow--can watch at 1.5x speed)
   * **GO DEEPER:** [Functional Development with Elixir](https://pragprog.com/book/lhelph/functional-web-development-with-elixir-otp-and-phoenix)
 * [Intro to Domain-Driven Design](https://techbeacon.com/get-your-feet-wet-domain-driven-design-3-guiding-principles)
   * **GO DEEPER:** [Domain Modeling Made Functional](https://pragprog.com/book/swdddf/domain-modeling-made-functional)
