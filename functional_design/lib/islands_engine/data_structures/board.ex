@@ -18,13 +18,11 @@ defmodule IslandsEngine.DataStructures.Board do
   end
 
   @spec ready?(%{}) :: boolean
-  def ready?(board), do: Enum.all?( Island.types, &(Map.has_key?(board, &1)) )
+  def ready?(board),
+    do: Enum.all?( Island.types, &(Map.has_key?(board, &1)) )
 
-  def player_guess(board, %Coordinate{} = coordinate) do
-    board
-    |> hit_(coordinate)
-    |> record(board)
-  end
+  def player_guess(board, %Coordinate{} = coordinate),
+    do: board |> hit_(coordinate) |> record(board)
 
   defp hit_(board, coordinate) do
     Enum.find_value(board, :miss, fn {key, island} ->
@@ -35,14 +33,16 @@ defmodule IslandsEngine.DataStructures.Board do
     end)
   end
 
-  defp record(:miss, board), do: {:miss, :none, :cont, board}
+  defp record(:miss, board),
+    do: {:miss, :none, false, board}
   defp record({key, island}, board) do
     board = %{board | key => island}
     {:hit,
      (if Map.fetch!(board, key) |> Island.forested?, do: key, else: :none),
-     (if winner?(board), do: :won, else: :cont),
+     winner?(board),
      board}
   end
 
-  defp winner?(board), do: Enum.all?(board, fn {_key, island} -> Island.forested?(island) end)
+  defp winner?(board),
+    do: Enum.all?(board, fn {_key, island} -> Island.forested?(island) end)
 end

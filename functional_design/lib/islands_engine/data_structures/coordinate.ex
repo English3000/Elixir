@@ -17,6 +17,6 @@ defmodule IslandsEngine.DataStructures.Coordinate do #(0) -- defining new data s
     and row >= first and row <= last
     and col >= first and col <= last,
       do: {:ok, %Coordinate{row: row, col: col}}
-
-  def new(_row, _col, _range), do: {:error, :invalid_coordinate}
+  def new(_row, _col, _range),
+    do: {:error, :invalid_coord}
 end

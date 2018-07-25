@@ -20,7 +20,7 @@ defmodule IslandsEngine.DataStructures.Island do #(2)
   defp offsets(:dot),    do: [{0,0}]
   defp offsets(:L),      do: [{0,0},{1,0},{2,0},{2,1}]
   defp offsets(:S),      do: [{1,0},{1,1},{0,1},{0,2}]
-  defp offsets(_),       do: {:error, :invalid_island_type}
+  defp offsets(_),       do: {:error, :invalid_island}
 
   defp add_coordinates(offsets, start) do
     Enum.reduce_while(offsets, MapSet.new(), fn offset, acc ->
@@ -29,15 +29,16 @@ defmodule IslandsEngine.DataStructures.Island do #(2)
   end
 
   # Each time we build a new coordinate, we check to see if it is valid.
-  defp add_coordinate(coordinates, %Coordinate{row: row, col: col}, {row_offset, col_offset}) do
+  defp add_coordinate(coords, %Coordinate{row: row, col: col}, {row_offset, col_offset}) do
     case Coordinate.new(row + row_offset, col + col_offset) do
-      {:ok,    coordinate}          -> {:cont, MapSet.put(coordinates, coordinate)}
-      {:error, :invalid_coordinate} -> {:halt, {:error, :invalid_coordinate}}
+      {:ok,    coord}          -> {:cont, MapSet.put(coords, coord)}
+      {:error, :invalid_coord} -> {:halt, {:error, :invalid_coord}}
     end
   end
 
   @doc "To determine if islands overlap"
-  def overlap?(existing, new), do: not MapSet.disjoint?(existing.coordinates, new.coordinates)
+  def overlap?(existing, new),
+    do: not MapSet.disjoint?(existing.coordinates, new.coordinates)
 
   def hit_(island, coordinate) do
     case MapSet.member?(island.coordinates, coordinate) do
@@ -47,5 +48,6 @@ defmodule IslandsEngine.DataStructures.Island do #(2)
   end
 
   @doc "Checks whether island is 100% hit"
-  def forested?(island), do: MapSet.equal?(island.coordinates, island.hits)
+  def forested?(island),
+    do: MapSet.equal?(island.coordinates, island.hits)
 end
