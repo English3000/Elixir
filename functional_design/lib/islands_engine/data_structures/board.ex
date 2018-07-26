@@ -4,12 +4,10 @@ defmodule IslandsEngine.DataStructures.Board do
   def new, do: %{}
 
   @spec place_island(%{}, atom, %Island{}) :: %{}
-  def place_island(board, key, %Island{} = island) do
-    case collision?(board, key, island) do
-      false -> Map.put(board, key, island)
-       true -> {:error, :overlaps}
-    end
-  end
+  def place_island(board, key, %Island{} = island),
+    do: if collision?(board, key, island),
+          do:   {:error, :overlaps}, 
+          else: Map.put(board, key, island)
 
   defp collision?(board, new_key, new_island) do
     Enum.any?(board, fn {key, island} ->
@@ -19,7 +17,9 @@ defmodule IslandsEngine.DataStructures.Board do
 
   @spec ready?(%{}) :: boolean
   def ready?(board),
-    do: Enum.all?( Island.types, &(Map.has_key?(board, &1)) )
+    do: if Enum.all?( Island.types, &(Map.has_key?(board, &1)) ),
+          do:   true,
+          else: {:error, :unplaced_islands}
 
   def player_guess(board, %Coordinate{} = coordinate),
     do: board |> hit_(coordinate) |> record(board)

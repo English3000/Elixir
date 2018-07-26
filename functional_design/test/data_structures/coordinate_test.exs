@@ -3,7 +3,7 @@ defmodule DataStructures.CoordinateTest do
   use ExUnitProperties
   alias IslandsEngine.DataStructures.Coordinate
 
-  IO.puts "Coordinate.new/3"
+  IO.puts "\nTESTING: Coordinate.new/3"
   property "given valid range, handles row & col inputs properly" do
     check all        first <- integer(1..5),
                       last <- integer(6..10),
@@ -15,4 +15,5 @@ defmodule DataStructures.CoordinateTest do
       assert {:error, _} = Coordinate.new(in_range, not_in_range, first..last)
     end
   end
+  IO.puts "."
 end

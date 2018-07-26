@@ -1,28 +1,35 @@
 defmodule IslandsEngine.Game do
-  use GenServer # start_link/3, start/3
+  use GenServer, start: {__MODULE__, :start_link, []}, restart: :transient  # start_link/3, start/3
   alias IslandsEngine.Rules
   alias IslandsEngine.DataStructures.{Board, Island, Guesses, Coordinate}
 
-  @players [:player1, :player2]
+                                # Used by:
+  @timeout 60 * 60 * 24 * 1000  #  reply/2
+  @players [:player1, :player2] #  Stages
+  @errors [:invalid_coord, :invalid_island, :invalid_coord, :unplaced_islands]
 
-  def name_process(pid),
-    do: {:via, Registry, {Registry.Game, pid}}
-
-  def start(player) when is_binary(player),
-    do: GenServer.start_link(__MODULE__, player, name: player |> name_process)
+  @doc "Start a new game."
+  def start_link(player) when is_binary(player),
+    do: GenServer.start_link(__MODULE__, player, name: player |> registry_tuple)
   def init(player) do
     player1 = %{name: player, board: Board.new, guesses: Guesses.new}
     player2 = %{name: nil,    board: Board.new, guesses: Guesses.new}
-    {:ok, %{player1: player1, player2: player2, rules: Rules.new} }
+    {:ok, %{player1: player1, player2: player2, rules: Rules.new}, @timeout}
   end
 
+  def handle_info(:timeout, state),
+    do: {:stop, {:shutdown, :timeout}, state}
+
+  # Stages
   def add_player(game, name) when is_binary(name),
     do: GenServer.call(game, {:add_player, name})
   def handle_call({:add_player, name}, _caller, state) do
     with {:ok, rules} <- Rules.check(state.rules, :add_player) do
-      {:reply, :ok, state |> join_game(name) |> update_rules(rules)}
+      state |> join_game(name)
+            |> update_rules(rules)
+            |> reply(:ok)
     else
-      :error -> {:reply, :error, state}
+      error -> reply(state, error)
     end
   end
 
@@ -35,12 +42,11 @@ defmodule IslandsEngine.Game do
          {:ok, island} <- Island.new(key, coord),
          %{} = board   <- Board.place_island(board, key, island)
     do
-      {:reply, :ok, state |> update_board(player, board) |> update_rules(rules)}
+      state |> update_board(player, board)
+            |> update_rules(rules)
+            |> reply(:ok)
     else
-      :error                    -> {:reply, :error, state}
-      {:error, :invalid_coord}  -> {:reply, {:error, :invalid_coord}, state}
-      {:error, :invalid_island} -> {:reply, {:error, :invalid_island}, state}
-      # else, let it crash
+      error -> reply(state, error)
     end
   end
 
@@ -50,10 +56,10 @@ defmodule IslandsEngine.Game do
     board = get_board(state, player)
     with {:ok, rules} <- Rules.check(state.rules, {:islands_set, player}),
                  true <- Board.ready?(board) do
-      {:reply, {:ok, board}, update_rules(state, rules)}
+      state |> update_rules(rules)
+            |> reply({:ok, board})
     else
-      :error -> {:reply, :error, state}
-       false -> {:reply, {:error, :unplaced_islands}, state}
+      error -> reply(state, error)
     end
   end
 
@@ -67,14 +73,29 @@ defmodule IslandsEngine.Game do
          {result, forested_island, status, targets} <- Board.player_guess(targets, coord),
          {:ok, rules} <- Rules.check(rules, {:end, status})
     do
-      {:reply, {result, forested_island, status}, state |> update_board(enemy, targets)
-                                                        |> update_guesses(player, result, coord)
-                                                        |> update_rules(rules) }
+      state |> update_board(enemy, targets)
+            |> update_guesses(player, result, coord)
+            |> update_rules(rules)
+            |> reply({result, forested_island, status})
     else
-      :error                    -> {:reply, :error, state}
-      {:error, :invalid_coord}  -> {:reply, {:error, :invalid_coord}, state}
+      error -> reply(state, error)
     end
   end
+
+  # Helpers
+  @doc "Generates `:via` tuple for a named process."
+  def registry_tuple(name),
+    do: {:via, Registry, {Registry.Game, name}}
+  @doc "Get atom for opposing player. (Assumes only 2 players.)"
+  def opponent(:player1), do: :player2
+  def opponent(:player2), do: :player1
+
+  defp reply(state, {:error, msg} = result)
+    when msg in @errors,
+      do: {:reply, result, state, @timeout}
+  defp reply(state, result)
+    when not is_tuple(result) or elem(result, 0) != :error,
+      do: {:reply, result, state, @timeout}
 
   defp join_game(state, player),
     do: put_in(state.player2.name, player)
@@ -86,6 +107,4 @@ defmodule IslandsEngine.Game do
     do: Map.get(state, player).board
   defp update_guesses(state, player, result, coord),
     do: update_in(state[player].guesses, &( Guesses.add(&1, result, coord) ))
-  defp opponent(:player1), do: :player2 # assuming only 2 players
-  defp opponent(:player2), do: :player1
 end

@@ -9,6 +9,7 @@ defmodule IslandsEngine.Application do
     # List all child processes to be supervised
     children = [
       {Registry, keys: :unique, name: Registry.Game}, # starts Registry
+      IslandsEngine.GameSupervisor
       # Starts a worker by calling: IslandsEngine.Worker.start_link(options)
       # {IslandsEngine.Worker, options}
     ]
