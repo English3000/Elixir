@@ -27,6 +27,7 @@ Love every part of your stack! Try WRAP:
 ### _Getting Started_
 #### Intro
 * [Learn Elixir](https://elixir-lang.org/getting-started/introduction.html)
+  * [Syntactic sugar for maps](https://github.com/whatyouhide/short_maps#shortmaps) **[(config)](https://hex.pm/packages/short_maps)**
   * [On performance](https://medium.com/learn-elixir/speed-up-data-access-in-elixir-842617030514)
 * [Practice problems](http://exercism.io/languages/elixir/about)
 * [ElixirForum](https://elixirforum.com/) (like StackOverflow, but specifically for Elixir developers; responses within a few hours, in my experience)
