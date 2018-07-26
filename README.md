@@ -27,6 +27,7 @@ Love every part of your stack! Try WRAP:
 ### _Getting Started_
 #### Intro
 * [Learn Elixir](https://elixir-lang.org/getting-started/introduction.html)
+  * [Syntactic sugar for maps](https://hexdocs.pm/shorthand/Shorthand.html) **[(config)](https://hex.pm/packages/shorthand)**
   * [On performance](https://medium.com/learn-elixir/speed-up-data-access-in-elixir-842617030514)
 * [Practice problems](http://exercism.io/languages/elixir/about)
 * [ElixirForum](https://elixirforum.com/) (like StackOverflow, but specifically for Elixir developers; responses within a few hours, in my experience)
@@ -36,6 +37,7 @@ Love every part of your stack! Try WRAP:
 
 #### Design patterns
 * [Intro to Functional Programming Design](https://fsharpforfunandprofit.com/video/)
+* ["Phoenix is Not Your Application"](https://www.youtube.com/watch?v=lDKCSheBc-8) (speaks a bit slow--can watch at 1.5x speed)
   * **GO DEEPER:** [Functional Development with Elixir](https://pragprog.com/book/lhelph/functional-web-development-with-elixir-otp-and-phoenix)
 * [Intro to Domain-Driven Design](https://techbeacon.com/get-your-feet-wet-domain-driven-design-3-guiding-principles)
   * **GO DEEPER:** [Domain Modeling Made Functional](https://pragprog.com/book/swdddf/domain-modeling-made-functional)
