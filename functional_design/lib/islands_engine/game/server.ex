@@ -30,13 +30,6 @@ defmodule IslandsEngine.Game.Server do
   def terminate(_reason, _state),
     do: :ok
 
-
-  defp new_game(player) do
-    player1 = %{name: player, board: Board.new, guesses: Guesses.new}
-    player2 = %{name: nil,    board: Board.new, guesses: Guesses.new}
-    %{player1: player1, player2: player2, rules: Rules.new}
-  end
-
   # Stages
   def add_player(game, name) when is_binary(name),
     do: GenServer.call(game, {:add_player, name})
@@ -119,6 +112,11 @@ defmodule IslandsEngine.Game.Server do
     {:reply, result, state, @timeout}
   end
 
+  defp new_game(player) do
+    player1 = %{name: player, board: Board.new, guesses: Guesses.new}
+    player2 = %{name: nil,    board: Board.new, guesses: Guesses.new}
+    %{player1: player1, player2: player2, rules: Rules.new}
+  end
   defp join_game(state, player),
     do: put_in(state.player2.name, player)
   defp update_rules(state, rules),
