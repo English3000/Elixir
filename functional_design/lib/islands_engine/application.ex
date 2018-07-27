@@ -6,16 +6,13 @@ defmodule IslandsEngine.Application do
   use Application
 
   def start(_type, _args) do
-    # List all child processes to be supervised
-    children = [
-      {Registry, keys: :unique, name: Registry.Game}, # starts Registry
-      IslandsEngine.GameSupervisor
-      # Starts a worker by calling: IslandsEngine.Worker.start_link(options)
-      # {IslandsEngine.Worker, options}
-    ]
+    # a list of processes to start & supervise
+    children = [ {Registry, keys: :unique, name: Registry.Game},
+                 IslandsEngine.Game.Supervisor ]
 
-    # See https://hexdocs.pm/elixir/Supervisor.html
-    # for other strategies and supported options
+    # :ets.new(:game, [:public, :named_table])
+    :dets.open_file(:game, []) # TEST!
+
     opts = [strategy: :one_for_one, name: IslandsEngine.Supervisor]
     Supervisor.start_link(children, opts)
   end

@@ -1,6 +1,6 @@
-defmodule IslandsEngine.Game do
+defmodule IslandsEngine.Game.Server do
   use GenServer, start: {__MODULE__, :start_link, []}, restart: :transient  # start_link/3, start/3
-  alias IslandsEngine.Rules
+  alias IslandsEngine.Game.Rules
   alias IslandsEngine.DataStructures.{Board, Island, Guesses, Coordinate}
 
                                 # Used by:
@@ -12,13 +12,30 @@ defmodule IslandsEngine.Game do
   def start_link(player) when is_binary(player),
     do: GenServer.start_link(__MODULE__, player, name: player |> registry_tuple)
   def init(player) do
-    player1 = %{name: player, board: Board.new, guesses: Guesses.new}
-    player2 = %{name: nil,    board: Board.new, guesses: Guesses.new}
-    {:ok, %{player1: player1, player2: player2, rules: Rules.new}, @timeout}
+    send(self(), {:set_state, player})
+    {:ok, new_game(player)}
   end
-
+  def handle_info({:set_state, player}, _state) do
+    state = case :dets.lookup(:game, player) do
+              [{_key, game}] -> game
+                          [] -> new_game(player)
+            end
+    :dets.insert(:game, {player, state})
+    {:noreply, state, @timeout}
+  end
   def handle_info(:timeout, state),
     do: {:stop, {:shutdown, :timeout}, state}
+  def terminate({:shutdown, :timeout}, state),
+    do: :dets.delete(:game, state.player1.name); :ok
+  def terminate(_reason, _state),
+    do: :ok
+
+
+  defp new_game(player) do
+    player1 = %{name: player, board: Board.new, guesses: Guesses.new}
+    player2 = %{name: nil,    board: Board.new, guesses: Guesses.new}
+    %{player1: player1, player2: player2, rules: Rules.new}
+  end
 
   # Stages
   def add_player(game, name) when is_binary(name),
@@ -94,8 +111,13 @@ defmodule IslandsEngine.Game do
     when msg in @errors,
       do: {:reply, result, state, @timeout}
   defp reply(state, result)
-    when not is_tuple(result) or elem(result, 0) != :error,
-      do: {:reply, result, state, @timeout}
+    when not is_tuple(result) or
+         elem(result, 0) != :error
+  do
+    if result != :error,
+      do: :dets.insert(:game, {state.player1.name, state})
+    {:reply, result, state, @timeout}
+  end
 
   defp join_game(state, player),
     do: put_in(state.player2.name, player)

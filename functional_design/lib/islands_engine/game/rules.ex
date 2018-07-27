@@ -1,4 +1,4 @@
-defmodule IslandsEngine.Rules do
+defmodule IslandsEngine.Game.Rules do
   alias __MODULE__
   defstruct state: :init,
             player1: :init,
