@@ -8,7 +8,7 @@ use Mix.Config
 # Configures the endpoint
 config :islands_interface, IslandsInterfaceWeb.Endpoint,
   url: [host: "localhost"],
-  secret_key_base: "34gBWcgArikl27qdqMS/CZeO9SiMi9bqLO+NsKC4AlfV6g0BFofI79S+OEnRI24E",
+  secret_key_base: "yBYywnJZtXVqflz7EMnQpoh7pU7KrlCqiYvqgg2vOxp4HA0VQHJaSz0c8YBqLxwu",
   render_errors: [view: IslandsInterfaceWeb.ErrorView, accepts: ~w(html json)],
   pubsub: [name: IslandsInterface.PubSub,
            adapter: Phoenix.PubSub.PG2]

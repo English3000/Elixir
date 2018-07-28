@@ -35,7 +35,7 @@ defmodule IslandsInterfaceWeb.Endpoint do
   plug Plug.Session,
     store: :cookie,
     key: "_islands_interface_key",
-    signing_salt: "spWZ/a4N"
+    signing_salt: "iUluLatm"
 
   plug IslandsInterfaceWeb.Router
 

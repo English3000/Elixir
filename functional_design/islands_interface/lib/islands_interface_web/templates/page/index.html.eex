@@ -1,6 +1,12 @@
 <div class="jumbotron">
   <h2><%= gettext "Welcome to %{name}!", name: "Phoenix" %></h2>
   <p class="lead">A productive web framework that<br />does not compromise speed and maintainability.</p>
+  <p>
+    <%= form_tag("/test") do
+      [ tag(:input, type: "text", name: "Name"),
+        tag(:input, type: "submit", value: "Play Islands!") ]
+    end %>
+  </p>
 </div>
 
 <div class="row marketing">
