@@ -17,6 +17,7 @@ defmodule IslandsInterfaceWeb.Router do
     pipe_through :browser # Use the default browser stack
 
     get "/", PageController, :index
+    post "/test", PageController, :test ##
   end
 
   # Other scopes may use custom stacks.

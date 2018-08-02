@@ -1,4 +1,7 @@
 defmodule IslandsEngine.Game.Server do
+  @moduledoc """
+  `game` argument can be PID or `:via` registry_tuple
+  """
   use GenServer, start: {__MODULE__, :start_link, []}, restart: :transient  # start_link/3, start/3
   alias IslandsEngine.Game.Rules
   alias IslandsEngine.DataStructures.{Board, Island, Guesses, Coordinate}
@@ -8,7 +11,7 @@ defmodule IslandsEngine.Game.Server do
   @players [:player1, :player2] #  Stages
   @errors [:invalid_coord, :invalid_island, :invalid_coord, :unplaced_islands]
 
-  @doc "Start a new game."
+  @doc "Start a new game." # CHANGE: game name too now
   def start_link(player) when is_binary(player),
     do: GenServer.start_link(__MODULE__, player, name: player |> registry_tuple)
   def init(player) do
@@ -81,7 +84,7 @@ defmodule IslandsEngine.Game.Server do
     with {:ok, rules} <- Rules.check(state.rules, {:guess, player}),
          {:ok, coord} <- Coordinate.new(row, col),
          {result, forested_island, status, targets} <- Board.player_guess(targets, coord),
-         {:ok, rules} <- Rules.check(rules, {:end, status})
+         {:ok, rules} <- Rules.check(rules, {:status, status})
     do
       state |> update_board(enemy, targets)
             |> update_guesses(player, result, coord)

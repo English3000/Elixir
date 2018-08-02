@@ -25,7 +25,7 @@ defmodule IslandsEngine.Game.Rules do
 
   def check(%Rules{state: {:turn, player}} = rules, {:guess, guesser}) when guesser == player,
     do: { :ok, %Rules{rules | state: {:turn, opponent(player)}} }
-  def check(%Rules{state: {:turn, _}} = rules, {:end, result}) do
+  def check(%Rules{state: {:turn, _}} = rules, {:status, result}) do
     case result do
        true -> {:ok, %Rules{rules | state: :end}}
       false -> {:ok, rules}

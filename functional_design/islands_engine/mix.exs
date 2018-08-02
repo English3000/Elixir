@@ -9,7 +9,8 @@ defmodule IslandsEngine.MixProject do
           deps: deps() ]
 
   defp deps, # compile-time deps
-    do: [ {:stream_data, "~> 0.1", only: :test} ] # Run "mix help deps" to learn about dependencies.
+    do: [ {:stream_data, "~> 0.1", only: :test}, # Run "mix help deps" to learn about dependencies.
+          {:shorthand, "~> 0.0.3"} ] 
 
   def application, # run-time deps
     do: [ extra_applications: [:logger],

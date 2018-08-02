@@ -1,3 +1,11 @@
+/***
+ * Excerpted from "Functional Web Development with Elixir, OTP, and Phoenix",
+ * published by The Pragmatic Bookshelf.
+ * Copyrights apply to this code. It may not be used to create training material,
+ * courses, books, articles, and the like. Contact us if you are in doubt.
+ * We make no guarantees that this code is fit for any purpose.
+ * Visit http://www.pragmaticprogrammer.com/titles/lhelph for more book information.
+***/
 exports.config = {
   // See http://brunch.io/#documentation for docs.
   files: {
@@ -45,8 +53,9 @@ exports.config = {
   // Configure your plugins
   plugins: {
     babel: {
+      presets: ["es2015", "react"],
       // Do not use ES6 compiler in vendor code
-      ignore: [/vendor/]
+      ignore: [/web\/static\/vendor/]
     }
   },
 

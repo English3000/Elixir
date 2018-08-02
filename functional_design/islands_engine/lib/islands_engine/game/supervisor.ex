@@ -9,7 +9,7 @@ defmodule IslandsEngine.Game.Supervisor do
 
   def start_game(player),
     do: Supervisor.start_child(__MODULE__, [player])
-  def stop_game(player) do
+  def stop_game(player) do # could record game result in another table
     :dets.delete(:game, player)
     Supervisor.terminate_child(__MODULE__, Server.registry_tuple(player) |> GenServer.whereis)
   end
