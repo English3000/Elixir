@@ -75,7 +75,11 @@ Love every part of your stack! Try WRAP:
   * [Making an `absolute` element pressable](https://stackoverflow.com/questions/36938742/touchablehighlight-not-clickable-if-position-absolute?rq=1)
   > **Note:** I haven't found clear/explicit [documentation](http://phoenixframework.org/blog/static-assets) for using `react-native-web` SSR with Phoenix.
   * [Alternative way to SSR](https://medium.com/@chvanikoff/phoenix-react-love-story-reph-1-c68512cfe18)
-  * [Add type-checking with Flow](https://flow.org/en/docs/install/)
+  * [Add type-checking with Flow](https://flow.org/en/docs/install/) 
+* **IDEA:** [ReactEX](https://elixirforum.com/t/elixirscript/2409/36)
+  * [JavaScript's Rise](https://www.lform.com/blog/post/how-javascript-became-the-dominant-language-of-the-web)
+  * [The rise of JSX](https://medium.freecodecamp.org/react-s-jsx-the-other-side-of-the-coin-2ace7ab62b98)
+  * [The future of JavaScript... as a "VM"](https://codeburst.io/the-future-of-javascript-will-be-less-javascript-cea373eb57fd)
 
 ### _Absinthe (GraphQL backend)_
 * ["Getting" GraphQL](https://medium.com/@english3000.org/getting-graphql-40dd48dd53a1)
