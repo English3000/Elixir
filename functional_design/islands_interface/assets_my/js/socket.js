@@ -4,32 +4,39 @@ import {Socket} from "phoenix"
 let socket = new Socket("/socket", {params: {token: window.userToken}})
 socket.connect()
 
-const new_channel = (player, screen_name) =>
-  socket.channel("game:" + player, {screen_name})
+const join_game = (socket, game, player) =>
+  socket.channel("game:" + game, {screen_name: player}).join()
+        .receive("ok",    response => {console.log("Joined channel!", response); return response})
+        .receive("error", response => {console.log(response.reason)})
+
+// const new_channel = (game, player) =>
+//   socket.channel("game:" + game, {screen_name: player})
 // let game_channel = new_channel("planets", "moon") // change for new game (rather than a restored one)
 // game_channel.on("subscribers", response => {console.log("Current players online:", response)})
   // To see, in browser console, copy, paste, then type: game_channel.push("show_subscribers")
 
-const join = (channel) =>
-  channel.join()
-         .receive("ok",    response => {console.log("Joined channel!",         response)})
-         .receive("error", response => {console.log("Failed to join channel.", response)})
+// const join = (channel) =>
+//   channel.join()
+//          .receive("ok",    response => {console.log("Joined channel!", response); return response})
+//          .receive("error", response => {console.log(response.reason)})
 // join(game_channel)
 
 // Create a channel event function for each handle_in/3 clause in the GameChannel.
-const new_game = (channel) =>
-  channel.push("new_game")
+// Create a channel event function for each handle_in/3 clause in the GameChannel.
+// unnecessary -- join now handles
+/* const new_game = (channel) =>
+  channel.push("new_game", channel.params.screen_name)
          .receive("ok",    response => {console.log("New game started!",         response)})
-         .receive("error", response => {console.log("Failed to start new game.", response)})
+         .receive("error", response => {console.log("Failed to start new game.", response)}) */
 
-const add_player = (channel, player) =>
-  channel.push("add_player", player)
-         .receive("error", response => {console.log(`Could not add new player: ${player}`, response)})
+// const add_player = (channel, player) =>
+//   channel.push("add_player", player)
+//          .receive("error", response => {console.log(`Could not add new player: ${player}`, response)})
 // .on defines event listener
 //                  event     callback (handler)
 // game_channel.on("player_added", response => {console.log("Player added", response)})
 
-const place_island = (channel, player, island, row, col) =>
+const place_island = (channel, player, island, row, col) => //
   channel.push("place_island", {player, island, row, col})
          .receive("ok",    response => {console.log("Island placed.",          response)})
          .receive("error", response => {console.log("Could not place island.", response)})

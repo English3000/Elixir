@@ -406,15 +406,16 @@ class Game extends React.Component {
        })
   }
 
-  newGame(channel) {
-    channel.push("new_game")
-      .receive("ok", response => {
-         console.log("New Game!");
-       })
-      .receive("error", response => {
-         console.log("Unable to start a new game.");
-       })
-  }
+  // DEPRECATED: join now covers this functionality
+  // newGame(channel) {
+  //   channel.push("new_game")
+  //     .receive("ok", response => {
+  //        console.log("New Game!");
+  //      })
+  //     .receive("error", response => {
+  //        console.log("Unable to start a new game.");
+  //      })
+  // }
 
   addPlayer(channel, player) {
     channel.push("add_player", player)
@@ -434,7 +435,7 @@ class Game extends React.Component {
       this.setState({channel: player1_channel});
       this.setState({player: "player1"});
       this.join(player1_channel);
-      this.newGame(player1_channel);
+      // this.newGame(player1_channel);
     } else {
       this.setState({channel: player2_channel});
       this.setState({player: "player2"});

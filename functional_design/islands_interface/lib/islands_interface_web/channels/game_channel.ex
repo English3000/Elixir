@@ -13,7 +13,9 @@ defmodule IslandsInterfaceWeb.GameChannel do
   alias IslandsEngine.Game.{Server, Supervisor}
 
   @doc """
-  Phoenix.Channel.join/3 => {:ok, channel}
+  Sends game state to frontend.
+
+  Phoenix.Channel.join/3 => {:ok, state - rules, channel}
    SERVES SIMILARLY TO
   GenServer.init/1 => {:ok, state}
   """
@@ -21,36 +23,71 @@ defmodule IslandsInterfaceWeb.GameChannel do
     {:ok, Socket.t} |
     {:ok, reply :: map, Socket.t} |
     {:error, reply :: map}
-  def join("game:" <> _player, %{"screen_name" => screen_name}, channel) do
-    case authorized?(channel, screen_name) do
-       true -> send(self(), {:after_join, screen_name})
-               {:ok, channel} # should send game state
-
-      false -> {:error, %{reason: "Game at capacity OR you've already joined."}}
+  def join("game:" <> game, %{"screen_name" => player}, channel) do
+    if authorized?(channel, player) do
+       case get_game(game, player) do
+            {:ok, state}  -> {:ok, state, channel}
+         {:error, reason} -> {:error, m(reason), channel}
+       end
+    else
+      {:error, %{reason: "Game at capacity."}, channel}
     end
-
   end
 
-  defp authorized?(channel, screen_name),
+  defp authorized?(channel, player),
     do: game_size(channel) < 2 and
-        not playing?(channel, screen_name)
+        not playing?(channel, player)
 
   defp game_size(channel),
     do: channel |> Presence.list
                 |> Map.keys
                 |> length
 
-  defp playing?(channel, screen_name),
+  defp playing?(channel, player),
     do: channel |> Presence.list
-                |> Map.has_key?(screen_name)
+                |> Map.has_key?(player)
+
+  defp get_game(game, player) do
+    case via(game) |> Server.process? do # bug when using `if !`
+      nil -> new_game(game, player)
+        _ -> register_player(game, player)
+    end
+  end
+
+  defp new_game(game, player) do
+    case Supervisor.start_game(game, player) do
+      {:error, reason} -> {:error, m(reason)}
+
+         {:ok, _pid}   -> send(self(), {:after_join, player})
+                          {:ok, m(game, player) |> Server.lookup_game |> Map.delete(:rules)}
+    end
+  end
+
+  defp register_player(game, player) do
+    state = m(game, player) |> Server.lookup_game
+    if state.player1 == player,
+      do:   {:ok, Map.delete(state, :rules)},
+      else: add_player(game, player)
+  end
+
+  defp add_player(game, player) do
+    case via(game) |> Server.add_player(player) do
+      :ok              -> send(self(), {:after_join, player})
+                          {:ok, m(game, player) |> Server.lookup_game |> Map.delete(:rules)}
+      :error           -> {:error, %{reason: "Game at capacity."}}
+      {:error, reason} -> {:error, m(reason)}
+    end
+  end
 
   @doc "Tracks newly joined players using Phoenix.Presence"
-  def handle_info({:after_join, screen_name}, channel) do
-    {:ok, _} = Presence.track(channel, screen_name, %{time: System.system_time(:seconds) |> inspect})
+  def handle_info({:after_join, player}, channel) do
+    {:ok, _} = Presence.track(channel, player, %{time: System.system_time(:seconds) |> inspect}) ##
     {:noreply, channel}
   end
 
   @doc "Broadcasts list of current players to browser clients."
+  ## haven't arrived at this use case yet
+    ## maybe, if fail to join...
   def handle_in("show_subscribers", _payload, channel) do
     broadcast! channel, "subscribers", Presence.list(channel) # 3rd arg = response to all clients
     {:noreply, channel}
@@ -64,24 +101,26 @@ defmodule IslandsInterfaceWeb.GameChannel do
   @spec handle_in(event :: String.t, payload :: any, channel :: Socket.t) ::
     {:reply, {status :: atom} | {status :: atom, response :: map}, channel :: Socket.t } |
     {:noreply,                                                     channel :: Socket.t}
-  def handle_in("new_game", _payload, channel) do # payload = 2nd arg given to .push on frontend
-    "game:" <> player = channel.topic
-    case Supervisor.start_game(player) do
-         {:ok, _pid}   -> {:reply, :ok, channel}
-      {:error, reason} -> {:reply, {:error, %{reason: inspect(reason)} }, channel}
-    end
-  end
+  # NOTE: Functionality moved to `get_game/2`, error-handling to `join/3`
+  # def handle_in("new_game", player, channel) do # payload = 2nd arg given to .push on frontend
+  #   "game:" <> game = channel.topic
+  #   case Supervisor.start_game(game, player) do
+  #        {:ok, _pid}   -> {:reply, :ok, channel}
+  #     {:error, reason} -> {:reply, {:error, %{reason: inspect(reason)} }, channel}
+  #   end
+  # end
 
-  def handle_in("add_player", player, channel) do
-    case via(channel.topic) |> Server.add_player(player) do
-      :ok              -> broadcast! channel, "player_added", %{message: player <> " joined game."}
-                          {:noreply, channel}
-
-      :error           -> {:reply, :error, channel}
-
-      {:error, reason} -> {:reply, {:error, %{reason: inspect(reason)} }, channel}
-    end
-  end
+  # def handle_in("add_player", player, channel) do
+  #   "game:" <> game = channel.topic
+  #   case via(game) |> Server.add_player(player) do
+  #     :ok              -> broadcast! channel, "player_added", %{message: player <> " joined game."}
+  #                         {:noreply, channel}
+  #
+  #     :error           -> {:reply, :error, channel} ## no error msg
+  #
+  #     {:error, reason} -> {:reply, {:error, %{reason: inspect(reason)} }, channel}
+  #   end
+  # end
 
   def handle_in("place_island", payload, channel) do
     %{ "player" => player,
@@ -91,8 +130,9 @@ defmodule IslandsInterfaceWeb.GameChannel do
 
     player_atom = String.to_existing_atom(player)
     island_atom = String.to_existing_atom(island)
+    "game:" <> game = channel.topic
 
-    case via(channel.topic) |> Server.place_island(player_atom, island_atom, row, col) do
+    case via(game) |> Server.place_island(player_atom, island_atom, row, col) do
       :ok -> {:reply, :ok, channel}
         _ -> {:reply, :error, channel}
     end
@@ -100,7 +140,8 @@ defmodule IslandsInterfaceWeb.GameChannel do
 
   def handle_in("set_islands", player, channel) do
     player_atom = String.to_existing_atom(player)
-    case via(channel.topic) |> Server.set_islands(player_atom) do
+    "game:" <> game = channel.topic
+    case via(game) |> Server.set_islands(player_atom) do
       {:ok, board} -> broadcast! channel, "islands_set", %{player: player_atom}
                       {:reply, {:ok, m(board)}, channel}
 
@@ -114,7 +155,8 @@ defmodule IslandsInterfaceWeb.GameChannel do
           "col" => col } = params
 
     player = String.to_existing_atom(player)
-    case via(channel.topic) |> Server.guess_coordinate(player, row, col) do
+    "game:" <> game = channel.topic
+    case via(game) |> Server.guess_coordinate(player, row, col) do
       {result, island, status} -> hit = if result == :hit, do: true, else: false
                                   result = m(hit, island, status)
                                   broadcast! channel, "guessed_coordinate", m(player, row, col, result)
@@ -126,6 +168,6 @@ defmodule IslandsInterfaceWeb.GameChannel do
     end
   end
 
-  defp via("game:" <> player),
-    do: Server.registry_tuple(player)
+  defp via(game),
+    do: Server.registry_tuple(game)
 end

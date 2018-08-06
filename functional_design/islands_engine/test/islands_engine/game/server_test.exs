@@ -39,7 +39,7 @@ defmodule Game.ServerTest do
     Server.add_player(game, player)
     state = :sys.get_state(game)
     assert player == state.player2.name
-    assert :has_players = state.rules.state
+    assert :players_set = state.rules.state
     IO.puts "."
     game
   end
@@ -76,7 +76,7 @@ defmodule Game.ServerTest do
 
     assert {:ok, _board} = Server.set_islands(game, player)
     state = :sys.get_state(game)
-    assert :has_players = state.rules.state
+    assert :players_set = state.rules.state
     IO.puts "."
     game
   end

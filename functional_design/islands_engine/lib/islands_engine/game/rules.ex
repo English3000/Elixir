@@ -7,15 +7,15 @@ defmodule IslandsEngine.Game.Rules do
   def new, do: %Rules{} # seems redundant
 
   def check(%Rules{state: :init} = rules, :add_player),
-    do: { :ok, %Rules{rules | state: :has_players} }
+    do: { :ok, %Rules{rules | state: :players_set} }
 
-  def check(%Rules{state: :has_players} = rules, {:place_islands, player}) do
+  def check(%Rules{state: :players_set} = rules, {:place_islands, player}) do
     case Map.fetch!(rules, player) do
              :init -> {:ok, rules}
       :islands_set -> :error
     end
   end
-  def check(%Rules{state: :has_players} = rules, {:islands_set, player}) do
+  def check(%Rules{state: :players_set} = rules, {:islands_set, player}) do
     rules = Map.put(rules, player, :islands_set)
     case ready?(rules) do
        true -> {:ok, %Rules{ rules | state: {:turn, :player1} } }
@@ -32,11 +32,11 @@ defmodule IslandsEngine.Game.Rules do
     end
   end
 
-  defp opponent(:player1), do: :player2 # assuming only 2 players
-  defp opponent(:player2), do: :player1
-
   def check(_state, _action), do: :error
 
   defp ready?(rules), do: rules.player1 == :islands_set and
                           rules.player2 == :islands_set
+
+  defp opponent(:player1), do: :player2 # assuming only 2 players
+  defp opponent(:player2), do: :player1
 end

@@ -2,6 +2,7 @@ defmodule IslandsEngine.Game.Server do
   @moduledoc """
   `game` argument can be PID or `:via` registry_tuple
   """
+  import Shorthand
   use GenServer, start: {__MODULE__, :start_link, []}, restart: :transient  # start_link/3, start/3
   alias IslandsEngine.Game.Rules
   alias IslandsEngine.DataStructures.{Board, Island, Guesses, Coordinate}
@@ -10,35 +11,30 @@ defmodule IslandsEngine.Game.Server do
   @timeout 60 * 60 * 24 * 1000  #  reply/2
   @players [:player1, :player2] #  Stages
   @errors [:invalid_coord, :invalid_island, :invalid_coord, :unplaced_islands]
-
-  @doc "Start a new game." # CHANGE: game name too now
-  def start_link(player) when is_binary(player),
-    do: GenServer.start_link(__MODULE__, player, name: player |> registry_tuple)
-  def init(player) do
-    send(self(), {:set_state, player})
-    {:ok, new_game(player)}
+  # https://hexdocs.pm/elixir/Supervisor.html#module-module-based-supervisors
+  @doc "Start a new game."
+  def start_link(game, player) when is_binary(game) and is_binary(player),
+    do: GenServer.start_link(__MODULE__, m(game, player), name: game |> registry_tuple)
+  @doc "Sets process's initial state, or stops process on timeout."
+  def init(payload) do
+    send(self(), {:set_state, payload})
+    {:ok, new_game(payload)}
   end
-  def handle_info({:set_state, player}, _state) do
-    state = case :dets.lookup(:game, player) do
-              [{_key, game}] -> game
-                          [] -> new_game(player)
-            end
-    :dets.insert(:game, {player, state})
-    {:noreply, state, @timeout}
-  end
+  def handle_info({:set_state, payload}, _state),
+    do: {:noreply, lookup_game(payload), @timeout}
   def handle_info(:timeout, state),
     do: {:stop, {:shutdown, :timeout}, state}
   def terminate({:shutdown, :timeout}, state),
-    do: :dets.delete(:game, state.player1.name); :ok
+    do: :dets.delete(:game, state.game); :ok
   def terminate(_reason, _state),
     do: :ok
 
   # Stages
-  def add_player(game, name) when is_binary(name),
-    do: GenServer.call(game, {:add_player, name})
-  def handle_call({:add_player, name}, _caller, state) do
+  def add_player(pid, player) when is_binary(player),
+    do: GenServer.call(pid, {:add_player, player})
+  def handle_call({:add_player, player}, _caller, state) do
     with {:ok, rules} <- Rules.check(state.rules, :add_player) do
-      state |> join_game(name)
+      state |> join_game(player)
             |> update_rules(rules)
             |> reply(:ok)
     else
@@ -46,8 +42,8 @@ defmodule IslandsEngine.Game.Server do
     end
   end
 
-  def place_island(game, player, key, row, col) when player in @players,
-    do: GenServer.call(game, {:place_island, player, key, row, col})
+  def place_island(pid, player, key, row, col) when player in @players,
+    do: GenServer.call(pid, {:place_island, player, key, row, col})
   def handle_call({:place_island, player, key, row, col}, _caller, state) do
     board = get_board(state, player)
     with {:ok, rules}  <- Rules.check(state.rules, {:place_islands, player}),
@@ -63,8 +59,8 @@ defmodule IslandsEngine.Game.Server do
     end
   end
 
-  def set_islands(game, player) when player in @players,
-    do: GenServer.call(game, {:islands_set, player})
+  def set_islands(pid, player) when player in @players,
+    do: GenServer.call(pid, {:islands_set, player})
   def handle_call({:islands_set, player}, _caller, state) do
     board = get_board(state, player)
     with {:ok, rules} <- Rules.check(state.rules, {:islands_set, player}),
@@ -76,8 +72,8 @@ defmodule IslandsEngine.Game.Server do
     end
   end
 
-  def guess_coordinate(game, player, row, col) when player in @players,
-    do: GenServer.call(game, {:guess, player, row, col})
+  def guess_coordinate(pid, player, row, col) when player in @players,
+    do: GenServer.call(pid, {:guess, player, row, col})
   def handle_call({:guess, player, row, col}, _caller, state) do
       enemy = opponent(player)
     targets = get_board(state, enemy)
@@ -96,9 +92,11 @@ defmodule IslandsEngine.Game.Server do
   end
 
   # Helpers
+  def process?(tuple),
+    do: GenServer.whereis(tuple)
   @doc "Generates `:via` tuple for a named process."
-  def registry_tuple(name),
-    do: {:via, Registry, {Registry.Game, name}}
+  def registry_tuple(game),
+    do: {:via, Registry, {Registry.Game, game}}
   @doc "Get atom for opposing player. (Assumes only 2 players.)"
   def opponent(:player1), do: :player2
   def opponent(:player2), do: :player1
@@ -110,15 +108,22 @@ defmodule IslandsEngine.Game.Server do
     when not is_tuple(result) or
          elem(result, 0) != :error
   do
-    if result != :error,
-      do: :dets.insert(:game, {state.player1.name, state})
+    if result != :error, do: :dets.insert(:game, {state.game, state})
     {:reply, result, state, @timeout}
   end
 
-  defp new_game(player) do
+  def lookup_game(%{game: game} = payload) do
+    state = case :dets.lookup(:game, game) do
+              [{_key, saved_game}] -> saved_game
+                                [] -> new_game(payload)
+            end
+    :dets.insert(:game, {game, state}); state
+  end
+  defp new_game(%{game: game, player: player}) do
     player1 = %{name: player, board: Board.new, guesses: Guesses.new}
     player2 = %{name: nil,    board: Board.new, guesses: Guesses.new}
-    %{player1: player1, player2: player2, rules: Rules.new}
+    rules = Rules.new
+    m(game, player1, player2, rules)
   end
   defp join_game(state, player),
     do: put_in(state.player2.name, player)
