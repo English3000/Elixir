@@ -12,6 +12,7 @@ On refresh, the game page is lost. So, while the backend remembers the state, th
 
 The best solution is to include the game & player in a query string -- using `withRouter` from `'react-router-dom'` -- so on refresh, these two can be used to rejoin the channel & game.
 
+
 > Component Hierarchy
 >
 >  -------------------------------
@@ -37,6 +38,8 @@ The best solution is to include the game & player in a query string -- using `wi
 > |        -------------------------
 > |
 >  -------------------------------
+
+
 
 ## UI
 

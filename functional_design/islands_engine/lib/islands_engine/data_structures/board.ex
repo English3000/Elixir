@@ -1,14 +1,19 @@
-defmodule IslandsEngine.DataStructures.Board do
+defmodule IslandsEngine.DataStructures.Board do #convert to IslandSet
   alias IslandsEngine.DataStructures.{Island, Coordinate}
 
-  def new, do: %{}
+  def new, do: %{} # really just Islands
 
+  # No logic for re-placing an island (to another spot on the board)
   @spec place_island(%{}, atom, %Island{}) :: %{}
   def place_island(board, key, %Island{} = island),
     do: if collision?(board, key, island),
-          do:   {:error, :overlaps}, 
+          do:   {:error, :overlaps},
           else: Map.put(board, key, island)
 
+  # No logic for removing island from board
+  # def remove_island(board, key?)
+
+  # Ensures no duplicate island types or overlapping islands.
   defp collision?(board, new_key, new_island) do
     Enum.any?(board, fn {key, island} ->
       key != new_key and Island.overlap?(island, new_island)

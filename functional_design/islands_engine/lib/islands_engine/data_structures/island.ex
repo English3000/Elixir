@@ -13,7 +13,6 @@ defmodule IslandsEngine.DataStructures.Island do #(2)
   end
 
   def types, do: [:atoll, :dot, :L, :S, :square]
-
   # For all islands, we’ll assume that the starting coordinate is in the upper-left corner.
   defp offsets(:square), do: [{0,0},{0,1},{1,0},{1,1}]
   defp offsets(:atoll),  do: [{0,0},{0,1},{1,1},{2,1},{2,0}]
@@ -23,15 +22,14 @@ defmodule IslandsEngine.DataStructures.Island do #(2)
   defp offsets(_),       do: {:error, :invalid_island}
 
   defp add_coordinates(offsets, start) do
-    Enum.reduce_while(offsets, MapSet.new(), fn offset, acc ->
+    Enum.reduce_while(offsets, MapSet.new, fn offset, acc ->
       add_coordinate(acc, start, offset)
     end)
   end
-
   # Each time we build a new coordinate, we check to see if it is valid.
   defp add_coordinate(coords, %Coordinate{row: row, col: col}, {row_offset, col_offset}) do
     case Coordinate.new(row + row_offset, col + col_offset) do
-      {:ok,    coord}          -> {:cont, MapSet.put(coords, coord)}
+      {:ok,    coord}               -> {:cont, MapSet.put(coords, coord)}
       {:error, :invalid_coordinate} -> {:halt, {:error, :invalid_coordinate}}
     end
   end

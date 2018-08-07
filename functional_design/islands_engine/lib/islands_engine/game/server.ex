@@ -75,7 +75,7 @@ defmodule IslandsEngine.Game.Server do
   def guess_coordinate(pid, player, row, col) when player in @players,
     do: GenServer.call(pid, {:guess, player, row, col})
   def handle_call({:guess, player, row, col}, _caller, state) do
-      enemy = Rules.opponent(player) ## @ modifying server response state to exclude other player's board
+      enemy = Rules.opponent(player)
     targets = get_board(state, enemy)
     with {:ok, rules} <- Rules.check(state.rules, {:guess, player}),
          {:ok, coord} <- Coordinate.new(row, col),
@@ -123,7 +123,7 @@ defmodule IslandsEngine.Game.Server do
            player2: new_player(nil) }
   defp new_player(player),
     do: %{ name: player,
-           board: Board.new, 
+           board: Board.new, # really Islands
            guesses: Guesses.new }
   defp join_game(state, player),
     do: put_in(state.player2.name, player)

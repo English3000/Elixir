@@ -1,6 +1,15 @@
-## START su-5-Aug-2018
+##  m-6-Aug-2018
 
-- [x] Adapted `game_channel.ex` to reply with/broadcast state to `socket.js`
++ refactored `game_channel.ex` to properly handle crashes & page refreshes
+
+***Now clear to build UI for joining game.***
+
+
+
+
+## su-5-Aug-2018
+
++ adapted `game_channel.ex` to reply with/broadcast state to `socket.js`
 
   > More recently, I
   >
