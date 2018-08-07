@@ -95,8 +95,8 @@ defmodule IslandsInterfaceWeb.GameChannel do
     do: {:reply, payload |> Server.lookup_game |> remove_board(player), channel}
   defp remove_board(state, player) do
     cond do
-      state.player1.name == player -> remove_board(:player2)
-      state.player2.name == player -> remove_board(:player1)
+      state.player1.name == player -> remove_board(state, :player2)
+      state.player2.name == player -> remove_board(state, :player1)
                               true -> {:error, %{reason: "Not playing."}}
     end
   end

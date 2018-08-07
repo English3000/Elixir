@@ -5,7 +5,7 @@ defmodule IslandsEngine.Game.Server do
   import Shorthand
   use GenServer, start: {__MODULE__, :start_link, []}, restart: :transient  # start_link/3, start/3
   alias IslandsEngine.Game.Rules
-  alias IslandsEngine.DataStructures.{Board, Island, Guesses, Coordinate}
+  alias IslandsEngine.DataStructures.{IslandSet, Island, Guesses, Coordinate}
 
                                 # Used by:
   @timeout 60 * 60 * 24 * 1000  #  reply/2
@@ -45,13 +45,13 @@ defmodule IslandsEngine.Game.Server do
   def place_island(pid, player, key, row, col) when player in @players,
     do: GenServer.call(pid, {:place_island, player, key, row, col})
   def handle_call({:place_island, player, key, row, col}, _caller, state) do
-    board = get_board(state, player)
+    islands = get_islands(state, player)
     with {:ok, rules}  <- Rules.check(state.rules, {:place_islands, player}),
          {:ok, coord}  <- Coordinate.new(row, col),
          {:ok, island} <- Island.new(key, coord),                # errors if island is out of bounds
-         %{} = board   <- Board.place_island(board, key, island) # errors if island overlaps
+         %{} = islands   <- IslandSet.place_island(islands, key, island) # errors if island overlaps
     do
-      state |> update_board(player, board)
+      state |> update_islands(player, islands)
             |> update_rules(rules)
             |> reply(:ok)
     else
@@ -62,11 +62,11 @@ defmodule IslandsEngine.Game.Server do
   def set_islands(pid, player) when player in @players,
     do: GenServer.call(pid, {:islands_set, player})
   def handle_call({:islands_set, player}, _caller, state) do
-    board = get_board(state, player)
+    islands = get_islands(state, player)
     with {:ok, rules} <- Rules.check(state.rules, {:islands_set, player}),
-                 true <- Board.ready?(board) do
+                 true <- IslandSet.ready?(islands) do
       state |> update_rules(rules)
-            |> reply({:ok, board})
+            |> reply({:ok, islands})
     else
       error -> reply(state, error)
     end
@@ -76,13 +76,13 @@ defmodule IslandsEngine.Game.Server do
     do: GenServer.call(pid, {:guess, player, row, col})
   def handle_call({:guess, player, row, col}, _caller, state) do
       enemy = Rules.opponent(player)
-    targets = get_board(state, enemy)
+    targets = get_islands(state, enemy)
     with {:ok, rules} <- Rules.check(state.rules, {:guess, player}),
          {:ok, coord} <- Coordinate.new(row, col),
-         {result, forested_island, status, targets} <- Board.player_guess(targets, coord),
+         {result, forested_island, status, targets} <- IslandSet.player_guess(targets, coord),
          {:ok, rules} <- Rules.check(rules, {:status, status})
     do
-      state |> update_board(enemy, targets)
+      state |> update_islands(enemy, targets)
             |> update_guesses(player, result, coord)
             |> update_rules(rules)
             |> reply({result, forested_island, status})
@@ -123,16 +123,16 @@ defmodule IslandsEngine.Game.Server do
            player2: new_player(nil) }
   defp new_player(player),
     do: %{ name: player,
-           board: Board.new, # really Islands
+           islands: IslandSet.new,
            guesses: Guesses.new }
   defp join_game(state, player),
     do: put_in(state.player2.name, player)
   defp update_rules(state, rules),
     do: %{state | rules: rules}
-  defp update_board(state, player, board),
-    do: Map.update!(state, player, &(%{&1 | board: board}) )
-  defp get_board(state, player),
-    do: Map.get(state, player).board
+  defp update_islands(state, player, islands),
+    do: Map.update!(state, player, &(%{&1 | islands: islands}) )
+  defp get_islands(state, player),
+    do: Map.get(state, player).islands
   defp update_guesses(state, player, result, coord),
     do: update_in(state[player].guesses, &( Guesses.add(&1, result, coord) ))
 end

@@ -1,7 +1,7 @@
-defmodule IslandsEngine.DataStructures.Board do #convert to IslandSet
+defmodule IslandsEngine.DataStructures.IslandSet do
   alias IslandsEngine.DataStructures.{Island, Coordinate}
 
-  def new, do: %{} # really just Islands
+  def new, do: %{}
 
   # No logic for re-placing an island (to another spot on the board)
   @spec place_island(%{}, atom, %Island{}) :: %{}
