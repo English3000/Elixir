@@ -36,7 +36,7 @@ defmodule IslandsInterfaceWeb.GameChannel do
     end
   end
   # Restores game upon crash or Phoenix.Presence upon refresh.
-  defp handle_restart(channel, game, player) do
+  defp handle_restart(channel, game, _player) do
     with                    0 <- Presence.list(channel) |> Map.keys |> length,
          [{_key, saved_game}] <- :dets.lookup(:game, game)
     do
@@ -81,7 +81,7 @@ defmodule IslandsInterfaceWeb.GameChannel do
     {:ok, _} = Presence.track(channel, player, %{time: System.system_time(:seconds) |> inspect}) ##
     {:noreply, channel}
   end
-  defp remove_board(state, opp_atom) do
+  defp remove_board(state, opp_atom) when is_atom(opp_atom) do
     opp_data = state |> Map.get(opp_atom) |> Map.delete(:board)
     {:ok, Map.put(state, opp_atom, opp_data)}
   end
@@ -90,30 +90,38 @@ defmodule IslandsInterfaceWeb.GameChannel do
   @spec handle_in(event :: String.t, payload :: any, channel :: Socket.t) ::
     {:reply, {status :: atom} | {status :: atom, response :: map}, channel :: Socket.t } |
     {:noreply,                                                     channel :: Socket.t}
-
   def handle_in("get_state", %{player: player} = payload, channel),
     do: {:reply, payload |> Server.lookup_game |> remove_board(player), channel}
-  defp remove_board(state, player) do
+  defp remove_board(state, player) when is_binary(player) do
     cond do
       state.player1.name == player -> remove_board(state, :player2)
       state.player2.name == player -> remove_board(state, :player1)
                               true -> {:error, %{reason: "Not playing."}}
     end
   end
-  # No need to return anything until islands set. Mutable frontend can handle placement logic.
-  # BUT instead, if I want to decouple logic, means sending larger payloads
-  def handle_in("place_island", %{"player"=> player,"island"=> island,"row"=> row,"col"=> col}, channel) do
-    player_atom = String.to_existing_atom(player)
-    island_atom = String.to_existing_atom(island)
-    "game:" <> game = channel.topic
 
+  # To decouple logic, sending larger payload
+  def handle_in("place_island", %{"player"=> player,"island"=> island,"row"=> row,"col"=> col}, channel) do
+        player_atom = String.to_existing_atom(player)
+        island_atom = String.to_existing_atom(island)
+    "game:" <> game = channel.topic
     case via(game) |> Server.place_island(player_atom, island_atom, row, col) do
-                   :ok -> {:reply, :ok, channel}
+        {:ok, islands} -> {:reply,    {:ok, islands},   channel}
       {:error, reason} -> {:reply, {:error, m(reason)}, channel} # :overlaps | :invalid_coordinate
     end
   end
 
-  def handle_in("set_islands", player, channel) do
+  def handle_in("remove_island", %{"player"=> player,"island"=> island}, channel) do
+        player_atom = String.to_existing_atom(player)
+        island_atom = String.to_existing_atom(island)
+    "game:" <> game = channel.topic
+    case via(game) |> Server.remove_island(player_atom, island_atom) do
+      {:ok, islands} -> {:reply, {:ok, islands}, channel}
+                   _ -> {:reply, {:error, %{reason: "Island not removed."}}, channel}
+    end
+  end
+
+  def handle_in("set_islands", player, channel) do ## @
     player_atom = String.to_existing_atom(player)
     "game:" <> game = channel.topic
     case via(game) |> Server.set_islands(player_atom) do

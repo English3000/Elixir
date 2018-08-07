@@ -1,16 +1,11 @@
-defmodule IslandsEngine.DataStructures.Coordinate do #(0) -- defining new data structures
-  @moduledoc """
-  Since we’ve aliased the Coordinate module,
-  we can now refer to coordinate structs as %Coordinate{}
-  instead of %IslandsEngine.Coordinate{}.
-  """
-  alias __MODULE__
+#(0) -- defining new data structures
+defmodule IslandsEngine.DataStructures.Coordinate do
+  alias __MODULE__ # DataStructures.Coordinate -> Coordinate
   @enforce_keys [:row, :col]
       defstruct [:row, :col]
 
-  @doc "Coordinate.new(integer, integer, range)"
-  # @spec new(non_neg_integer, non_neg_integer, non_neg_integer..non_neg_integer) ::
-  #   %Coordinate{row: non_neg_integer, col: non_neg_integer}
+  @doc "A coordinate is a struct with two integer values."
+  ## range should not be defined at coordinate-level
   def new(row, col, range \\ 1..10)
   def new(row, col, first..last)
     when first > 0 and first < last

@@ -48,23 +48,31 @@ defmodule IslandsEngine.Game.Server do
     islands = get_islands(state, player)
     with {:ok, rules}  <- Rules.check(state.rules, {:place_islands, player}),
          {:ok, coord}  <- Coordinate.new(row, col),
-         {:ok, island} <- Island.new(key, coord),                # errors if island is out of bounds
-         %{} = islands   <- IslandSet.place_island(islands, key, island) # errors if island overlaps
+         {:ok, island} <- Island.new(key, coord),             # errors if island is out of bounds
+         %{} = islands <- IslandSet.put(islands, key, island) # errors if island overlaps
     do
       state |> update_islands(player, islands)
             |> update_rules(rules)
-            |> reply(:ok)
+            |> reply({:ok, islands})
     else
       error -> reply(state, error)
     end
   end
+
+  def remove_island(pid, player, key) when player in @players,
+    do: GenServer.call(pid, {:remove_island, player, key})
+  def handle_call({:remove_island, player, key}, _caller, state) do
+      islands = get_islands(state, player) |> IslandSet.delete(key)
+    update_islands(state, player, islands) |> reply({:ok, islands})
+  end
+  ## On frontend, disable draggability once islands are set.
 
   def set_islands(pid, player) when player in @players,
     do: GenServer.call(pid, {:islands_set, player})
   def handle_call({:islands_set, player}, _caller, state) do
     islands = get_islands(state, player)
     with {:ok, rules} <- Rules.check(state.rules, {:islands_set, player}),
-                 true <- IslandSet.ready?(islands) do
+                 true <- IslandSet.set?(islands) do
       state |> update_rules(rules)
             |> reply({:ok, islands})
     else
@@ -79,7 +87,7 @@ defmodule IslandsEngine.Game.Server do
     targets = get_islands(state, enemy)
     with {:ok, rules} <- Rules.check(state.rules, {:guess, player}),
          {:ok, coord} <- Coordinate.new(row, col),
-         {result, forested_island, status, targets} <- IslandSet.player_guess(targets, coord),
+         {result, forested_island, status, targets} <- IslandSet.guess(targets, coord),
          {:ok, rules} <- Rules.check(rules, {:status, status})
     do
       state |> update_islands(enemy, targets)

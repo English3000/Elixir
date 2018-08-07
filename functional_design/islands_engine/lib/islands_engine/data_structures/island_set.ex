@@ -1,53 +1,35 @@
 defmodule IslandsEngine.DataStructures.IslandSet do
   alias IslandsEngine.DataStructures.{Island, Coordinate}
-
+  @doc "An islandset is a map of islands by type atom."
   def new, do: %{}
 
-  # No logic for re-placing an island (to another spot on the board)
-  @spec place_island(%{}, atom, %Island{}) :: %{}
-  def place_island(board, key, %Island{} = island),
-    do: if collision?(board, key, island),
+  def delete(islands, key),
+    do: Map.delete(islands, key)
+
+  def put(islands, key, %Island{} = island),
+    do: if collision?(islands, island),
           do:   {:error, :overlaps},
-          else: Map.put(board, key, island)
+          else: Map.put(islands, key, island)
+  defp collision?(islands, new_island),
+    do: Enum.any?(islands, fn {_key, island} ->
+          not MapSet.disjoint?(island.coordinates, new_island.coordinates)
+        end)
 
-  # No logic for removing island from board
-  # def remove_island(board, key?)
-
-  # Ensures no duplicate island types or overlapping islands.
-  defp collision?(board, new_key, new_island) do
-    Enum.any?(board, fn {key, island} ->
-      key != new_key and Island.overlap?(island, new_island)
-    end)
-  end
-
-  @spec ready?(%{}) :: boolean
-  def ready?(board),
-    do: if Enum.all?( Island.types, &(Map.has_key?(board, &1)) ),
+  @spec set?(%{}) :: boolean
+  def set?(islands),
+    do: if Enum.all?( Island.types, &(Map.has_key?(islands, &1)) ),
           do:   true,
           else: {:error, :unplaced_islands}
 
-  def player_guess(board, %Coordinate{} = coordinate),
-    do: board |> hit_(coordinate) |> record(board)
-
-  defp hit_(board, coordinate) do
-    Enum.find_value(board, :miss, fn {key, island} ->
-      case Island.hit_(island, coordinate) do
+  def guess(islands, %Coordinate{} = coordinate) do
+    Enum.find_value(islands, :miss, fn {key, island} ->
+      case Island.hit?(island, coordinate) do
         {:hit, island} -> {key, island}
                  :miss -> false
       end
-    end)
+    end) |> Island.result(islands)
   end
 
-  defp record(:miss, board),
-    do: {:miss, :none, false, board}
-  defp record({key, island}, board) do
-    board = %{board | key => island}
-    {:hit,
-     (if Map.fetch!(board, key) |> Island.forested?, do: key, else: :none),
-     winner?(board),
-     board}
-  end
-
-  defp winner?(board),
-    do: Enum.all?(board, fn {_key, island} -> Island.forested?(island) end)
+  def winner?(islands),
+    do: Enum.all?(islands, fn {_key, island} -> Island.filled?(island) end)
 end
