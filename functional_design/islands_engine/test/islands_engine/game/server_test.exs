@@ -54,7 +54,7 @@ defmodule Game.ServerTest do
     game
   end
   defp invalid_coord(game, player, island, row, col) do
-    assert {:error, :invalid_coord} = Server.place_island(game, player, island, row, col)
+    assert {:error, :invalid_coordinate} = Server.place_island(game, player, island, row, col)
     IO.puts "+ handles invalid coordinates"
     game
   end

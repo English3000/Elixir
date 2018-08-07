@@ -32,7 +32,7 @@ defmodule IslandsEngine.DataStructures.Island do #(2)
   defp add_coordinate(coords, %Coordinate{row: row, col: col}, {row_offset, col_offset}) do
     case Coordinate.new(row + row_offset, col + col_offset) do
       {:ok,    coord}          -> {:cont, MapSet.put(coords, coord)}
-      {:error, :invalid_coord} -> {:halt, {:error, :invalid_coord}}
+      {:error, :invalid_coordinate} -> {:halt, {:error, :invalid_coordinate}}
     end
   end
 

@@ -1,6 +1,7 @@
 defmodule IslandsEngine.Game.Rules do
   alias __MODULE__
-  defstruct state: :init,
+  defstruct state: :init, # game stage
+            # players' stage
             player1: :init,
             player2: :init
 
@@ -34,9 +35,10 @@ defmodule IslandsEngine.Game.Rules do
 
   def check(_state, _action), do: :error
 
+  @doc "Get atom for opposing player. (Assumes only 2 players.)"
+  def opponent(:player1), do: :player2
+  def opponent(:player2), do: :player1
+
   defp ready?(rules), do: rules.player1 == :islands_set and
                           rules.player2 == :islands_set
-
-  defp opponent(:player1), do: :player2 # assuming only 2 players
-  defp opponent(:player2), do: :player1
 end

@@ -10,7 +10,7 @@ defmodule IslandsEngine.Game.Server do
                                 # Used by:
   @timeout 60 * 60 * 24 * 1000  #  reply/2
   @players [:player1, :player2] #  Stages
-  @errors [:invalid_coord, :invalid_island, :invalid_coord, :unplaced_islands]
+  @errors [:invalid_coordinate, :invalid_island, :invalid_coordinate, :unplaced_islands, :overlaps]
   # https://hexdocs.pm/elixir/Supervisor.html#module-module-based-supervisors
   @doc "Start a new game."
   def start_link(game, player) when is_binary(game) and is_binary(player),
@@ -48,8 +48,8 @@ defmodule IslandsEngine.Game.Server do
     board = get_board(state, player)
     with {:ok, rules}  <- Rules.check(state.rules, {:place_islands, player}),
          {:ok, coord}  <- Coordinate.new(row, col),
-         {:ok, island} <- Island.new(key, coord),
-         %{} = board   <- Board.place_island(board, key, island)
+         {:ok, island} <- Island.new(key, coord),                # errors if island is out of bounds
+         %{} = board   <- Board.place_island(board, key, island) # errors if island overlaps
     do
       state |> update_board(player, board)
             |> update_rules(rules)
@@ -75,7 +75,7 @@ defmodule IslandsEngine.Game.Server do
   def guess_coordinate(pid, player, row, col) when player in @players,
     do: GenServer.call(pid, {:guess, player, row, col})
   def handle_call({:guess, player, row, col}, _caller, state) do
-      enemy = opponent(player)
+      enemy = Rules.opponent(player) ## @ modifying server response state to exclude other player's board
     targets = get_board(state, enemy)
     with {:ok, rules} <- Rules.check(state.rules, {:guess, player}),
          {:ok, coord} <- Coordinate.new(row, col),
@@ -97,12 +97,9 @@ defmodule IslandsEngine.Game.Server do
   @doc "Generates `:via` tuple for a named process."
   def registry_tuple(game),
     do: {:via, Registry, {Registry.Game, game}}
-  @doc "Get atom for opposing player. (Assumes only 2 players.)"
-  def opponent(:player1), do: :player2
-  def opponent(:player2), do: :player1
 
   defp reply(state, {:error, msg} = result)
-    when msg in @errors,
+    when msg in @errors, # redunant/coupled?
       do: {:reply, result, state, @timeout}
   defp reply(state, result)
     when not is_tuple(result) or
@@ -119,12 +116,15 @@ defmodule IslandsEngine.Game.Server do
             end
     :dets.insert(:game, {game, state}); state
   end
-  defp new_game(%{game: game, player: player}) do
-    player1 = %{name: player, board: Board.new, guesses: Guesses.new}
-    player2 = %{name: nil,    board: Board.new, guesses: Guesses.new}
-    rules = Rules.new
-    m(game, player1, player2, rules)
-  end
+  defp new_game(%{game: game, player: player}),
+    do: %{ game: game,
+           rules: Rules.new,
+           player1: new_player(player),
+           player2: new_player(nil) }
+  defp new_player(player),
+    do: %{ name: player,
+           board: Board.new, 
+           guesses: Guesses.new }
   defp join_game(state, player),
     do: put_in(state.player2.name, player)
   defp update_rules(state, rules),
