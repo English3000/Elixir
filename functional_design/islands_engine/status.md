@@ -1,13 +1,25 @@
-##  m-6-Aug-2018
+##  w-08-Aug-2018
+
+if app crashes, how does that work?
+  1. page refresh erases state -- can refetch via rejoin via query string
+  2. server crashes -- supervisor would restart game (w/ saved state)
+    * Does browser maintain history on crash? If so, same approach works...
+
+      > From search, looks like browsers are built to be robust.
+      > Also, when Firefox closes, it auto-opens my tabs.
+      > If it restarts, I am able to restore my last session.
+
+    * I'll assume the browser will handle it's own crashes; I'll just worry about the server.
+
+
+##  m-06-Aug-2018
 
 + refactored `game_channel.ex` to properly handle crashes & page refreshes
 
 ***Now clear to build UI for joining game.***
 
 
-
-
-## su-5-Aug-2018
+## su-05-Aug-2018
 
 + adapted `game_channel.ex` to reply with/broadcast state to `socket.js`
 
