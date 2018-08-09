@@ -1,5 +1,5 @@
-defmodule IslandsEngine.DataStructures.Island do #(2)
-  alias IslandsEngine.DataStructures.{Coordinate, Island, IslandSet}
+defmodule IslandsEngine.DataStructures.Island do
+  alias IslandsEngine.DataStructures.{Coordinate, Island}
   @enforce_keys [:coordinates, :hits]
       defstruct [:coordinates, :hits]
 
@@ -12,9 +12,20 @@ defmodule IslandsEngine.DataStructures.Island do #(2)
       error -> error
     end
   end
+  # Builds a mapset of coordinates, or errors out if invalid.
+  defp build_island(coords, start) do
+    Enum.reduce_while(coords, MapSet.new, fn coord, acc ->
+      add_coordinate(acc, start, coord)
+    end)
+  end
+  defp add_coordinate(coords, %Coordinate{row: row, col: col}, {row_offset, col_offset}) do
+    case Coordinate.new(row + row_offset, col + col_offset) do
+         {:ok, coord}               -> {:cont, MapSet.put(coords, coord)}
+      {:error, :invalid_coordinate} -> {:halt, {:error, :invalid_coordinate}}
+    end
+  end
 
-  def types, do: [:atoll, :dot, :L, :S, :square]
-  # For all islands, we’ll assume that the starting coordinate is in the upper-left corner.
+  def  types,                do: [:atoll, :dot, :L, :S, :square]
   defp coordinates(:square), do: [{0,0},{0,1},{1,0},{1,1}]
   defp coordinates(:atoll),  do: [{0,0},{0,1},{1,1},{2,1},{2,0}]
   defp coordinates(:dot),    do: [{0,0}]
@@ -22,18 +33,9 @@ defmodule IslandsEngine.DataStructures.Island do #(2)
   defp coordinates(:S),      do: [{1,0},{1,1},{0,1},{0,2}]
   defp coordinates(_),       do: {:error, :invalid_island}
 
-  defp build_island(coords, start) do
-    Enum.reduce_while(coords, MapSet.new, fn coord, acc ->
-      new_coordinate(acc, start, coord)
-    end)
-  end
-  # Each time we build a new coordinate, we check to see if it is valid.
-  defp new_coordinate(coords, %Coordinate{row: row, col: col}, {row_offset, col_offset}) do
-    case Coordinate.new(row + row_offset, col + col_offset) do
-         {:ok, coord}               -> {:cont, MapSet.put(coords, coord)}
-      {:error, :invalid_coordinate} -> {:halt, {:error, :invalid_coordinate}}
-    end
-  end
+  @doc "Checks whether island is 100% hit"
+  def filled?(island),
+    do: MapSet.equal?(island.coordinates, island.hits)
 
   def hit?(island, coordinate) do
     case MapSet.member?(island.coordinates, coordinate) do
@@ -41,16 +43,4 @@ defmodule IslandsEngine.DataStructures.Island do #(2)
       false -> :miss
     end
   end
-
-  def result(:miss, islands),
-    do: {:miss, :none, false, islands}
-  def result({key, island}, islands) do
-    islands  = %{islands | key => island}
-    forested = if Map.fetch!(islands, key) |> filled?, do: key, else: :none
-    {:hit, forested, IslandSet.winner?(islands), islands}
-  end
-
-  @doc "Checks whether island is 100% hit"
-  def filled?(island),
-    do: MapSet.equal?(island.coordinates, island.hits)
 end

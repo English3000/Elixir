@@ -1,34 +1,41 @@
-defmodule IslandsEngine.Game.Rules do
-  alias __MODULE__
-  defstruct state: :init, # game stage
+defmodule IslandsEngine.Game.Rules do  # TODO: major refactor
+  alias __MODULE__                     # change to Player module?
+  defstruct stage: :init, # game stage
             # players' stage
             player1: :init,
             player2: :init
 
-  def new, do: %Rules{} # seems redundant
+  def new, do: %Rules{} # for consistent API across data structures..?
 
-  def check(%Rules{state: :init} = rules, :add_player),
-    do: { :ok, %Rules{rules | state: :players_set} }
+  def check(%Rules{stage: :init} = rules, :add_player),
+    do: { :ok, %Rules{rules | stage: :players_set} }
+  # def check(%Rules{} = rules, :add_player) do
+  #   cond do
+  #     rules.player1 == :none -> {:ok, %Rules{rules | player1: :joined} }
+  #     rules.player2 == :none ->
+  #                       true -> :error
+  #   end
+  # end
 
-  def check(%Rules{state: :players_set} = rules, {:place_islands, player}) do
+  def check(%Rules{stage: :players_set} = rules, {:place_islands, player}) do
     case Map.fetch!(rules, player) do
              :init -> {:ok, rules}
       :islands_set -> :error
     end
   end
-  def check(%Rules{state: :players_set} = rules, {:islands_set, player}) do
+  def check(%Rules{stage: :players_set} = rules, {:islands_set, player}) do
     rules = Map.put(rules, player, :islands_set)
     case ready?(rules) do
-       true -> {:ok, %Rules{ rules | state: {:turn, :player1} } }
+       true -> {:ok, %Rules{ rules | stage: {:turn, :player1} } }
       false -> {:ok, rules}
     end
   end
 
-  def check(%Rules{state: {:turn, player}} = rules, {:guess, guesser}) when guesser == player,
-    do: { :ok, %Rules{rules | state: {:turn, opponent(player)}} }
-  def check(%Rules{state: {:turn, _}} = rules, {:status, result}) do
+  def check(%Rules{stage: {:turn, player}} = rules, {:guess, guesser}) when guesser == player,
+    do: { :ok, %Rules{rules | stage: {:turn, opponent(player)}} }
+  def check(%Rules{stage: {:turn, _}} = rules, {:status, result}) do
     case result do
-       true -> {:ok, %Rules{rules | state: :end}}
+       true -> {:ok, %Rules{rules | stage: :end}}
       false -> {:ok, rules}
     end
   end

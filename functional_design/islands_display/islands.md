@@ -6,6 +6,27 @@ We also have a Phoenix server with all the functions to communicate/interface wi
 
 We need you to create a UI for the game.
 
+## High-Level Overview
+
+Coordinate
+  - [x] new => struct{row: integer, col: integer}
+
+Guesses
+  - [x] new => struct{hits: mapset(coordinate), misses: mapset(coordinate)}
+  * add(guesses, result, coordinate) => struct
+
+Player
+  - [x] new
+
+Island
+  - [x] new(type, coordinate) => { atom, struct{coordinates: mapset(coordinate), hits: mapset(coordinate)} }
+    - [x] build_island
+      - [x] add_coordinate
+  - [x] types = [atom]
+  - [x] coordinates(atom) => [{integer, integer}] | {atom, atom}
+
+  * hit?(island, coordinate) <- GUESSES?
+
 ## Issues w/ Book Code
 
 On refresh, the game page is lost. So, while the backend remembers the state, the frontend does not.

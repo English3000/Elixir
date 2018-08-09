@@ -1,11 +1,11 @@
-#(0) -- defining new data structures
+# (0) -- defining new data structures
 defmodule IslandsEngine.DataStructures.Coordinate do
-  alias __MODULE__ # DataStructures.Coordinate -> Coordinate
+  alias __MODULE__
   @enforce_keys [:row, :col]
       defstruct [:row, :col]
 
-  @doc "A coordinate is a struct with two integer values."
   ## range should not be defined at coordinate-level
+  @doc "A coordinate is a struct with two integer values."
   def new(row, col, range \\ 1..10)
   def new(row, col, first..last)
     when first > 0 and first < last

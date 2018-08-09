@@ -45,7 +45,7 @@ defmodule IslandsEngine.Game.Server do
   def place_island(pid, player, key, row, col) when player in @players,
     do: GenServer.call(pid, {:place_island, player, key, row, col})
   def handle_call({:place_island, player, key, row, col}, _caller, state) do
-    islands = get_islands(state, player)
+    islands = player_data(state, [player, :islands])
     with {:ok, rules}  <- Rules.check(state.rules, {:place_islands, player}),
          {:ok, coord}  <- Coordinate.new(row, col),
          {:ok, island} <- Island.new(key, coord),             # errors if island is out of bounds
@@ -62,7 +62,7 @@ defmodule IslandsEngine.Game.Server do
   def remove_island(pid, player, key) when player in @players,
     do: GenServer.call(pid, {:remove_island, player, key})
   def handle_call({:remove_island, player, key}, _caller, state) do
-      islands = get_islands(state, player) |> IslandSet.delete(key)
+    islands = player_data(state, [player, :islands]) |> IslandSet.delete(key)
     update_islands(state, player, islands) |> reply({:ok, islands})
   end
   ## On frontend, disable draggability once islands are set.
@@ -70,7 +70,7 @@ defmodule IslandsEngine.Game.Server do
   def set_islands(pid, player) when player in @players,
     do: GenServer.call(pid, {:islands_set, player})
   def handle_call({:islands_set, player}, _caller, state) do
-    islands = get_islands(state, player)
+    islands = player_data(state, [player, :islands])
     with {:ok, rules} <- Rules.check(state.rules, {:islands_set, player}),
                  true <- IslandSet.set?(islands) do
       state |> update_rules(rules)
@@ -83,17 +83,17 @@ defmodule IslandsEngine.Game.Server do
   def guess_coordinate(pid, player, row, col) when player in @players,
     do: GenServer.call(pid, {:guess, player, row, col})
   def handle_call({:guess, player, row, col}, _caller, state) do
-      enemy = Rules.opponent(player)
-    targets = get_islands(state, enemy)
+    enemy = Rules.opponent(player)
+     data = player_data(state, [enemy])
     with {:ok, rules} <- Rules.check(state.rules, {:guess, player}),
          {:ok, coord} <- Coordinate.new(row, col),
-         {result, forested_island, status, targets} <- IslandSet.guess(targets, coord),
-         {:ok, rules} <- Rules.check(rules, {:status, status})
+         {guesses, islands, result, type, game_status} <- IslandSet.guess(data.guesses, data.islands, coord),
+         {:ok, rules} <- Rules.check(rules, {:status, game_status})
     do
-      state |> update_islands(enemy, targets)
-            |> update_guesses(player, result, coord)
+      state |> update_islands(enemy, islands)
+            |> update_guesses(player, guesses)
             |> update_rules(rules)
-            |> reply({result, forested_island, status})
+            |> reply({result, type, game_status}) # why does client need result? isn't type enough?
     else
       error -> reply(state, error)
     end
@@ -133,14 +133,15 @@ defmodule IslandsEngine.Game.Server do
     do: %{ name: player,
            islands: IslandSet.new,
            guesses: Guesses.new }
+           # stage: :joined | :none if name == nil
+  defp player_data(state, keys),
+    do: get_in(state, keys)
   defp join_game(state, player),
     do: put_in(state.player2.name, player)
   defp update_rules(state, rules),
     do: %{state | rules: rules}
   defp update_islands(state, player, islands),
     do: Map.update!(state, player, &(%{&1 | islands: islands}) )
-  defp get_islands(state, player),
-    do: Map.get(state, player).islands
-  defp update_guesses(state, player, result, coord),
-    do: update_in(state[player].guesses, &( Guesses.add(&1, result, coord) ))
+  defp update_guesses(state, player, guesses),
+    do: Map.update!(state, player, &(%{&1 | guesses: guesses}) )
 end

@@ -1,5 +1,5 @@
 defmodule IslandsEngine.DataStructures.IslandSet do
-  alias IslandsEngine.DataStructures.{Island, Coordinate}
+  alias IslandsEngine.DataStructures.{Island, Coordinate, Guesses}
   @doc "An islandset is a map of islands by type atom."
   def new, do: %{}
 
@@ -21,15 +21,23 @@ defmodule IslandsEngine.DataStructures.IslandSet do
           do:   true,
           else: {:error, :unplaced_islands}
 
-  def guess(islands, %Coordinate{} = coordinate) do
-    Enum.find_value(islands, :miss, fn {key, island} ->
-      case Island.hit?(island, coordinate) do
-        {:hit, island} -> {key, island}
-                 :miss -> false
-      end
-    end) |> Island.result(islands)
+  def guess(guesses, islands, %Coordinate{} = coord) do
+    case Enum.find_value(islands, :miss, fn {key, island} ->
+           case Island.hit?(island, coord) do
+             {:hit, island} -> {key, island}
+                      :miss -> false
+           end
+         end)
+    do                                                            # redundant?
+              :miss -> {Guesses.put(guesses, :miss, coord), islands, :miss, :none, false}
+      {key, island} -> islands = %{islands | key => island}
+                        filled = if Map.fetch!(islands, key) |> Island.filled?,
+                                   do:   key,
+                                   else: :none
+                       {Guesses.put(guesses, :hit, coord), islands, :hit, filled, filled?(islands)}
+    end
   end
 
-  def winner?(islands),
+  def filled?(islands),
     do: Enum.all?(islands, fn {_key, island} -> Island.filled?(island) end)
 end

@@ -23,7 +23,7 @@ defmodule IslandsInterfaceWeb.GameChannel do
 
          ## What happens if a player leaves the game temporarily? (handle foundational issues first)
          {:ok, state}  -> send(self(), {:after_join, "game_joined", state})
-                          {:ok, channel}
+                          {:ok, channel}  # How will game receive proper instruction to display?
     end
   end
   defp append_players(msg, channel) do
@@ -39,8 +39,7 @@ defmodule IslandsInterfaceWeb.GameChannel do
   # Also restores game on crash.
   defp track_players(channel, game, player) do
     keys = Presence.list(channel) |> Map.keys
-    IO.inspect Presence.list(channel)
-    time = System.system_time(:seconds) ## unnecessary w/ no match
+    time = System.system_time(:seconds) # unnecessary w/ no match
     case length(keys) do
       0 -> case :dets.lookup(:game, game) do
                                [] -> Presence.track(channel, player, m(time))
@@ -53,7 +52,6 @@ defmodule IslandsInterfaceWeb.GameChannel do
       1 -> if hd(keys) != player,
              do: Presence.track(channel, player, m(time))
     end
-    IO.inspect Presence.list(channel)
 
     via(game) |> Server.process?
   end
@@ -79,20 +77,10 @@ defmodule IslandsInterfaceWeb.GameChannel do
   defp get_state(result, game, player) do
     case result do
       :error -> {:error, "Game at capacity."}
-
-         :ok -> # send(self(), {:after_join, player})
-                m(game, player) |> Server.lookup_game |> remove_board(:player1)
-
+         :ok -> m(game, player) |> Server.lookup_game |> remove_board(:player1)
        tuple -> tuple
     end
   end
-
-  ## move logic into `track_players`
-  # @doc "Tracks newly joined players using Phoenix.Presence"
-  # def handle_info({:after_join, player}, channel) do
-  #   {:ok, _} = Presence.track(channel, player, %{time: System.system_time(:seconds) |> inspect}) ##
-  #   {:noreply, channel}
-  # end
   defp remove_board(state, opp_atom) when is_atom(opp_atom) do
     opp_data = state |> Map.get(opp_atom) |> Map.delete(:board)
     {:ok, Map.put(state, opp_atom, opp_data)}
@@ -142,13 +130,13 @@ defmodule IslandsInterfaceWeb.GameChannel do
     end
   end
 
-  def handle_in("guess_coordinate", params, %{topic: "game:" <> game} = channel) do # Can just `result` be broadcasted?
+  def handle_in("guess_coordinate", params, %{topic: "game:" <> game} = channel) do
     %{ "player" => player,
           "row" => row,
           "col" => col } = params
 
     player = String.to_existing_atom(player)
-    case via(game) |> Server.guess_coordinate(player, row, col) do
+    case via(game) |> Server.guess_coordinate(player, row, col) do ## REFACTOR
       {result, island, status} -> hit = if result == :hit, do: true, else: false
                                   result = m(hit, island, status)
                                   # Can just `result` be broadcasted?
