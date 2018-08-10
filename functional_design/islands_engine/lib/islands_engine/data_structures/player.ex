@@ -1,19 +1,14 @@
-# TODO: refactor DataStructures API
 defmodule IslandsEngine.DataStructures.Player do
   alias IslandsEngine.DataStructures.{Player, IslandSet, Guesses}
-  defstruct name:    nil,
+  defstruct key:     :player2,
+            name:    nil,
             stage:   :none,
             islands: IslandSet.new,
             guesses: Guesses.new
-            # key??
 
-  def new,
-    do: %Player{}
-  def new(name),
-    do: %Player{name: name, stage: :joined}
+  def new      , do: %Player{}
+  def new(name), do: %Player{key: :player1, name: name, stage: :joined}
 
-  # Rules API
-
-  # look at other data structures
-  # possibly add Game struct too
+  def opponent(:player1), do: :player2
+  def opponent(:player2), do: :player1
 end

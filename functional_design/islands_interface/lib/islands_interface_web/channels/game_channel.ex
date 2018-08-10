@@ -10,14 +10,14 @@ defmodule IslandsInterfaceWeb.GameChannel do
     {:ok, Socket.t} |
     {:ok, reply :: map, Socket.t} |
     {:error, reply :: map}
-  def join("game:" <> game, %{"screen_name" => player}, channel) do
+  def join("game:" <> game, %{"screen_name" => player_name}, channel) do
     ## NOTE: Perfect use case for Monad.
     functions = [ channel, # first result
                   &track_players/3,
                   &register_player?/3,
                   &add_player?/3,
                   &get_state/3 ]
-    call = fn function, result -> function.(result, game, player) end
+    call = fn function, result -> function.(result, game, player_name) end
     case Enum.reduce(functions, call) do
       {:error, reason} -> {:error, %{reason: append_players(reason, channel)}}
 

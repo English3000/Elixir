@@ -1,12 +1,8 @@
 defmodule IslandsEngine.Game.Server do
-  @moduledoc """
-  `game` argument can be PID or `:via` registry_tuple
-  """
   import Shorthand
-  use GenServer, start: {__MODULE__, :start_link, []}, restart: :transient  # start_link/3, start/3
-  alias IslandsEngine.Game.Rules
-  alias IslandsEngine.DataStructures.{IslandSet, Island, Guesses, Coordinate}
-
+  use GenServer, start: {__MODULE__, :start_link, []}, restart: :transient
+  alias IslandsEngine.Game.Stage
+  alias IslandsEngine.DataStructures.{IslandSet, Island, Player, Guesses, Coordinate}
                                 # Used by:
   @timeout 60 * 60 * 24 * 1000  #  reply/2
   @players [:player1, :player2] #  Stages
@@ -30,69 +26,76 @@ defmodule IslandsEngine.Game.Server do
     do: :ok
 
   # Stages
-  def add_player(pid, player) when is_binary(player),
-    do: GenServer.call(pid, {:add_player, player})
-  def handle_call({:add_player, player}, _caller, state) do
-    with {:ok, rules} <- Rules.check(state.rules, :add_player) do
-      state |> join_game(player)
-            |> update_rules(rules)
-            |> reply(:ok)
-    else
-      error -> reply(state, error)
+  def add_player(pid, player_name) when is_binary(player_name),
+    do: GenServer.call(pid, {:add_player, player_name})
+  def handle_call({:add_player, _player_name} = tuple, _caller, state) do
+    case Stage.check(state.player2, tuple) do
+      {:ok, player2} -> state |> update_player(player2)
+                              |> reply(:ok)
+              :error -> reply(state, :error)
     end
   end
 
-  def place_island(pid, player, key, row, col) when player in @players,
-    do: GenServer.call(pid, {:place_island, player, key, row, col})
-  def handle_call({:place_island, player, key, row, col}, _caller, state) do
-    islands = player_data(state, [player, :islands])
-    with {:ok, rules}  <- Rules.check(state.rules, {:place_islands, player}),
+  def place_island(pid, player_atom, key, row, col) when player_atom in @players,
+    do: GenServer.call(pid, {:place_island, player_atom, key, row, col})
+  def handle_call({:place_island, player_atom, key, row, col}, _caller, state) do
+    player = player_data(state, [player_atom])
+    with  :ok          <- Stage.check(player, :place_island),
          {:ok, coord}  <- Coordinate.new(row, col),
-         {:ok, island} <- Island.new(key, coord),             # errors if island is out of bounds
-         %{} = islands <- IslandSet.put(islands, key, island) # errors if island overlaps
-    do
-      state |> update_islands(player, islands)
-            |> update_rules(rules)
+         {:ok, island} <- Island.new(key, coord),                       # errors if island is out of bounds
+         %{} = islands <- IslandSet.put(player.islands, key, island) do # errors if island overlaps
+      state |> update_islands(player_atom, islands)
             |> reply({:ok, islands})
     else
       error -> reply(state, error)
     end
   end
 
-  def remove_island(pid, player, key) when player in @players,
-    do: GenServer.call(pid, {:remove_island, player, key})
-  def handle_call({:remove_island, player, key}, _caller, state) do
-    islands = player_data(state, [player, :islands]) |> IslandSet.delete(key)
-    update_islands(state, player, islands) |> reply({:ok, islands})
+  def remove_island(pid, player_atom, key) when player_atom in @players,
+    do: GenServer.call(pid, {:remove_island, player_atom, key})
+  def handle_call({:remove_island, player_atom, key}, _caller, state) do
+    islands = player_data(state, [player_atom, :islands]) |> IslandSet.delete(key)
+    update_islands(state, player_atom, islands) |> reply({:ok, islands})
   end
   ## On frontend, disable draggability once islands are set.
 
-  def set_islands(pid, player) when player in @players,
-    do: GenServer.call(pid, {:islands_set, player})
-  def handle_call({:islands_set, player}, _caller, state) do
-    islands = player_data(state, [player, :islands])
-    with {:ok, rules} <- Rules.check(state.rules, {:islands_set, player}),
-                 true <- IslandSet.set?(islands) do
-      state |> update_rules(rules)
-            |> reply({:ok, islands})
+  def set_islands(pid, player_atom) when player_atom in @players,
+    do: GenServer.call(pid, {:set_islands, player_atom})
+  def handle_call({:set_islands, player_atom}, _caller, state) do
+    with {:ok, player} <- player_data(state, [player_atom]) |> Stage.check(:set_islands),
+                  true <- IslandSet.set?(player.islands)
+    do
+      # check if both players are ready
+      result = if player_atom == :player1,
+                 do:   Stage.check( player, player_data(state, [:player2]) ),
+                 else: Stage.check( player_data(state, [:player1]), player )
+
+      case result do # update state accordingly
+        {:ok, player1, player2} -> state |> update_player(player1)
+                                         |> update_player(player2)
+                                         |> reply({:ok, player.islands})
+
+                         :error -> state |> update_player(player)
+                                         |> reply({:ok, player.islands})
+      end
     else
       error -> reply(state, error)
     end
   end
 
-  def guess_coordinate(pid, player, row, col) when player in @players,
-    do: GenServer.call(pid, {:guess, player, row, col})
-  def handle_call({:guess, player, row, col}, _caller, state) do
-    enemy = Rules.opponent(player)
-     data = player_data(state, [enemy])
-    with {:ok, rules} <- Rules.check(state.rules, {:guess, player}),
-         {:ok, coord} <- Coordinate.new(row, col),
-         {guesses, islands, result, type, game_status} <- IslandSet.guess(data.guesses, data.islands, coord),
-         {:ok, rules} <- Rules.check(rules, {:status, game_status})
+  def guess_coordinate(pid, player_atom, row, col) when player_atom in @players,
+    do: GenServer.call(pid, {:guess, player_atom, row, col})
+  def handle_call({:guess, player_atom, row, col}, _caller, state) do
+      player = player_data(state, [player_atom])
+    opponent = player_data(state, [player_atom |> Player.opponent])
+    with {:ok, coord}            <- Coordinate.new(row, col),
+         {guesses, islands, result, type, game_status} <- IslandSet.hit?(player.guesses, player.islands, coord),
+         {:ok, guesser, waiting} <- Stage.check(player, opponent, game_status)
     do
-      state |> update_islands(enemy, islands)
-            |> update_guesses(player, guesses)
-            |> update_rules(rules)
+      state |> update_islands(waiting, islands)
+            |> update_guesses(guesser, guesses)
+            |> update_player(guesser)
+            |> update_player(waiting)
             |> reply({result, type, game_status}) # why does client need result? isn't type enough?
     else
       error -> reply(state, error)
@@ -126,22 +129,15 @@ defmodule IslandsEngine.Game.Server do
   end
   defp new_game(%{game: game, player: player}),
     do: %{ game: game,
-           rules: Rules.new,
-           player1: new_player(player),
-           player2: new_player(nil) }
-  defp new_player(player),
-    do: %{ name: player,
-           islands: IslandSet.new,
-           guesses: Guesses.new }
-           # stage: :joined | :none if name == nil
+           player1: Player.new(player),
+           player2: Player.new }
   defp player_data(state, keys),
     do: get_in(state, keys)
-  defp join_game(state, player),
-    do: put_in(state.player2.name, player)
-  defp update_rules(state, rules),
-    do: %{state | rules: rules}
-  defp update_islands(state, player, islands),
-    do: Map.update!(state, player, &(%{&1 | islands: islands}) )
-  defp update_guesses(state, player, guesses),
-    do: Map.update!(state, player, &(%{&1 | guesses: guesses}) )
+  # could refactor to 1 method
+  defp update_player(state, player),
+    do: %{state | player.key => player}
+  defp update_islands(state, player_atom, islands),
+    do: Map.update!(state, player_atom, &(%{&1 | islands: islands}) )
+  defp update_guesses(state, player_atom, guesses),
+    do: Map.update!(state, player_atom, &(%{&1 | guesses: guesses}) )
 end

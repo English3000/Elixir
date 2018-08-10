@@ -1,8 +1,8 @@
 defmodule Game.ServerTest do
   use ExUnit.Case
-  alias IslandsEngine.Game.{Server, Rules, Supervisor}
+  alias IslandsEngine.Game.{Server, Stage, Supervisor}
 
-  @module "Game.{Server, Rules}"
+  @module "Game.{Server, Stage}"
   @player1 "Frank"
   @player2 "Dweezil"
   @coupled_island :square
@@ -96,7 +96,7 @@ defmodule Game.ServerTest do
     game
   end
 
-  # Rules
+  # Stage
   defp guessing_rule(game, player, row, col) do
     IO.puts "Rule: can't guess during board-setting phase"
     assert :error = Server.guess_coordinate(game, player, row, col)
@@ -107,7 +107,7 @@ defmodule Game.ServerTest do
   defp turns_rule(game) do
     IO.puts "Rule: can't place island during turn-taking phase"
     new_state = :sys.replace_state(game, fn state ->
-      %{state | rules: %Rules{state: {:turn, :player1} }}
+      %{state | rules: %Stage{state: {:turn, :player1} }}
     end)
     assert {:turn, :player1} = new_state.rules.state
     assert :error = Server.place_island(game, :player1, :dot, 5,5)

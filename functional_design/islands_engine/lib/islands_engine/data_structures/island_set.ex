@@ -21,7 +21,7 @@ defmodule IslandsEngine.DataStructures.IslandSet do
           do:   true,
           else: {:error, :unplaced_islands}
 
-  def guess(guesses, islands, %Coordinate{} = coord) do
+  def hit?(guesses, islands, %Coordinate{} = coord) do
     case Enum.find_value(islands, :miss, fn {key, island} ->
            case Island.hit?(island, coord) do
              {:hit, island} -> {key, island}

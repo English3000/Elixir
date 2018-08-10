@@ -6,26 +6,38 @@ We also have a Phoenix server with all the functions to communicate/interface wi
 
 We need you to create a UI for the game.
 
-## High-Level Overview
+## Data Structures API
 
 Coordinate
   - [x] new => struct{row: integer, col: integer}
 
 Guesses
-  - [x] new => struct{hits: mapset(coordinate), misses: mapset(coordinate)}
-  * add(guesses, result, coordinate) => struct
+  - [x] new                              => struct{hits: mapset(coordinate), misses: mapset(coordinate)}
+  - [x] put(guesses, result, coordinate) => struct
 
 Player
   - [x] new
 
+Stage
+
 Island
-  - [x] new(type, coordinate) => { atom, struct{coordinates: mapset(coordinate), hits: mapset(coordinate)} }
+  - [x] new(type, coordinate)           => { atom, struct{coordinates: mapset(coordinate), hits: mapset(coordinate)} }
     - [x] build_island
       - [x] add_coordinate
-  - [x] types = [atom]
-  - [x] coordinates(atom) => [{integer, integer}] | {atom, atom}
+  - [x] types                           => [atom]
+  - [x] coordinates(atom)               => [{integer, integer}] | {atom, atom}
+  - [x] hit?       (island, coordinate) => {atom, map(island)} | atom
+  - [x] filled?    (island)             => boolean
 
-  * hit?(island, coordinate) <- GUESSES?
+IslandSet
+  - [x] new                                     => map
+  - [x] put    (islandset, atom, island)        => islandset | {atom, atom}
+    - [x] collision?
+  - [x] delete (islandset, atom)                => islandset
+  - [x] set?   (islandset)                      => boolean | {atom, atom}
+  - [x] hit?   (guesses, islandset, coordinate) => {guesses, islandset, atom, atom, boolean}
+  - [x] filled?(islandset)                      => boolean
+
 
 ## Issues w/ Book Code
 
@@ -92,7 +104,7 @@ If game exists,
   ```
   * if no second player, `player2` displays message, e.g. `Waiting for another player to join...`
 
-> Stages:
+> Stage:
 >
 > * setting one's islands
 > * taking a turn

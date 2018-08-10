@@ -33,14 +33,13 @@ defmodule IslandsEngine.DataStructures.Island do
   defp coordinates(:S),      do: [{1,0},{1,1},{0,1},{0,2}]
   defp coordinates(_),       do: {:error, :invalid_island}
 
-  @doc "Checks whether island is 100% hit"
-  def filled?(island),
-    do: MapSet.equal?(island.coordinates, island.hits)
-
   def hit?(island, coordinate) do
     case MapSet.member?(island.coordinates, coordinate) do
       true -> { :hit, %{island | hits: MapSet.put(island.hits, coordinate)} }
       false -> :miss
     end
   end
+
+  def filled?(island),
+    do: MapSet.equal?(island.coordinates, island.hits)
 end
