@@ -23,7 +23,7 @@ defmodule IslandsInterfaceWeb.GameChannel do
 
          ## What happens if a player leaves the game temporarily? (handle foundational issues first)
          {:ok, state}  -> send(self(), {:after_join, "game_joined", state})
-                          {:ok, channel}  # How will game receive proper instruction to display?
+                          {:ok, state, channel}  # How will game receive proper instruction to display?
     end
   end
   defp append_players(msg, channel) do
@@ -81,8 +81,8 @@ defmodule IslandsInterfaceWeb.GameChannel do
        tuple -> tuple
     end
   end
-  defp remove_board(state, opp_atom) when is_atom(opp_atom) do
-    opp_data = state |> Map.get(opp_atom) |> Map.delete(:board)
+  defp remove_islands(state, opp_atom) when is_atom(opp_atom) do
+    opp_data = state |> Map.get(opp_atom) |> Map.delete(:islands)
     {:ok, Map.put(state, opp_atom, opp_data)}
   end
 
@@ -91,11 +91,11 @@ defmodule IslandsInterfaceWeb.GameChannel do
     {:reply, {status :: atom} | {status :: atom, response :: map}, channel :: Socket.t } |
     {:noreply,                                                     channel :: Socket.t}
   def handle_in("get_state", %{player: player} = payload, channel),
-    do: {:reply, payload |> Server.lookup_game |> remove_board(player), channel}
-  defp remove_board(state, player) when is_binary(player) do
+    do: {:reply, payload |> Server.lookup_game |> remove_islands(player), channel}
+  defp remove_islands(state, player) when is_binary(player) do
     cond do
-      state.player1.name == player -> remove_board(state, :player2)
-      state.player2.name == player -> remove_board(state, :player1)
+      state.player1.name == player -> remove_islands(state, :player2)
+      state.player2.name == player -> remove_islands(state, :player1)
                               true -> {:error, %{reason: "Not playing."}}
     end
   end
@@ -112,7 +112,7 @@ defmodule IslandsInterfaceWeb.GameChannel do
     end
   end
 
-  def handle_in("remove_island", %{"player"=> player,"island"=> island}, channel) do
+  def handle_in("delete_island", %{"player"=> player,"island"=> island}, channel) do
         player_atom = String.to_existing_atom(player)
         island_atom = String.to_existing_atom(island)
     "game:" <> game = channel.topic

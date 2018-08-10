@@ -1,5 +1,4 @@
 defmodule IslandsEngine.Game.Stage do
-  alias __MODULE__
   alias IslandsEngine.DataStructures.Player
 
   def check(%Player{stage: :none} = player, {:add_player, name}),
@@ -10,15 +9,17 @@ defmodule IslandsEngine.Game.Stage do
     do: { :ok, %Player{player | stage: :ready} }
   def check(%Player{stage: :ready} = player1, %Player{stage: :ready} = player2),
     do: { :ok, %Player{player1 | stage: :turn}, %Player{player2 | stage: :wait} }
+  def check(_state, _action),
+    do: :error
   def check(%Player{stage: :turn} = guesser, waiting, status) do
     case status do
        true -> { :ok, %Player{guesser | stage: :won},  %Player{waiting | stage: :lost} }
       false -> { :ok, %Player{guesser | stage: :wait}, %Player{waiting | stage: :turn} }
     end
   end
-  def check(_state, _action),          do: :error
-  def check(_state, _action, _status), do: :error
-
+  def check(_state, _action, _status),
+    do: :error
+end
 
   # def check(%Stage{stage: :init} = rules, :add_player),
   #   do: { :ok, %Stage{rules | stage: :players_set} }
@@ -50,4 +51,3 @@ defmodule IslandsEngine.Game.Stage do
   #
   # defp ready?(rules), do: rules.player1 == :islands_set and
   #                         rules.player2 == :islands_set
-end

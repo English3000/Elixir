@@ -2,7 +2,7 @@ defmodule IslandsEngine.Game.Server do
   import Shorthand
   use GenServer, start: {__MODULE__, :start_link, []}, restart: :transient
   alias IslandsEngine.Game.Stage
-  alias IslandsEngine.DataStructures.{IslandSet, Island, Player, Guesses, Coordinate}
+  alias IslandsEngine.DataStructures.{IslandSet, Island, Player, Coordinate}
                                 # Used by:
   @timeout 60 * 60 * 24 * 1000  #  reply/2
   @players [:player1, :player2] #  Stages

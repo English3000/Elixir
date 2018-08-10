@@ -16,9 +16,11 @@ Guesses
   - [x] put(guesses, result, coordinate) => struct
 
 Player
-  - [x] new
+  - [x] new            => struct{key: atom, name: String.t | nil, stage: atom, islands: islands, guesses: guesses}
+  - [x] opponent(atom) => atom
 
 Stage
+  - [x] check(player, player | tuple | atom) ...
 
 Island
   - [x] new(type, coordinate)           => { atom, struct{coordinates: mapset(coordinate), hits: mapset(coordinate)} }
