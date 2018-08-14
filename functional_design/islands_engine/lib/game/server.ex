@@ -57,7 +57,6 @@ defmodule IslandsEngine.Game.Server do
     islands = player_data(state, [player_atom, :islands]) |> IslandSet.delete(key)
     update_islands(state, player_atom, islands) |> reply({:ok, key})
   end
-  ## On frontend, disable draggability once islands are set.
 
   def set_islands(pid, player_atom) when player_atom in @players,
     do: GenServer.call(pid, {:set_islands, player_atom})
@@ -85,7 +84,7 @@ defmodule IslandsEngine.Game.Server do
 
   def guess_coordinate(pid, player_atom, row, col) when player_atom in @players,
     do: GenServer.call(pid, {:guess, player_atom, row, col})
-  def handle_call({:guess, player_atom, row, col}, _caller, state) do # frontend prevents duplicate guesses
+  def handle_call({:guess, player_atom, row, col}, _caller, state) do # frontend prevents duplicate guesses (so no need to check)
       player = player_data(state, [player_atom])
     opponent = player_data(state, [player_atom |> Player.opponent])
     with {:ok, coord}            <- Coordinate.new(row, col),

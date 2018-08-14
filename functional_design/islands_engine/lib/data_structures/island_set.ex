@@ -34,7 +34,6 @@ defmodule IslandsEngine.DataStructures.IslandSet do
       {key, island} -> {Guesses.put(guesses, :hit,  coord), key,   filled?(guesses, opp_islands)}
     end
   end
-
   defp filled?(guesses, opp_islands),
     do: Enum.all?(opp_islands, fn {_key, island} -> MapSet.subset?(island.coordinates, guesses.hits) end)
 end

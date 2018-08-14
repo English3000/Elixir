@@ -62,7 +62,7 @@ defmodule IslandsInterfaceWeb.GameChannel do  ## TODO: write tests ~ https://hex
     do: Supervisor.start_game(game, player)
   defp add_player?(result, game, player) do
     case result do
-      {false, state} -> remove_coords(state, :player2)
+      {false, state} -> remove_islands(state, :player2)
       { true, state} -> via(game) |> Server.add_player(player)
                error -> error
     end
@@ -70,12 +70,12 @@ defmodule IslandsInterfaceWeb.GameChannel do  ## TODO: write tests ~ https://hex
   defp get_state(result, game, player) do
     case result do
       :error -> {:error, "Game at capacity."}
-         :ok -> m(game, player) |> Server.lookup_game |> remove_coords(:player1)
+         :ok -> m(game, player) |> Server.lookup_game |> remove_islands(:player1)
        tuple -> tuple
     end
   end
-  defp remove_coords(state, opp_atom) when is_atom(opp_atom),
-    do: {:ok, update_in(state, [opp_atom, :islands], &( Map.delete(&1, :coordinates) ))}
+  defp remove_islands(state, opp_atom) when is_atom(opp_atom),
+    do: {:ok, update_in(state, [opp_atom], &( Map.delete(&1, :islands) ))}
 
   @doc "<JS> channel.push(event, payload) => handle_in(event, payload, channel) <EX>"
   @spec handle_in(event :: String.t, payload :: any, channel :: Socket.t) ::
@@ -83,10 +83,10 @@ defmodule IslandsInterfaceWeb.GameChannel do  ## TODO: write tests ~ https://hex
     {:noreply,                                                     channel :: Socket.t}
   # def handle_in("get_state", %{player: player} = payload, channel),
   #   do: {:reply, payload |> Server.lookup_game |> remove_coords(player), channel}
-  # defp remove_coords(state, player) when is_binary(player) do
+  # defp remove_islands(state, player) when is_binary(player) do
   #   cond do
-  #     state.player1.name == player -> remove_coords(state, :player2)
-  #     state.player2.name == player -> remove_coords(state, :player1)
+  #     state.player1.name == player -> remove_islands(state, :player2)
+  #     state.player2.name == player -> remove_islands(state, :player1)
   #                             true -> {:error, %{reason: "Not playing."}}
   #   end
   # end
@@ -102,7 +102,7 @@ defmodule IslandsInterfaceWeb.GameChannel do  ## TODO: write tests ~ https://hex
   end
 
   def handle_in("delete_island", %{"player"=> player,"island"=> island}, %{topic: "game" <> game} = channel) do
-    case via(game) |> Server.delete_island(String.to_existing_atom(player), String.to_existing_atom(island)) do
+    case via(game) |> Server.delete_island(String.to_atom(player), String.to_atom(island)) do
       {:ok, island_atom} -> push channel, "island_removed", island_atom
                             {:reply, :ok, channel}
 

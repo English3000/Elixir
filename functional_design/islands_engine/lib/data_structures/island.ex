@@ -7,7 +7,7 @@ defmodule IslandsEngine.DataStructures.Island do
   def new(type, %Coordinate{} = upper_left) do
     with [_|_] = coordinates <- coordinates(type),
      %MapSet{} = coords      <- build_island(coordinates, upper_left) do
-      { :ok, %Island{coordinates: coords, hits: MapSet.new, type: type} }
+      { :ok, %Island{coordinates: coords, type: type} }
     else
       error -> error
     end
@@ -33,6 +33,6 @@ defmodule IslandsEngine.DataStructures.Island do
   defp coordinates(:S),      do: [{1,0},{1,1},{0,1},{0,2}]
   defp coordinates(_),       do: {:error, :invalid_island}
 
-  def hit?(island, coordinate), 
+  def hit?(island, coordinate),
     do: MapSet.member?(island.coordinates, coordinate)
 end
