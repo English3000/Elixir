@@ -89,11 +89,10 @@ defmodule IslandsEngine.Game.Server do
       player = player_data(state, [player_atom])
     opponent = player_data(state, [player_atom |> Player.opponent])
     with {:ok, coord}            <- Coordinate.new(row, col),
-         {guesses, islands, key, game_status} <- IslandSet.hit?(player.guesses, player.islands, coord),
+         {guesses, islands, key, game_status} <- IslandSet.hit?(player.guesses, opponent.islands, coord),
          {:ok, guesser, waiting} <- Stage.check(player, opponent, game_status)
     do
-      state |> update_islands(waiting, islands)
-            |> update_guesses(guesser, guesses)
+      state |> update_guesses(guesser, guesses)
             |> update_player(guesser)
             |> update_player(waiting)
             |> reply({key, game_status})

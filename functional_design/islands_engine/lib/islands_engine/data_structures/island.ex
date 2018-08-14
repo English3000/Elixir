@@ -1,7 +1,7 @@
 defmodule IslandsEngine.DataStructures.Island do
   alias IslandsEngine.DataStructures.{Coordinate, Island}
-  @enforce_keys [:coordinates, :hits, :type] # isn't hits redundant
-      defstruct [:coordinates, :hits, :type]
+  @enforce_keys [:coordinates, :type]
+      defstruct [:coordinates, :type]
 
   @doc "An island is a mapset of coordinates that corresponds to a type atom."
   def new(type, %Coordinate{} = upper_left) do
@@ -33,13 +33,6 @@ defmodule IslandsEngine.DataStructures.Island do
   defp coordinates(:S),      do: [{1,0},{1,1},{0,1},{0,2}]
   defp coordinates(_),       do: {:error, :invalid_island}
 
-  def hit?(island, coordinate) do
-    case MapSet.member?(island.coordinates, coordinate) do
-      true -> { :hit, %{island | hits: MapSet.put(island.hits, coordinate)} }
-      false -> :miss
-    end
-  end
-
-  def filled?(island),
-    do: MapSet.equal?(island.coordinates, island.hits)
+  def hit?(island, coordinate), 
+    do: MapSet.member?(island.coordinates, coordinate)
 end

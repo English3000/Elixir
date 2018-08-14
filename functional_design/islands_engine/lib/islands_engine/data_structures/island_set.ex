@@ -22,19 +22,19 @@ defmodule IslandsEngine.DataStructures.IslandSet do
           do:   true,
           else: {:error, :unplaced_islands}
 
-  def hit?(guesses, islands, %Coordinate{} = coord) do
-    case Enum.find_value(islands, :miss, fn {key, island} ->
+  def hit?(guesses, opp_islands, %Coordinate{} = coord) do
+    case Enum.find_value(opp_islands, :miss, fn {key, island} ->
            case Island.hit?(island, coord) do
              {:hit, island} -> {key, island}
                       :miss -> false
            end
          end)
     do
-              :miss -> {Guesses.put(guesses, :miss, coord), islands,                 false, false}
-      {key, island} -> {Guesses.put(guesses, :hit,  coord), put(islands, key, island), key, filled?(islands)}
+              :miss -> {Guesses.put(guesses, :miss, coord), false, false}
+      {key, island} -> {Guesses.put(guesses, :hit,  coord), key,   filled?(guesses, opp_islands)}
     end
   end
 
-  def filled?(islands), # refactor to check opposing player's hits against IslandSet coords
-    do: Enum.all?(islands, fn {_key, island} -> Island.filled?(island) end)
+  defp filled?(guesses, opp_islands),
+    do: Enum.all?(opp_islands, fn {_key, island} -> MapSet.subset?(island.coordinates, guesses.hits) end)
 end
