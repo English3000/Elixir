@@ -1,6 +1,6 @@
 defmodule IslandsEngine.DataStructures.Guesses do
   alias IslandsEngine.DataStructures.{Coordinate, Guesses}
-  defstruct hits:   MapSet.new,
+  defstruct hits:   MapSet.new, # O(n) search??
             misses: MapSet.new
 
   def new, do: %Guesses{}

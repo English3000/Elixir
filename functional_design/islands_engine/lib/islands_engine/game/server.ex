@@ -45,17 +45,17 @@ defmodule IslandsEngine.Game.Server do
          {:ok, island} <- Island.new(key, coord),                       # errors if island is out of bounds
          %{} = islands <- IslandSet.put(player.islands, key, island) do # errors if island overlaps
       state |> update_islands(player_atom, islands)
-            |> reply({:ok, islands})
+            |> reply({:ok, island})
     else
       error -> reply(state, error)
     end
   end
 
-  def remove_island(pid, player_atom, key) when player_atom in @players,
-    do: GenServer.call(pid, {:remove_island, player_atom, key})
-  def handle_call({:remove_island, player_atom, key}, _caller, state) do
+  def delete_island(pid, player_atom, key) when player_atom in @players,
+    do: GenServer.call(pid, {:delete_island, player_atom, key})
+  def handle_call({:delete_island, player_atom, key}, _caller, state) do
     islands = player_data(state, [player_atom, :islands]) |> IslandSet.delete(key)
-    update_islands(state, player_atom, islands) |> reply({:ok, islands})
+    update_islands(state, player_atom, islands) |> reply({:ok, key})
   end
   ## On frontend, disable draggability once islands are set.
 
@@ -73,10 +73,10 @@ defmodule IslandsEngine.Game.Server do
       case result do # update state accordingly
         {:ok, player1, player2} -> state |> update_player(player1)
                                          |> update_player(player2)
-                                         |> reply({:ok, player.islands})
+                                         |> reply({:ok, player})
 
                          :error -> state |> update_player(player)
-                                         |> reply({:ok, player.islands})
+                                         |> reply({:ok, player})
       end
     else
       error -> reply(state, error)
@@ -85,18 +85,18 @@ defmodule IslandsEngine.Game.Server do
 
   def guess_coordinate(pid, player_atom, row, col) when player_atom in @players,
     do: GenServer.call(pid, {:guess, player_atom, row, col})
-  def handle_call({:guess, player_atom, row, col}, _caller, state) do
+  def handle_call({:guess, player_atom, row, col}, _caller, state) do # frontend prevents duplicate guesses
       player = player_data(state, [player_atom])
     opponent = player_data(state, [player_atom |> Player.opponent])
     with {:ok, coord}            <- Coordinate.new(row, col),
-         {guesses, islands, result, type, game_status} <- IslandSet.hit?(player.guesses, player.islands, coord),
+         {guesses, islands, key, game_status} <- IslandSet.hit?(player.guesses, player.islands, coord),
          {:ok, guesser, waiting} <- Stage.check(player, opponent, game_status)
     do
       state |> update_islands(waiting, islands)
             |> update_guesses(guesser, guesses)
             |> update_player(guesser)
             |> update_player(waiting)
-            |> reply({result, type, game_status}) # why does client need result? isn't type enough?
+            |> reply({key, game_status})
     else
       error -> reply(state, error)
     end

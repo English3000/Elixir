@@ -1,29 +1,22 @@
-# TODO: write tests ~ https://hexdocs.pm/phoenix/testing_channels.html
-defmodule IslandsInterfaceWeb.GameChannel do
+defmodule IslandsInterfaceWeb.GameChannel do  ## TODO: write tests ~ https://hexdocs.pm/phoenix/testing_channels.html
   import Shorthand
   use IslandsInterfaceWeb, :channel
   alias IslandsInterfaceWeb.Presence
   alias IslandsEngine.Game.{Server, Supervisor}
+  @moduledoc "Need error broadcasts too..."
 
   @doc "Sends game state (except opponent's board) to frontend."
   @spec join(topic :: String.t, params :: map, channel :: Socket.t) ::
-    {:ok, Socket.t} |
-    {:ok, reply :: map, Socket.t} |
-    {:error, reply :: map}
+       {:ok, Socket.t} |
+       {:ok, reply :: map, Socket.t} |
+    {:error, reply :: map}  ## NOTE: Perfect use case for Monad.
   def join("game:" <> game, %{"screen_name" => player_name}, channel) do
-    ## NOTE: Perfect use case for Monad.
-    functions = [ channel, # first result
-                  &track_players/3,
-                  &register_player?/3,
-                  &add_player?/3,
-                  &get_state/3 ]
-    call = fn function, result -> function.(result, game, player_name) end
-    case Enum.reduce(functions, call) do
+    functions = [&track_players/3, &register_player?/3, &add_player?/3, &get_state/3]
+         call = fn function, result -> function.(result, game, player_name) end
+    case Enum.reduce(functions, channel, call) do
       {:error, reason} -> {:error, %{reason: append_players(reason, channel)}}
-
-         ## What happens if a player leaves the game temporarily? (handle foundational issues first)
          {:ok, state}  -> send(self(), {:after_join, "game_joined", state})
-                          {:ok, state, channel}  # How will game receive proper instruction to display?
+                          {:ok, state, channel}  ## What happens if a player leaves the game temporarily?
     end
   end
   defp append_players(msg, channel) do
@@ -69,7 +62,7 @@ defmodule IslandsInterfaceWeb.GameChannel do
     do: Supervisor.start_game(game, player)
   defp add_player?(result, game, player) do
     case result do
-      {false, state} -> remove_board(state, :player2)
+      {false, state} -> remove_coords(state, :player2)
       { true, state} -> via(game) |> Server.add_player(player)
                error -> error
     end
@@ -77,56 +70,54 @@ defmodule IslandsInterfaceWeb.GameChannel do
   defp get_state(result, game, player) do
     case result do
       :error -> {:error, "Game at capacity."}
-         :ok -> m(game, player) |> Server.lookup_game |> remove_board(:player1)
+         :ok -> m(game, player) |> Server.lookup_game |> remove_coords(:player1)
        tuple -> tuple
     end
   end
-  defp remove_islands(state, opp_atom) when is_atom(opp_atom) do
-    opp_data = state |> Map.get(opp_atom) |> Map.delete(:islands)
-    {:ok, Map.put(state, opp_atom, opp_data)}
-  end
+  defp remove_coords(state, opp_atom) when is_atom(opp_atom),
+    do: {:ok, update_in(state, [opp_atom, :islands], &( Map.delete(&1, :coordinates) ))}
 
   @doc "<JS> channel.push(event, payload) => handle_in(event, payload, channel) <EX>"
   @spec handle_in(event :: String.t, payload :: any, channel :: Socket.t) ::
     {:reply, {status :: atom} | {status :: atom, response :: map}, channel :: Socket.t } |
     {:noreply,                                                     channel :: Socket.t}
-  def handle_in("get_state", %{player: player} = payload, channel),
-    do: {:reply, payload |> Server.lookup_game |> remove_islands(player), channel}
-  defp remove_islands(state, player) when is_binary(player) do
-    cond do
-      state.player1.name == player -> remove_islands(state, :player2)
-      state.player2.name == player -> remove_islands(state, :player1)
-                              true -> {:error, %{reason: "Not playing."}}
+  # def handle_in("get_state", %{player: player} = payload, channel),
+  #   do: {:reply, payload |> Server.lookup_game |> remove_coords(player), channel}
+  # defp remove_coords(state, player) when is_binary(player) do
+  #   cond do
+  #     state.player1.name == player -> remove_coords(state, :player2)
+  #     state.player2.name == player -> remove_coords(state, :player1)
+  #                             true -> {:error, %{reason: "Not playing."}}
+  #   end
+  # end
+
+  def handle_in("place_island", %{"player"=> player,"island"=> island,"row"=> row,"col"=> col}, %{topic: "game" <> game} = channel) do
+    case via(game) |> Server.place_island(String.to_existing_atom(player), String.to_existing_atom(island), row, col) do
+         {:ok, island} -> push channel, "island_placed", island
+                          {:reply, :ok, channel}
+
+      {:error, reason} -> push channel, "error", reason
+                          {:reply, :error, channel}
     end
   end
 
-  # To decouple logic, sending larger payload
-  # Just send island??
-  def handle_in("place_island", %{"player"=> player,"island"=> island,"row"=> row,"col"=> col}, channel) do
-        player_atom = String.to_existing_atom(player)
-        island_atom = String.to_existing_atom(island)
-    "game:" <> game = channel.topic
-    case via(game) |> Server.place_island(player_atom, island_atom, row, col) do
-        {:ok, islands} -> {:reply,    {:ok, islands},   channel}
-      {:error, reason} -> {:reply, {:error, m(reason)}, channel} # :overlaps | :invalid_coordinate
-    end
-  end
+  def handle_in("delete_island", %{"player"=> player,"island"=> island}, %{topic: "game" <> game} = channel) do
+    case via(game) |> Server.delete_island(String.to_existing_atom(player), String.to_existing_atom(island)) do
+      {:ok, island_atom} -> push channel, "island_removed", island_atom
+                            {:reply, :ok, channel}
 
-  def handle_in("delete_island", %{"player"=> player,"island"=> island}, channel) do
-        player_atom = String.to_existing_atom(player)
-        island_atom = String.to_existing_atom(island)
-    "game:" <> game = channel.topic
-    case via(game) |> Server.remove_island(player_atom, island_atom) do
-      {:ok, islands} -> {:reply, {:ok, islands}, channel}
-                   _ -> {:reply, {:error, %{reason: "Island not removed."}}, channel}
+                       _ -> push channel, "error", "Island not removed."
+                            {:reply, :error, channel}
     end
   end
 
   def handle_in("set_islands", player, %{topic: "game:" <> game} = channel) do
     case via(game) |> Server.set_islands( String.to_existing_atom(player) ) do
-         {:ok, _board}  -> broadcast! channel, "islands_set", player <> " islands set."
-                          {:reply, :ok, channel}
-      {:error, reason} -> {:reply, {:error, m(reason)}, channel}
+      {:ok, player_data} -> broadcast! channel, "islands_set", %{stage: player_data.stage, key: player_data.key}
+                            {:reply, :ok, channel}
+
+        {:error, reason} -> push channel, "error", reason
+                            {:reply, :error, channel}
     end
   end
 
@@ -136,16 +127,16 @@ defmodule IslandsInterfaceWeb.GameChannel do
           "col" => col } = params
 
     player = String.to_existing_atom(player)
-    case via(game) |> Server.guess_coordinate(player, row, col) do ## REFACTOR
-      {result, island, status} -> hit = if result == :hit, do: true, else: false
-                                  result = m(hit, island, status)
-                                  # Can just `result` be broadcasted?
-                                  broadcast! channel, "guessed_coordinate", m(player, row, col, result)
-                                  {:noreply, channel}
+    case via(game) |> Server.guess_coordinate(player, row, col) do
+      {key, status}    -> result = m(key, status)
+                          broadcast! channel, "coordinate_guessed", m(player, row, col, result)
+                          {:reply, :ok, channel}
 
-      :error                   -> {:reply, {:error, %{reason: "Not your turn."}}, channel}
+      :error           -> push channel, "error", "Not your turn."
+                          {:reply, :error, channel}
 
-      {:error, reason}         -> {:reply, {:error, m(reason)}, channel}
+      {:error, reason} -> push channel, "error", reason
+                          {:reply, :error, channel}
     end
   end
 

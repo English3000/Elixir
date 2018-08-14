@@ -7,11 +7,12 @@ defmodule IslandsEngine.DataStructures.IslandSet do
     do: Map.delete(islands, key)
 
   def put(islands, key, %Island{} = island),
-    do: if collision?(islands, island),
+    do: if collision?(islands, key, island),
           do:   {:error, :overlaps},
           else: Map.put(islands, key, island)
-  defp collision?(islands, new_island),
-    do: Enum.any?(islands, fn {_key, island} ->
+  defp collision?(islands, new_key, new_island),
+    do: Enum.any?(islands, fn {key, island} ->
+          new_key == key or  # allows for updates
           not MapSet.disjoint?(island.coordinates, new_island.coordinates)
         end)
 
@@ -28,16 +29,12 @@ defmodule IslandsEngine.DataStructures.IslandSet do
                       :miss -> false
            end
          end)
-    do                                                            # redundant?
-              :miss -> {Guesses.put(guesses, :miss, coord), islands, :miss, :none, false}
-      {key, island} -> islands = %{islands | key => island}
-                        filled = if Map.fetch!(islands, key) |> Island.filled?,
-                                   do:   key,
-                                   else: :none
-                       {Guesses.put(guesses, :hit, coord), islands, :hit, filled, filled?(islands)}
+    do
+              :miss -> {Guesses.put(guesses, :miss, coord), islands,                 false, false}
+      {key, island} -> {Guesses.put(guesses, :hit,  coord), put(islands, key, island), key, filled?(islands)}
     end
   end
 
-  def filled?(islands),
+  def filled?(islands), # refactor to check opposing player's hits against IslandSet coords
     do: Enum.all?(islands, fn {_key, island} -> Island.filled?(island) end)
 end

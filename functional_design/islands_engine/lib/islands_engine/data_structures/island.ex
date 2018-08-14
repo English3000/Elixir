@@ -1,13 +1,13 @@
 defmodule IslandsEngine.DataStructures.Island do
   alias IslandsEngine.DataStructures.{Coordinate, Island}
-  @enforce_keys [:coordinates, :hits]
-      defstruct [:coordinates, :hits]
+  @enforce_keys [:coordinates, :hits, :type] # isn't hits redundant
+      defstruct [:coordinates, :hits, :type]
 
   @doc "An island is a mapset of coordinates that corresponds to a type atom."
   def new(type, %Coordinate{} = upper_left) do
     with [_|_] = coordinates <- coordinates(type),
      %MapSet{} = coords      <- build_island(coordinates, upper_left) do
-      { :ok, %Island{coordinates: coords, hits: MapSet.new} }
+      { :ok, %Island{coordinates: coords, hits: MapSet.new, type: type} }
     else
       error -> error
     end
