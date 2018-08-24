@@ -93,6 +93,8 @@ Love every part of your stack! Try WRAP:
 * **[Putting it all together ("WRAP" stack)](https://medium.com/@english3000.org/starting-a-new-project-with-absinthe-relay-be9a127b8f63)**
 
 ### _Relay (GraphQL frontend)_
+Instead of passing a `data` prop down the entire component hierarchy (which is why a fragment is a specification of data requirements), you can [use React's new Context API](https://reactjs.org/docs/context.html). Further, if you don't use Relay, [you still don't need to use Redux...!](https://medium.freecodecamp.org/replacing-redux-with-the-new-react-context-api-8f5d01a00e8c)
+
 * ["Getting" Relay (GraphQL frontend)](https://www.reindex.io/blog/redux-and-relay/)
   * [Relay over Redux](https://medium.com/@matt.krick/replacing-redux-with-relay-47ed085bfafe)
 * [Thinking in Relay](https://facebook.github.io/relay/docs/en/thinking-in-relay.html)
