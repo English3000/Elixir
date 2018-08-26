@@ -70,6 +70,7 @@ Love every part of your stack! Try WRAP:
 
 ### _`react-native-web` (cross-platform frontend library)_
 * [React setup](https://medium.com/@diamondgfx/phoenix-v1-1-2-and-react-js-3dbd195a880a) _(you can skip the [whitelist](https://github.com/brunch/brunch/blob/master/CHANGELOG.md#brunch-22-jan-22-2016) &_ `$ brunch build` _steps)_
+  * [Code-splitting](https://reacttraining.com/react-router/web/guides/code-splitting) ([**EXAMPLE**](https://hackernoon.com/effective-code-splitting-in-react-a-practical-guide-2195359d5d49))
 * [`react-native-web` setup](https://github.com/necolas/react-native-web/blob/master/packages/website/guides/getting-started.md) (can also server-side render)
   * [Creating a link](https://reactnativecode.com/open-website-url-in-default-browser/)
   * [Making an `absolute` element pressable](https://stackoverflow.com/questions/36938742/touchablehighlight-not-clickable-if-position-absolute?rq=1)
