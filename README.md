@@ -68,9 +68,10 @@ Love every part of your stack! Try WRAP:
 
   * [JSON API example](https://robots.thoughtbot.com/building-a-phoenix-json-api)
 
-### _React (frontend framework)_
+### _`react-native-web` (cross-platform frontend library)_
 * [React setup](https://medium.com/@diamondgfx/phoenix-v1-1-2-and-react-js-3dbd195a880a) _(you can skip the [whitelist](https://github.com/brunch/brunch/blob/master/CHANGELOG.md#brunch-22-jan-22-2016) &_ `$ brunch build` _steps)_
-* [`react-native-web`](https://github.com/necolas/react-native-web/blob/master/website/guides/getting-started.md#getting-started) for [cross-platform](https://github.com/necolas/react-native-web#react-native-for-web) React components, with option to server-side render
+  * [Code-splitting](https://reacttraining.com/react-router/web/guides/code-splitting) ([**EXAMPLE**](https://hackernoon.com/effective-code-splitting-in-react-a-practical-guide-2195359d5d49))
+* [`react-native-web` setup](https://github.com/necolas/react-native-web/blob/master/packages/website/guides/getting-started.md) (can also server-side render)
   * [Creating a link](https://reactnativecode.com/open-website-url-in-default-browser/)
   * [Making an `absolute` element pressable](https://stackoverflow.com/questions/36938742/touchablehighlight-not-clickable-if-position-absolute?rq=1)
   > **Note:** I haven't found clear/explicit [documentation](http://phoenixframework.org/blog/static-assets) for using `react-native-web` SSR with Phoenix.
@@ -93,6 +94,8 @@ Love every part of your stack! Try WRAP:
 * **[Putting it all together ("WRAP" stack)](https://medium.com/@english3000.org/starting-a-new-project-with-absinthe-relay-be9a127b8f63)**
 
 ### _Relay (GraphQL frontend)_
+Instead of passing a `data` prop down the entire component hierarchy (which is why a fragment is a specification of data requirements), you can [use React's new Context API](https://reactjs.org/docs/context.html). Further, if you don't use Relay, [you still don't need to use Redux...!](https://medium.freecodecamp.org/replacing-redux-with-the-new-react-context-api-8f5d01a00e8c)
+
 * ["Getting" Relay (GraphQL frontend)](https://www.reindex.io/blog/redux-and-relay/)
   * [Relay over Redux](https://medium.com/@matt.krick/replacing-redux-with-relay-47ed085bfafe)
 * [Thinking in Relay](https://facebook.github.io/relay/docs/en/thinking-in-relay.html)
@@ -114,6 +117,8 @@ Love every part of your stack! Try WRAP:
   * [`found-relay`](https://github.com/4Catalyzer/found-relay/blob/master/examples/todomvc-modern/src/routes.js)
 
 ### _Deploying Your App_
+To deploy your frontend and backend separately, [deploy your frontend `/build` to a CDN](https://medium.com/@omgwtfmarc/deploying-create-react-app-to-s3-or-cloudfront-48dae4ce0af), and [deploy your backend](https://gigalixir.readthedocs.io/en/latest/main.html#getting-started-guide) to a Plaform-as-a-Service below, with some [configurations](https://shift.infinite.red/how-to-set-up-a-cdn-in-phoenix-af89074e0a62).
+
 * [Heroku](https://hexdocs.pm/phoenix/heroku.html) has some limitations
 * [Gigalixir](http://gigalixir.readthedocs.io/en/latest/main.html) is a platform-as-a-service without those limitations
 > ["I chose to use Gigalixir for hosting my application so that I could get the Heroku-like ease-of-use that it provides, while being able to still learn and use features of Elixir that make it special (like ETS and hot upgrades)."](https://medium.com/@b1ackmartian/deployment-to-gigalixir-using-travis-ci-46329167082e)
