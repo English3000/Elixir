@@ -10,7 +10,8 @@ defmodule PlateSlateWeb.ItemController do
     }
   }
   """
-  def index(conn, result), do: render(conn, "index.html", items: result.data.menu_items)
+  def index(conn, result),
+    do: render(conn, "index.html", items: result.data.menu_items)
 
   @graphql """
   query ($id: ID!, $since: Date) {

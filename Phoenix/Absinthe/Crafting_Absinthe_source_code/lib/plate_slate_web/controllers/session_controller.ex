@@ -20,5 +20,6 @@ defmodule PlateSlateWeb.SessionController do
     end
   end
 
-  def delete(conn, _), do: conn |> clear_session |> redirect(to: "/admin/session/new")
+  def delete(conn, _),
+    do: conn |> clear_session |> redirect(to: "/admin/session/new")
 end
