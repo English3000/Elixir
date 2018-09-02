@@ -9,11 +9,8 @@ defmodule IslandsEngine.Game.Server do
   @errors [:invalid_coordinate, :invalid_island, :invalid_coordinate, :unplaced_islands, :overlaps]
   # https://hexdocs.pm/elixir/Supervisor.html#module-module-based-supervisors
   @doc "Start a new game."
-  def start_link(game, player) when is_binary(game) and is_binary(player) do
-    IO.inspect("server.ex:14")
-    IO.inspect(game)
-    GenServer.start_link(__MODULE__, m(game, player), name: game |> registry_tuple)
-  end
+  def start_link(game, player) when is_binary(game) and is_binary(player),
+    do: GenServer.start_link(__MODULE__, m(game, player), name: game |> registry_tuple)
   @doc "Sets process's initial state, or stops process on timeout."
   def init(payload) do
     send(self(), {:set_state, payload})
@@ -107,11 +104,8 @@ defmodule IslandsEngine.Game.Server do
   def process?(tuple),
     do: GenServer.whereis(tuple)
   @doc "Generates `:via` tuple for a named process."
-  def registry_tuple(game) do # BUG w/ game, I think
-    IO.inspect("server.ex:111")
-    {:via, Registry, {Registry.Game, game}} |> IO.inspect
-    {:via, Registry, {Registry.Game, game}}
-  end
+  def registry_tuple(game),
+    do: {:via, Registry, {Registry.Game, game}}
 
   defp reply(state, {:error, msg} = result)
     when msg in @errors, # redunant/coupled?

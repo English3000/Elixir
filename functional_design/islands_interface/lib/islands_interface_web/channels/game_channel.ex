@@ -48,9 +48,7 @@ defmodule IslandsInterfaceWeb.GameChannel do  ## TODO: write tests ~ https://hex
       2 -> nil
     end
 
-    IO.inspect("game_channel.ex:52")
-    IO.inspect(game)
-    via(game) |> Server.process? # nil
+    via(game) |> Server.process?
   end
   defp register_player?(result, game, player) do
     case result do
@@ -66,7 +64,9 @@ defmodule IslandsInterfaceWeb.GameChannel do  ## TODO: write tests ~ https://hex
     do: Supervisor.start_game(game, player)
   defp add_player?(result, game, player) do
     case result do
-      {false, state} -> remove_islands(state, :player2)
+      {false, state} -> remove_islands(state, ( if state.player1.name == player,
+                                                  do:   :player2,
+                                                  else: :player1 ))
       { true, state} -> via(game) |> Server.add_player(player)
                error -> error
     end
@@ -96,13 +96,11 @@ defmodule IslandsInterfaceWeb.GameChannel do  ## TODO: write tests ~ https://hex
   # end
 
   def handle_in("place_island", %{"player"=> player,"island"=> island,"row"=> row,"col"=> col}, %{topic: "game:" <> game} = channel) do
-    IO.inspect("game_channel.ex:98")
-    IO.inspect(game)
     case via(game) |> Server.place_island(String.to_atom(player), String.to_atom(island), row, col) do
          {:ok, island} -> push channel, "island_placed", island
                           {:reply, :ok, channel}
 
-      {:error, reason} -> push channel, "error", %{reason: reason}
+      {:error, reason} -> push channel, "error", %{reason: reason} # reason unused && redundant b/c of UI
                           {:reply, :error, channel}
     end
   end
