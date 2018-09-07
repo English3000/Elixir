@@ -29,8 +29,9 @@ Love every part of your stack! Try WRAP:
 * [Learn Elixir](https://elixir-lang.org/getting-started/introduction.html)
   * [Syntactic sugar for maps](https://hexdocs.pm/shorthand/Shorthand.html) **[(config)](https://hex.pm/packages/shorthand)**
   * [On performance](https://medium.com/learn-elixir/speed-up-data-access-in-elixir-842617030514)
-* [Practice problems](http://exercism.io/languages/elixir/about)
+* [Practice problems](https://exercism.io/tracks/elixir)
 * [ElixirForum](https://elixirforum.com/) (like StackOverflow, but specifically for Elixir developers; responses within a few hours, in my experience)
+* [Erlang modules](http://erlang.org/doc/man_index.html) -- extra Elixir-style modules, in case you don't find a particular function in Elixir
 * [Learn Functional Programming with Elixir](https://pragprog.com/book/cdc-elixir/learn-functional-programming-with-elixir)
   * [Error handling with MonadEx](https://blog.danielberkompas.com/2015/09/03/better-pipelines-with-monadex/)
 * **GO DEEPER:** [Learn Metaprogramming in Elixir](https://pragprog.com/book/cmelixir/metaprogramming-elixir)
