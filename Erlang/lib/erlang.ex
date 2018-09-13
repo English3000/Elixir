@@ -2,8 +2,11 @@ defmodule Erlang do
   @moduledoc """
   Documentation for Erlang syntax: https://elixir-lang.org/crash-course.html
 
-  Elixir
-  [3, 2] ++ [1] == [3, 2 | [1]]
+  ### Elixir
+
+  `[3, 2] ++ [1] == [3, 2 | [1]]`
+
+  `__STACKTRACE__` (in `rescue`/`catch` block)
   """
 
   defmodule Lists do
@@ -69,9 +72,23 @@ defmodule Erlang do
   defmodule Tuples do
     def to_list(tuple),
       do: to_list(tuple, 0, [])
+
     defp to_list(tuple, index, output) when index < tuple_size(tuple),
       do: to_list(tuple, index + 1, [elem(tuple, index) | output])
     defp to_list(_tuple, _index, output),
       do: Enum.reverse(output)
+  end
+
+  defmodule Maps do
+    @moduledoc """
+    A map is stored as an ordered (associative) collection of key-value pairs.
+
+    Updating a value is space-efficient. Accessing a value is time-efficient.
+    > SOURCE: "Programming Erlang", 2nd Ed.
+
+    Adding a new key isn't. Converting a list of N key-value pairs
+    (with `:maps.from_list/1`) can be faster than N `Map.put/3` calls.
+    > SOURCE: https://groups.google.com/forum/#!topic/elixir-lang-talk/e8GhTYld8as
+    """
   end
 end
