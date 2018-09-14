@@ -93,4 +93,42 @@ defmodule Erlang do
     > SOURCE: https://groups.google.com/forum/#!topic/elixir-lang-talk/e8GhTYld8as
     """
   end
+
+  defmodule Binaries do
+    @doc "Checks 3 MPEG frame headers to identify a proper start location."
+    def find_mpeg_header(binary, number),
+      do: is_header(binary, number, 3)
+
+    def is_header(binary, number, frame) do
+      with {:ok, length, _} <- get_word(binary, number) |> unpack_header(),
+                          0 <- frame do
+        {:ok, number - length}
+      else
+        :error -> added = (3 - frame) * length
+                  find_mpeg_header(binary, number - added + 1, 3)
+             _ -> is_header(binary, number + length, frame - 1)
+      end
+    end
+
+    def get_word(binary, number),
+      do: {_, << c :: size(32), _ :: binary >>} = split_binary(binary, number); c
+
+    def unpack_header(x) do
+      decode_header(x)
+    catch
+      _ -> :error
+    end
+
+    def decode_header(<< 2 11111111111 :: size(11), b :: size(2), c :: 2, _d :: 1,
+                         e :: size(4), f :: size(2), g :: size(1), bits :: size(9) >>) do
+      vsn = case b do
+              0 -> {2,5}
+              1 -> exit(:badVsn)
+              2 -> 2
+              3 -> 1
+            end
+
+      # resume @ Location 2950
+    end
+  end
 end
