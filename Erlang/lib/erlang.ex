@@ -81,7 +81,9 @@ defmodule Erlang do
 
   defmodule Maps do
     @moduledoc """
-    A map is stored as an ordered (associative) collection of key-value pairs.
+    A map is an ordered collection (hash array mapped trie) of key-value pairs.
+    > ARTICLE: https://en.wikipedia.org/wiki/Hash_array_mapped_trie
+    > DIAGRAMS: https://www.google.com/search?client=firefox-b-1-ab&ei=1vOaW9vNCJHN8APdwo2oCA&q=erlang+immutable+hash+array+mapped+trie&oq=erlang+immutable+hash+array+mapped+trie&gs_l=psy-ab.3..33i160.13313.16611..16999...0.0..0.156.1267.12j3......0....1..gws-wiz.......0i71j35i39j33i21.-a1izXmP2u0
 
     Updating a value is space-efficient. Accessing a value is time-efficient.
     > SOURCE: "Programming Erlang", 2nd Ed.
