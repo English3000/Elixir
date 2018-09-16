@@ -2,11 +2,19 @@ defmodule Erlang do
   @moduledoc """
   Documentation for Erlang syntax: https://elixir-lang.org/crash-course.html
 
+  Install :dialyxr globally, then `mix dialyzer`
+
   ### Elixir
 
   `[3, 2] ++ [1] == [3, 2 | [1]]`
 
   `__STACKTRACE__` (in `rescue`/`catch` block)
+
+  `for _ <- _, into: _, do: _`
+
+  `@spec` can have guards && multiple clauses
+
+  `@type` == global (vs `@typep`)
   """
 
   defmodule Lists do
@@ -16,7 +24,7 @@ defmodule Erlang do
       do: map(output ++ [function.(head)], tail, function)
 
     # `for` fn's
-      # `:into` https://elixir-lang.org/getting-started/comprehensions.html#the-into-option
+    #   `:into` https://elixir-lang.org/getting-started/comprehensions.html#the-into-option
     def quicksort([]),
       do: []
     def quicksort([pivot | tail]) do
@@ -110,7 +118,7 @@ defmodule Erlang do
       end
     end
 
-    def get_word(binary, number),
+    def get_word(binary, number), # incorrect destructuring in Elixir
       do: {_, << c :: size(32), _ :: binary >>} = split_binary(binary, number); c
 
     def unpack_header(x) do
@@ -119,16 +127,41 @@ defmodule Erlang do
       _ -> :error
     end
 
-    def decode_header(<< 2 11111111111 :: size(11), b :: size(2), c :: 2, _d :: 1,
+    def decode_header(<< Integer.parse(11111111111, 2) :: size(11), b :: size(2), c :: 2, _d :: 1,
                          e :: size(4), f :: size(2), g :: size(1), bits :: size(9) >>) do
       vsn = case b do
               0 -> {2,5}
-              1 -> exit(:badVsn)
+              1 -> exit(:bad_vsn)
               2 -> 2
               3 -> 1
             end
 
-      # resume @ Location 2950
+      layer = case c do
+                0 -> exit(:bad_layer)
+                1 -> 3
+                2 -> 2
+                3 -> 1
+              end
+      # functions below aren't def'd
+      bit_rate = bit_rate(vsn, layer, e) * 1000
+      sample_rate = sample_rate(vsn, f)
+      padding = g
+      frame_length = frame_length(layer, bit_rate, sample_rate, padding)
+
+      case frame_length < 21 do
+         true -> exit(:frame_size)
+        false -> {:ok, frame_length, {layer, bit_rate, sample_rate, vsn, bits}}
+      end
     end
+    # https://hexdocs.pm/elixir/typespecs.html#defining-a-specification
+    # can define guards && multiple clauses for specs
+    @spec decode_header(arg) :: pid when arg: any, pid: pid
+    @spec decode_header(arg :: any) :: pid :: pid
+    @spec decode_header(arg :: any) :: pid :: atom
+    def decode_header(_),
+      do: exit(:bad_header)
+    # "Custom types defined through `@type` are exported and available outside the module they’re defined in.
+    # If you want to keep a custom type private, you can use the `@typep` directive instead of `@type`."
+    # https://elixir-lang.org/getting-started/typespecs-and-behaviours.html#defining-custom-types
   end
 end
