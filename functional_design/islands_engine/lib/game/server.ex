@@ -44,6 +44,7 @@ defmodule IslandsEngine.Game.Server do
          {:ok, coord}  <- Coordinate.new(row, col),
          {:ok, island} <- Island.new(key, coord),                       # errors if island is out of bounds
          %{} = islands <- IslandSet.put(player.islands, key, island) do # errors if island overlaps
+      IO.inspect(islands)
       state |> update_islands(player_atom, islands)
             |> reply({:ok, island})
     else

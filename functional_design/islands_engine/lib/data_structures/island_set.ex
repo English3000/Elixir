@@ -12,7 +12,6 @@ defmodule IslandsEngine.DataStructures.IslandSet do
           else: Map.put(islands, key, island)
   defp collision?(islands, new_key, new_island),
     do: Enum.any?(islands, fn {key, island} ->
-          new_key == key or  # allows for updates
           not MapSet.disjoint?(island.coordinates, new_island.coordinates)
         end)
 

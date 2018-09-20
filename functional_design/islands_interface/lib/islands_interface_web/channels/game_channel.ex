@@ -107,10 +107,10 @@ defmodule IslandsInterfaceWeb.GameChannel do  ## TODO: write tests ~ https://hex
 
   def handle_in("delete_island", %{"player"=> player,"island"=> island}, %{topic: "game:" <> game} = channel) do
     case via(game) |> Server.delete_island(String.to_atom(player), String.to_atom(island)) do
-      {:ok, island_atom} -> push channel, "island_removed", island_atom
+      {:ok, island_atom} -> push channel, "island_removed", %{type: island_atom}
                             {:reply, :ok, channel}
 
-                       _ -> push channel, "error", "Island not removed."
+                       _ -> push channel, "error", %{reason: "Island not removed."}
                             {:reply, :error, channel}
     end
   end

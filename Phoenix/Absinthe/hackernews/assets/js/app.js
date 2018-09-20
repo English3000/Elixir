@@ -75,5 +75,9 @@ export const styles = StyleSheet.create({
                  textTransform: "uppercase",
                  cursor: "pointer" }
 });
+// could do partial SSR, partial CSR (if matches route) -- prob in template... cond'l logic around <script src="<%= static_path(@conn, "/js/app.js)") %>"></script>
+  // need to distinguish btwn CSR & SSR links, handle lost state...
 
+// first decide whether react-native-web would need to be split to separate mobile && web frontends
+  // i.e. react-navigation vs react-router
 AppRegistry.runApplication("Root", {rootTag: document.getElementById("replace-with-js")});
