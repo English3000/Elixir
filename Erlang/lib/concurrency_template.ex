@@ -40,7 +40,7 @@ defmodule ConcurrencyTemplate do
     spawn(fn -> supervisor = Process.monitor(pid)
       receive do
         {:DOWN, sup_ref, :process, _pid, reason}
-          when sup_ref == supervisor -> IO.inspect reason
+          when sup_ref == supervisor -> IO.inspect reason # could handle as arg w/ macro??
                                         IO.inspect runtime # not different from above
       end
     end)
@@ -54,4 +54,44 @@ defmodule ConcurrencyTemplate do
       time -> Process.exit(pid, :kill)
     end
   end
+
+  def spawn_heartbeat(function, name, kill) do
+    for helper <- [&register/2, &handle_restart/2],
+      do: helper.(function, name)
+
+    heartbeat(name, kill)
+  end
+
+  defp register(function, name) do
+    spawn(function) |> Process.register(name)
+  end
+
+  defp handle_restart(function, name) do
+    spawn(fn ->
+      supervisor = Process.monitor(name)
+      receive do
+        {:DOWN, sup_ref, :process, _pid, reason}
+          when sup_ref == supervisor -> register(function, name)
+      end
+    end)
+  end
+
+  defp heartbeat(name, kill \\ false) do
+    pid = Process.whereis(name)
+
+    receive do
+    after
+      5_000 -> IO.puts "still running..."
+
+               # validates that `handle_restart` works
+               if kill do
+                 IO.puts "killed"
+                 Process.exit(pid, :kill)
+               end
+
+               heartbeat(name)
+    end
+  end
+
+  # @ 5.
 end
