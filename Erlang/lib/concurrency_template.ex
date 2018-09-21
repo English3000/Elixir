@@ -36,14 +36,9 @@ defmodule ConcurrencyTemplate do
 
   def my_spawn(module, function, args) do
     pid = spawn(module, function, args)
-    runtime = :erlang.statistics(:runtime)
-    spawn(fn -> supervisor = Process.monitor(pid)
-      receive do
-        {:DOWN, sup_ref, :process, _pid, reason}
-          when sup_ref == supervisor -> IO.inspect reason # could handle as arg w/ macro??
-                                        IO.inspect runtime # not different from above
-      end
-    end)
+
+    handle_exit(pid, fn reason -> IO.inspect reason; IO.inspect :erlang.statistics(:runtime) end)
+
     pid
   end
 
@@ -56,25 +51,14 @@ defmodule ConcurrencyTemplate do
   end
 
   def spawn_heartbeat(function, name, kill) do
-    for helper <- [&register/2, &handle_restart/2],
-      do: helper.(function, name)
+    register(name, function)
+    |> handle_exit(fn _ -> register(name, function) end)
 
     heartbeat(name, kill)
   end
 
-  defp register(function, name) do
-    spawn(function) |> Process.register(name)
-  end
-
-  defp handle_restart(function, name) do
-    spawn(fn ->
-      supervisor = Process.monitor(name)
-      receive do
-        {:DOWN, sup_ref, :process, _pid, reason}
-          when sup_ref == supervisor -> register(function, name)
-      end
-    end)
-  end
+  defp register(name, function),
+    do: spawn(function) |> Process.register(name)
 
   defp heartbeat(name, kill \\ false) do
     pid = Process.whereis(name)
@@ -93,5 +77,41 @@ defmodule ConcurrencyTemplate do
     end
   end
 
-  # @ 5.
+  def spawn_and_monitor(n, restart_all \\ false) do
+    pids = for i <- 1..n,
+             do: spawn(fn -> IO.inspect(i); loop/0 end)
+
+    if !restart_all do
+      spawn(fn ->
+        for pid <- pids,
+          do: handle_exit(pid, fn -> IO.inspect pid,    label: "\t restarted"
+                                     IO.inspect self(), label: "\t as"
+
+                                     loop() end)
+      end)
+    else
+      spawn(fn ->
+              for pid <- pids,
+                do: Process.link(pid)
+
+              loop()
+            end)
+      |> handle_exit(fn -> spawn_and_monitor(n, true) end)
+    end
+
+    pids
+  end
+
+  def handle_exit(pid, function) do
+    spawn(fn -> supervisor = Process.monitor(pid)
+      receive do
+        {:DOWN, sup_ref, :process, _pid, reason}
+          when sup_ref == supervisor ->
+            case :erlang.fun_info(function)[:arity] do
+              1 -> function.(reason)
+              0 -> function.()
+            end
+      end
+    end)
+  end
 end
