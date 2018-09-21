@@ -18,6 +18,7 @@ defmodule ConcurrencyTemplate do
     end
   end
 
+
   # Exercises
   def start(atom, function) do
     spawn(function) |> Process.register(atom)
@@ -34,6 +35,7 @@ defmodule ConcurrencyTemplate do
     :erlang.statistics(:runtime)
   end
 
+  @doc "Spawns a process; if dies, prints data"
   def my_spawn(module, function, args) do
     pid = spawn(module, function, args)
 
@@ -42,6 +44,7 @@ defmodule ConcurrencyTemplate do
     pid
   end
 
+  @doc "Spawns a process that dies in `time`"
   def spawn_then_die(module, function, args, time) do
     pid = spawn(module, function, args)
     receive do
@@ -50,6 +53,7 @@ defmodule ConcurrencyTemplate do
     end
   end
 
+  @doc "Spawns & registers a process that tail-recursively prints a message every 5 seconds"
   def spawn_heartbeat(function, name, kill) do
     register(name, function)
     |> handle_exit(fn _ -> register(name, function) end)
@@ -67,7 +71,7 @@ defmodule ConcurrencyTemplate do
     after
       5_000 -> IO.puts "still running..."
 
-               # validates that `handle_restart` works
+               # validates that `handle_exit` works
                if kill do
                  IO.puts "killed"
                  Process.exit(pid, :kill)
@@ -77,9 +81,14 @@ defmodule ConcurrencyTemplate do
     end
   end
 
+  @doc """
+  Spawns a monitor + children processes.
+
+  Has an option to restart a child independently or restart all on any crash.
+  """
   def spawn_and_monitor(n, restart_all \\ false) do
     pids = for i <- 1..n,
-             do: spawn(fn -> IO.inspect(i); loop/0 end)
+             do: spawn(fn -> IO.inspect(i); loop() end)
 
     if !restart_all do
       spawn(fn ->
@@ -102,6 +111,7 @@ defmodule ConcurrencyTemplate do
     pids
   end
 
+  @doc "A function that handles process crashes"
   def handle_exit(pid, function) do
     spawn(fn -> supervisor = Process.monitor(pid)
       receive do
