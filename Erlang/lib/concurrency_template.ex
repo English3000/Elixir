@@ -10,6 +10,7 @@ defmodule ConcurrencyTemplate do
     end
   end
 
+  @doc "Remote Procedure Call: sends request to server && awaits response"
   def rpc(pid, request) do
     send(pid, {self(), request})
 
