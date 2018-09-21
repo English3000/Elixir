@@ -33,4 +33,25 @@ defmodule ConcurrencyTemplate do
     Enum.reduce(pids, fn next_pid, pid -> send(pid, pid); next_pid end)
     :erlang.statistics(:runtime)
   end
+
+  def my_spawn(module, function, args) do
+    pid = spawn(module, function, args)
+    runtime = :erlang.statistics(:runtime)
+    spawn(fn -> supervisor = Process.monitor(pid)
+      receive do
+        {:DOWN, sup_ref, :process, _pid, reason}
+          when sup_ref == supervisor -> IO.inspect reason
+                                        IO.inspect runtime # not different from above
+      end
+    end)
+    pid
+  end
+
+  def spawn_then_die(module, function, args, time) do
+    pid = spawn(module, function, args)
+    receive do
+    after
+      time -> Process.exit(pid, :kill)
+    end
+  end
 end
