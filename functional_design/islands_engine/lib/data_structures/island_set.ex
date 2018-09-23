@@ -1,7 +1,7 @@
 defmodule IslandsEngine.DataStructures.IslandSet do
   alias IslandsEngine.DataStructures.{Island, Coordinate, Guesses}
   @doc "An islandset is a map of islands by type atom."
-  def new, do: %{}
+  def new, do: %{} # change to generate unplaced islandset
 
   def delete(islands, key),
     do: Map.delete(islands, key)

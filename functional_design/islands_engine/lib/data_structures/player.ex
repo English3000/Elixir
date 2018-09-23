@@ -1,5 +1,5 @@
 defmodule IslandsEngine.DataStructures.Player do
-  alias IslandsEngine.DataStructures.{Player, IslandSet, Guesses}
+  alias IslandsEngine.DataStructures.{IslandSet, Guesses}
   @player %{ key:     :player2,
              name:    nil,
              stage:   :none,
