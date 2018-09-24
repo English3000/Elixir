@@ -1,4 +1,4 @@
-##CSR
+## CSR
 
 Originally, I had completed "Functional Web Development with Elixir, OTP, and Phoenix". I looked at the frontend provided by this book and saw a lot of duplicate logic. So I refined the backend to remove as much duplication as I could.
 
