@@ -54,7 +54,7 @@ defmodule IslandsEngine.Game.Server do
   def delete_island(pid, player_atom, key) when player_atom in @players,
     do: GenServer.call(pid, {:delete_island, player_atom, key})
   def handle_call({:delete_island, player_atom, key}, _caller, state) do
-    islands = player_data(state, [player_atom, :islands]) |> IslandSet.remove(key)
+    islands = player_data(state, [player_atom, :islands]) |> IslandSet.delete(key)
     update_islands(state, player_atom, islands) |> reply({:ok, key})
   end
 

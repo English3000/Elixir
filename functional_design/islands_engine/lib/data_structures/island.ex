@@ -7,20 +7,20 @@ defmodule IslandsEngine.DataStructures.Island do
   def new(type, %Coordinate{} = top_left, placed \\ true) do
     with        %{} = bounds <- bounds(type, top_left),
          [_|_] = coordinates <- coordinates(type),
-          %MapSet{} = coords <- build_island(coordinates, top_left, placed) do
+          %MapSet{} = coords <- build_island(coordinates, top_left) do
       { :ok, %Island{coordinates: coords, bounds: bounds, type: type, placed: placed} }
     else
       error -> error
     end
   end
   # Builds a mapset of coordinates, or errors out if invalid.
-  defp build_island(coords, start, validate) do
+  defp build_island(coords, start) do
     Enum.reduce_while(coords, MapSet.new, fn coord, acc ->
-      add_coordinate(acc, start, coord, validate)
+      add_coordinate(acc, start, coord)
     end)
   end
-  defp add_coordinate(coords, %Coordinate{row: row, col: col}, {row_offset, col_offset}, validate) do
-    case Coordinate.new(row + row_offset, col + col_offset, validate) do
+  defp add_coordinate(coords, %Coordinate{row: row, col: col}, {row_offset, col_offset}) do
+    case Coordinate.new(row + row_offset, col + col_offset) do
          {:ok, coord}               -> {:cont, MapSet.put(coords, coord)}
       {:error, :invalid_coordinate} -> {:halt, {:error, :invalid_coordinate}}
     end
