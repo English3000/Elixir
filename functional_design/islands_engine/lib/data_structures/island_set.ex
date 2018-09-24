@@ -1,23 +1,32 @@
 defmodule IslandsEngine.DataStructures.IslandSet do
   alias IslandsEngine.DataStructures.{Island, Coordinate, Guesses}
-  @doc "An islandset is a map of islands by type atom."
-  def new, do: %{} # change to generate unplaced islandset
+  @doc "An island-set is a map of islands, with types for keys."
+  @spec new :: %{}
+  def new do
+    for type <- Island.types, into: %{}, do: (
+      {:ok, island} = Island.new(type, %Coordinate{row: 0, col: 0}, false);
+      {type, island}
+    )
+  end
 
-  def delete(islands, key),
-    do: Map.delete(islands, key)
+  def remove(island_set, key),
+    do: %{island_set | key => %{ Map.get(island_set, key) | placed: false }}
 
-  def put(islands, key, %Island{} = island),
-    do: if collision?(islands, key, island),
+  def put(island_set, key, %Island{} = island),
+    do: if collision?(island_set, key, island),
           do:   {:error, :overlaps},
-          else: Map.put(islands, key, island)
-  defp collision?(islands, new_key, new_island),
-    do: Enum.any?(islands, fn {key, island} ->
-          not MapSet.disjoint?(island.coordinates, new_island.coordinates)
-        end)
+        else: Map.put(island_set, key, island)
+  defp collision?(island_set, new_key, new_island) do
+    Enum.any?(island_set, fn
+      {key, %{placed: placed} = island} when placed ->
+        not MapSet.disjoint?(island.coordinates, new_island.coordinates)
 
-  @spec set?(%{}) :: boolean
-  def set?(islands),
-    do: if Enum.all?( Island.types, &(Map.has_key?(islands, &1)) ),
+      _ -> false
+    end)
+  end
+
+  def set?(island_set),
+    do: if Enum.all?(island_set, fn {key, %{placed: placed}} -> placed end),
           do:   true,
           else: {:error, :unplaced_islands}
 
