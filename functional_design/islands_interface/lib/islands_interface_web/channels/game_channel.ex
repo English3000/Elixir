@@ -71,58 +71,27 @@ defmodule IslandsInterfaceWeb.GameChannel do  ## TODO: write tests ~ https://hex
                error -> error
     end
   end
-  defp get_state(result, game, player) do
-    case result do
-      :error -> {:error, "Game at capacity."}
-         :ok -> m(game, player) |> Server.lookup_game |> remove_islands(:player1)
-       tuple -> tuple
-    end
-  end
   defp remove_islands(state, opp_atom) when is_atom(opp_atom),
     do: {:ok, update_in(state, [opp_atom], &( Map.delete(&1, :islands) ))}
-
+  # Removed `case` expressions && `:reply` tuples
   @doc "<JS> channel.push(event, payload) => handle_in(event, payload, channel) <EX>"
   @spec handle_in(event :: String.t, payload :: any, channel :: Socket.t) ::
     {:reply, {status :: atom} | {status :: atom, response :: map}, channel :: Socket.t } |
     {:noreply,                                                     channel :: Socket.t}
-  # def handle_in("get_state", %{player: player} = payload, channel),
-  #   do: {:reply, payload |> Server.lookup_game |> remove_coords(player), channel}
-  # defp remove_islands(state, player) when is_binary(player) do
-  #   cond do
-  #     state.player1.name == player -> remove_islands(state, :player2)
-  #     state.player2.name == player -> remove_islands(state, :player1)
-  #                             true -> {:error, %{reason: "Not playing."}}
-  #   end
+  # def handle_in("place_island", %{"player"=> player,"island"=> island,"row"=> row,"col"=> col}, %{topic: "game:" <> game} = channel) do
+  #   via(game) |> Server.place_island(String.to_atom(player), String.to_atom(island), row, col)
+  #   {:noreply, channel}
+  # end
+  #
+  # def handle_in("delete_island", %{"player"=> player,"island"=> island}, %{topic: "game:" <> game} = channel) do
+  #   via(game) |> Server.delete_island(String.to_atom(player), String.to_atom(island))
+  #   {:noreply, channel}
   # end
 
-  def handle_in("place_island", %{"player"=> player,"island"=> island,"row"=> row,"col"=> col}, %{topic: "game:" <> game} = channel) do
-    case via(game) |> Server.place_island(String.to_atom(player), String.to_atom(island), row, col) do
-         {:ok, island} -> push channel, "island_placed", island
-                          {:reply, :ok, channel}
-
-      {:error, reason} -> push channel, "error", %{reason: reason} # reason unused && redundant b/c of UI
-                          {:reply, :error, channel}
-    end
-  end
-
-  def handle_in("delete_island", %{"player"=> player,"island"=> island}, %{topic: "game:" <> game} = channel) do
-    case via(game) |> Server.delete_island(String.to_atom(player), String.to_atom(island)) do
-      {:ok, island_atom} -> push channel, "island_removed", %{type: island_atom}
-                            {:reply, :ok, channel}
-
-                       _ -> push channel, "error", %{reason: "Island not removed."}
-                            {:reply, :error, channel}
-    end
-  end
-
+  # NOTE: Update to handle full islandset
   def handle_in("set_islands", player, %{topic: "game:" <> game} = channel) do
-    case via(game) |> Server.set_islands( String.to_existing_atom(player) ) do
-      {:ok, player_data} -> broadcast! channel, "islands_set", %{stage: player_data.stage, key: player_data.key}
-                            {:reply, :ok, channel}
-
-        {:error, reason} -> push channel, "error", reason
-                            {:reply, :error, channel}
-    end
+    via(game) |> Server.set_islands(String.to_existing_atom(player))
+    {:noreply, channel}
   end
 
   def handle_in("guess_coordinate", params, %{topic: "game:" <> game} = channel) do
@@ -131,17 +100,8 @@ defmodule IslandsInterfaceWeb.GameChannel do  ## TODO: write tests ~ https://hex
           "col" => col } = params
 
     player = String.to_existing_atom(player)
-    case via(game) |> Server.guess_coordinate(player, row, col) do
-      {key, status}    -> result = m(key, status)
-                          broadcast! channel, "coordinate_guessed", m(player, row, col, result)
-                          {:reply, :ok, channel}
-
-      :error           -> push channel, "error", "Not your turn."
-                          {:reply, :error, channel}
-
-      {:error, reason} -> push channel, "error", reason
-                          {:reply, :error, channel}
-    end
+    via(game) |> Server.guess_coordinate(player, row, col)
+    {:noreply, channel}
   end
 
   defp via(game),

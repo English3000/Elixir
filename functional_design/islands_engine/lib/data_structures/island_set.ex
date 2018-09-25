@@ -9,8 +9,8 @@ defmodule IslandsEngine.DataStructures.IslandSet do
     )
   end
 
-  def remove(island_set, key),
-    do: %{island_set | key => %{ Map.get(island_set, key) | placed: false }}
+  # def remove(island_set, key),
+  #   do: %{island_set | key => %{ Map.get(island_set, key) | placed: false }}
 
   def put(island_set, key, %Island{} = island),
     do: if collision?(island_set, key, island),
@@ -25,10 +25,10 @@ defmodule IslandsEngine.DataStructures.IslandSet do
     end)
   end
 
-  def set?(island_set),
-    do: if Enum.all?(island_set, fn {key, %{placed: placed}} -> placed end),
-          do:   true,
-          else: {:error, :unplaced_islands}
+  # def set?(island_set),
+  #   do: if Enum.all?(island_set, fn {key, %{placed: placed}} -> placed end),
+  #         do:   true,
+  #         else: {:error, :unplaced_islands}
 
   def hit?(guesses, opp_islands, %Coordinate{} = coord) do
     case Enum.find_value(opp_islands, :miss, fn {key, island} ->

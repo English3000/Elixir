@@ -36,28 +36,29 @@ defmodule IslandsEngine.Game.Server do
     end
   end
 
-  def place_island(pid, player_atom, key, row, col) when player_atom in @players,
-    do: GenServer.call(pid, {:place_island, player_atom, key, row, col})
-  def handle_call({:place_island, player_atom, key, row, col}, _caller, state) do
-    player = player_data(state, [player_atom])
-    with  :ok          <- Stage.check(player, :place_island),
-         {:ok, coord}  <- Coordinate.new(row, col),
-         {:ok, island} <- Island.new(key, coord),                       # errors if island is out of bounds
-         %{} = islands <- IslandSet.put(player.islands, key, island) do # errors if island overlaps
-      state |> update_islands(player_atom, islands)
-            |> reply({:ok, island})
-    else
-      error -> reply(state, error)
-    end
-  end
+  # def place_island(pid, player_atom, key, row, col) when player_atom in @players,
+  #   do: GenServer.call(pid, {:place_island, player_atom, key, row, col})
+  # def handle_call({:place_island, player_atom, key, row, col}, _caller, state) do
+  #   player = player_data(state, [player_atom])
+  #   with  :ok          <- Stage.check(player, :place_island),
+  #        {:ok, coord}  <- Coordinate.new(row, col),
+  #        {:ok, island} <- Island.new(key, coord),                       # errors if island is out of bounds
+  #        %{} = islands <- IslandSet.put(player.islands, key, island) do # errors if island overlaps
+  #     state |> update_islands(player_atom, islands)
+  #           |> reply({:ok, island})
+  #   else
+  #     error -> reply(state, error)
+  #   end
+  # end
+  #
+  # def delete_island(pid, player_atom, key) when player_atom in @players,
+  #   do: GenServer.call(pid, {:delete_island, player_atom, key})
+  # def handle_call({:delete_island, player_atom, key}, _caller, state) do
+  #   islands = player_data(state, [player_atom, :islands]) |> IslandSet.remove(key)
+  #   update_islands(state, player_atom, islands) |> reply({:ok, key})
+  # end
 
-  def delete_island(pid, player_atom, key) when player_atom in @players,
-    do: GenServer.call(pid, {:delete_island, player_atom, key})
-  def handle_call({:delete_island, player_atom, key}, _caller, state) do
-    islands = player_data(state, [player_atom, :islands]) |> IslandSet.remove(key)
-    update_islands(state, player_atom, islands) |> reply({:ok, key})
-  end
-
+  # NOTE: Update to handle full islandset
   def set_islands(pid, player_atom) when player_atom in @players,
     do: GenServer.call(pid, {:set_islands, player_atom})
   def handle_call({:set_islands, player_atom}, _caller, state) do
