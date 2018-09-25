@@ -78,20 +78,14 @@ defmodule IslandsInterfaceWeb.GameChannel do  ## TODO: write tests ~ https://hex
   @spec handle_in(event :: String.t, payload :: any, channel :: Socket.t) ::
     {:reply, {status :: atom} | {status :: atom, response :: map}, channel :: Socket.t } |
     {:noreply,                                                     channel :: Socket.t}
-  # def handle_in("place_island", %{"player"=> player,"island"=> island,"row"=> row,"col"=> col}, %{topic: "game:" <> game} = channel) do
-  #   via(game) |> Server.place_island(String.to_atom(player), String.to_atom(island), row, col)
-  #   {:noreply, channel}
-  # end
-  #
-  # def handle_in("delete_island", %{"player"=> player,"island"=> island}, %{topic: "game:" <> game} = channel) do
-  #   via(game) |> Server.delete_island(String.to_atom(player), String.to_atom(island))
-  #   {:noreply, channel}
-  # end
 
   # NOTE: Update to handle full islandset
-  def handle_in("set_islands", player, %{topic: "game:" <> game} = channel) do
-    via(game) |> Server.set_islands(String.to_existing_atom(player))
-    {:noreply, channel}
+  def handle_in("set_islands", %{player => island_set} = payload, %{topic: "game:" <> game} = channel) do
+    case via(game) |> Server.set_islands(payload) do
+      {:ok, player_data} -> {:reply, {:ok, %{player => player_data}}, channel}
+
+                   error -> {:reply, error, channel}
+    end
   end
 
   def handle_in("guess_coordinate", params, %{topic: "game:" <> game} = channel) do

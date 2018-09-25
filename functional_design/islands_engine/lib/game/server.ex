@@ -36,41 +36,19 @@ defmodule IslandsEngine.Game.Server do
     end
   end
 
-  # def place_island(pid, player_atom, key, row, col) when player_atom in @players,
-  #   do: GenServer.call(pid, {:place_island, player_atom, key, row, col})
-  # def handle_call({:place_island, player_atom, key, row, col}, _caller, state) do
-  #   player = player_data(state, [player_atom])
-  #   with  :ok          <- Stage.check(player, :place_island),
-  #        {:ok, coord}  <- Coordinate.new(row, col),
-  #        {:ok, island} <- Island.new(key, coord),                       # errors if island is out of bounds
-  #        %{} = islands <- IslandSet.put(player.islands, key, island) do # errors if island overlaps
-  #     state |> update_islands(player_atom, islands)
-  #           |> reply({:ok, island})
-  #   else
-  #     error -> reply(state, error)
-  #   end
-  # end
-  #
-  # def delete_island(pid, player_atom, key) when player_atom in @players,
-  #   do: GenServer.call(pid, {:delete_island, player_atom, key})
-  # def handle_call({:delete_island, player_atom, key}, _caller, state) do
-  #   islands = player_data(state, [player_atom, :islands]) |> IslandSet.remove(key)
-  #   update_islands(state, player_atom, islands) |> reply({:ok, key})
-  # end
-
-  # NOTE: Update to handle full islandset
-  def set_islands(pid, player_atom) when player_atom in @players,
-    do: GenServer.call(pid, {:set_islands, player_atom})
-  def handle_call({:set_islands, player_atom}, _caller, state) do
-    with {:ok, player} <- player_data(state, [player_atom]) |> Stage.check(:set_islands),
-                  true <- IslandSet.set?(player.islands)
-    do
-      # check if both players are ready
-      result = if player_atom == :player1,
+  def set_islands(pid, payload),
+    do: GenServer.call(pid, {:set_islands, payload})
+  def handle_call({:set_islands, %{player => island_set}}, _caller, state) do
+    if IslandSet.valid?(island_set) do
+      saved_player = player_data(state, [String.to_existing_atom(player)])
+      island_set = IslandSet.convert(island_set)
+      player = %Player{saved_player | stage: :ready, islands: island_set}
+      # Check if other player is ready.
+      result = if player.key == :player1,
                  do:   Stage.check( player, player_data(state, [:player2]) ),
                  else: Stage.check( player_data(state, [:player1]), player )
 
-      case result do # update state accordingly
+      case result do
         {:ok, player1, player2} -> state |> update_player(player1)
                                          |> update_player(player2)
                                          |> reply({:ok, player})
@@ -79,7 +57,7 @@ defmodule IslandsEngine.Game.Server do
                                          |> reply({:ok, player})
       end
     else
-      error -> reply(state, error)
+      reply(state, {:error, :overlaps})
     end
   end
 

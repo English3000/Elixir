@@ -9,26 +9,24 @@ defmodule IslandsEngine.DataStructures.IslandSet do
     )
   end
 
-  # def remove(island_set, key),
-  #   do: %{island_set | key => %{ Map.get(island_set, key) | placed: false }}
-
-  def put(island_set, key, %Island{} = island),
-    do: if collision?(island_set, key, island),
-          do:   {:error, :overlaps},
-        else: Map.put(island_set, key, island)
-  defp collision?(island_set, new_key, new_island) do
-    Enum.any?(island_set, fn
-      {key, %{placed: placed} = island} when placed ->
-        not MapSet.disjoint?(island.coordinates, new_island.coordinates)
-
-      _ -> false
+  def valid?(island_set) do
+    Enum.reduce(island_set, fn island, coords -> island.coordinates ++ coords end)
+    |> Enum.reduce_while(MapSet.new, fn coord, mapset ->
+      case MapSet.member?(mapset, coord) do
+         true -> {:halt, false}
+        false -> {:cont, MapSet.put(mapset, coord)}
+      end
     end)
+    |> ( &(!!&1) ).() # converts result to boolean
   end
 
-  # def set?(island_set),
-  #   do: if Enum.all?(island_set, fn {key, %{placed: placed}} -> placed end),
-  #         do:   true,
-  #         else: {:error, :unplaced_islands}
+  def convert(payload),
+    do: for %{type: type, bounds: %{top_left: %{row: row, col: col}}} <- payload,
+        into: %{},
+          do: (
+            {:ok, island} = String.to_atom(island.type) |> Island.new(%Coordinate{row: row, col: col}) ;
+            {island.type, island}
+          )
 
   def hit?(guesses, opp_islands, %Coordinate{} = coord) do
     case Enum.find_value(opp_islands, :miss, fn {key, island} ->
