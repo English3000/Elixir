@@ -10,7 +10,7 @@ int write_exact(byte *buffer, int length);
 int read_cmd(byte, *buffer) {
   int length;
 
-  if (read_exact(buffer, 2) != 2) return(-1);
+  if (read_exact(buffer, 2) != 2) return (-1);
 
   length = (buffer[0] << 8) | buffer[1];
 
@@ -27,4 +27,20 @@ int write_cmd(byte, *buffer, int length) {
   return write_exact(buffer, length);
 }
 
-int read_exact() // @ 6206
+int read_exact(byte *buffer, int length) {
+  int i, at = 0;
+  do {
+    if ((i = read(0, buffer + at, length - at)) <= 0) return (i);
+    at += i;
+  } while(at < length);
+  return (length);
+}
+
+int write_exact(byte, *buffer, int length) {
+  int i, at = 0;
+  do {
+    if ((i = write(1, buffer + at, length - at)) <= 0) return (i);
+    at += i;
+  } while(at < length);
+  return (length);
+}
