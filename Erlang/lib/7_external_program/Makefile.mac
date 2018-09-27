@@ -1,0 +1,19 @@
+.SUFFIXES: .ex .erl .beam .yrl
+.erl.beam:
+        erlc -W $<
+
+MODS = interface interface_lid unit_test
+all:  ${MODS:%=%.beam} interface
+        interface_drv.so
+          @iex --noshell -S unit_test
+        start
+interface: interface.c erl_comm.c driver.c
+             gcc -o interface interface.c erl_comm.c driver.c
+
+interface_drv.so: interface_lid.c
+  interface.c
+  gcc -arch i386 -I /usr/local/lib/erlang/usr/include\
+          -o interface_drv.so -fPIC -bundle -flat_namespace -undefined suppress\
+          interface.c interface_lid.c
+clean:
+rm interface interface_drv.so *.beam

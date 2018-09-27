@@ -1,10 +1,14 @@
-# NIFs in Elixir: https://spin.atomicobject.com/2015/03/16/elixir-native-interoperability-ports-vs-nifs/
-defmodule Interface do # @ Location 6272
+# Makefile: http://www.cs.colby.edu/maxwell/courses/tutorials/maketutor/
+# Port examples: https://cultivatehq.com/posts/communicating-with-c-from-elixir-using-ports/,
+  # https://stackoverflow.com/questions/44050019/using-elixir-to-talk-to-rust-via-ports-what-am-i-getting-wrong
+defmodule Interface do
   def start do
-    Process.register(:interface, spawn(fn ->
+    spawn(fn ->
       Process.flag(:trap_exit, true)
+      # doesn't work...
       Port.open({:spawn, "./interface"}, [{:packet, 2}]) |> process()
-    end))
+    end)
+    |> Process.register(:interface)
   end
 
   defp process(port) do
