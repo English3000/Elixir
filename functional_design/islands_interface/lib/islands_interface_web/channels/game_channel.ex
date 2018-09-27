@@ -71,6 +71,13 @@ defmodule IslandsInterfaceWeb.GameChannel do  ## TODO: write tests ~ https://hex
                error -> error
     end
   end
+  defp get_state(result, game, player) do
+    case result do
+      :error -> {:error, "Game at capacity."}
+         :ok -> m(game, player) |> Server.lookup_game |> remove_islands(:player1)
+       tuple -> tuple
+    end
+  end
   defp remove_islands(state, opp_atom) when is_atom(opp_atom),
     do: {:ok, update_in(state, [opp_atom], &( Map.delete(&1, :islands) ))}
   # Removed `case` expressions && `:reply` tuples
@@ -80,7 +87,7 @@ defmodule IslandsInterfaceWeb.GameChannel do  ## TODO: write tests ~ https://hex
     {:noreply,                                                     channel :: Socket.t}
 
   # NOTE: Update to handle full islandset
-  def handle_in("set_islands", %{player => island_set} = payload, %{topic: "game:" <> game} = channel) do
+  def handle_in("set_islands", %{player: player, islands: island_set} = payload, %{topic: "game:" <> game} = channel) do
     case via(game) |> Server.set_islands(payload) do
       {:ok, player_data} -> {:reply, {:ok, %{player => player_data}}, channel}
 

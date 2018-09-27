@@ -38,11 +38,11 @@ defmodule IslandsEngine.Game.Server do
 
   def set_islands(pid, payload),
     do: GenServer.call(pid, {:set_islands, payload})
-  def handle_call({:set_islands, %{player => island_set}}, _caller, state) do
+  def handle_call({:set_islands, %{player: player, islands: island_set}}, _caller, state) do
     if IslandSet.valid?(island_set) do
       saved_player = player_data(state, [String.to_existing_atom(player)])
       island_set = IslandSet.convert(island_set)
-      player = %Player{saved_player | stage: :ready, islands: island_set}
+      player = %{saved_player | stage: :ready, islands: %{island_set | placed: true}}
       # Check if other player is ready.
       result = if player.key == :player1,
                  do:   Stage.check( player, player_data(state, [:player2]) ),

@@ -3,7 +3,7 @@ defmodule IslandsEngine.DataStructures.IslandSet do
   @doc "An island-set is a map of islands, with types for keys."
   @spec new :: %{}
   def new do
-    for type <- Island.types, into: %{}, do: (
+    for type <- Island.types, into: %{placed: false}, do: (
       {:ok, island} = Island.new(type, %Coordinate{row: 0, col: 0}, false);
       {type, island}
     )
@@ -24,7 +24,7 @@ defmodule IslandsEngine.DataStructures.IslandSet do
     do: for %{type: type, bounds: %{top_left: %{row: row, col: col}}} <- payload,
         into: %{},
           do: (
-            {:ok, island} = String.to_atom(island.type) |> Island.new(%Coordinate{row: row, col: col}) ;
+            {:ok, island} = String.to_atom(type) |> Island.new(%Coordinate{row: row, col: col}) ;
             {island.type, island}
           )
 
