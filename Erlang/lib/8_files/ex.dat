@@ -1,0 +1,3 @@
+{:person, "joe", "armstrong", [{:occupation, :programmer}, {:favorite_language, :erlang}]}
+
+{:cat, {:name, "zorro"}, {:owner, "joe"}}

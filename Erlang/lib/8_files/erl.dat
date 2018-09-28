@@ -1,0 +1,5 @@
+%% :file.consult("lib/8_files/erl.dat")
+
+{person, "joe", "armstrong", [{occupation, programmer}, {favorite_language, erlang}]}.
+
+{cat, {name, "zorro"}, {owner, "joe"}}.
