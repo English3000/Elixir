@@ -126,8 +126,8 @@
 #       _ -> :error
 #     end
 #
-#     def decode_header(<< Integer.parse(11111111111, 2) :: size(11), b :: size(2), c :: 2, _d :: 1,
-#                          e :: size(4), f :: size(2), g :: size(1), bits :: size(9) >>) do
+#     def decode_header(<<a::11, b::2, c::2, _d::1, e::4, f::2, g::1, bits::9>>)
+#       when a == Integer.parse(11111111111, 2) do # won't work
 #       vsn = case b do
 #               0 -> {2,5}
 #               1 -> exit(:bad_vsn)

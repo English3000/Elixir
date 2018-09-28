@@ -8,6 +8,12 @@ defmodule MP3 do
     |> dump("mp3data")
   end
 
+  def dump(file, term) do
+    output = file <> ".tmp" ; IO.inspect(output, label: "dumping to")
+    {:ok, pid} = File.open(output, [:write]) ; IO.inspect(pid, term)
+    File.close(pid)
+  end
+
   defp decode(file) do
     case File.open(file, [:read, :binary, :raw]) do
       {:ok, pid} -> size = :filelib.file_size(file)
@@ -17,14 +23,22 @@ defmodule MP3 do
 
     end
   end
+  # bitstring docs: https://hexdocs.pm/elixir/Kernel.SpecialForms.html#%3C%3C%3E%3E/1
+  defp parse(<<?T,?A,?G, title::30, artist::30, album::30, _year::4, _comment::28, 0::8, track::8, _genre::8>>),
+    do: {"ID3v1.1", [track: track, title: trim(title), artist: trim(artist), album: trim(album)]}
+  defp parse(<<?T,?A,?G, title::30, artist::30, album::30, _year::4, _comment::30, _genre::8>>),
+    do: {"ID3v1.1", [title: trim(title), artist: trim(artist), album: trim(album)]}
+  defp parse(_),
+    do: :error
 
-  defp parse(<<>>) do
-    # L 6576 -- focus on parsing properly
-  end
+  defp trim(binary),
+    do: binary
+        |> to_string
+        |> String.reverse
+        |> extract
+        |> String.reverse
 
-  def dump(file, term) do
-    output = file <> ".tmp" ; IO.inspect(output, label: "dumping to")
-    {:ok, pid} = File.open(output, [:write]) ; IO.inspect(pid, term)
-    File.close(pid)
-  end
+  defp extract([?\s | tail]), do: extract(tail)
+  defp extract([0 | tail]),   do: extract(tail)
+  defp extract(string),       do: extract(string)
 end
