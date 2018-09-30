@@ -80,18 +80,19 @@ defmodule IslandsInterfaceWeb.GameChannel do  ## TODO: write tests ~ https://hex
   end
   defp remove_islands(state, opp_atom) when is_atom(opp_atom),
     do: {:ok, update_in(state, [opp_atom], &( Map.delete(&1, :islands) ))}
-  # Removed `case` expressions && `:reply` tuples
+
   @doc "<JS> channel.push(event, payload) => handle_in(event, payload, channel) <EX>"
   @spec handle_in(event :: String.t, payload :: any, channel :: Socket.t) ::
     {:reply, {status :: atom} | {status :: atom, response :: map}, channel :: Socket.t } |
     {:noreply,                                                     channel :: Socket.t}
 
-  # NOTE: Update to handle full islandset
-  def handle_in("set_islands", %{player: player, islands: island_set} = payload, %{topic: "game:" <> game} = channel) do
+  def handle_in("set_islands", payload, %{topic: "game:" <> game} = channel) do
     case via(game) |> Server.set_islands(payload) do
-      {:ok, player_data} -> {:reply, {:ok, %{player => player_data}}, channel}
+      {:ok, player_data} -> push channel, "islands_set", player_data
+                            {:noreply, channel}
 
-                   error -> {:reply, error, channel}
+        {:error, reason} -> push channel, "error", m(reason)
+                            {:noreply, channel}
     end
   end
 

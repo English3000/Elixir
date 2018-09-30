@@ -2,31 +2,30 @@ defmodule IslandsEngine.DataStructures.IslandSet do
   alias IslandsEngine.DataStructures.{Island, Coordinate, Guesses}
   @doc "An island-set is a map of islands, with types for keys."
   @spec new :: %{}
-  def new do
+  def new do  # TODO: Remove `:placed` b/c `:stage` serves this function
     for type <- Island.types, into: %{placed: false}, do: (
       {:ok, island} = Island.new(type, %Coordinate{row: 0, col: 0}, false);
       {type, island}
     )
   end
 
-  def valid?(island_set) do
-    Enum.reduce(island_set, fn island, coords -> island.coordinates ++ coords end)
-    |> Enum.reduce_while(MapSet.new, fn coord, mapset ->
-      case MapSet.member?(mapset, coord) do
-         true -> {:halt, false}
-        false -> {:cont, MapSet.put(mapset, coord)}
-      end
-    end)
-    |> ( &(!!&1) ).() # converts result to boolean
-  end
+  def validate(island_set) do
+    Enum.reduce_while(%{island_set | placed: true}, {MapSet.new, %{}},
+      fn island, {map_set, islandset} ->
+        {:ok, island_} = Island.new(String.to_atom(island.type), island.bounds.top_left)
 
-  def convert(payload),
-    do: for %{type: type, bounds: %{top_left: %{row: row, col: col}}} <- payload,
-        into: %{},
-          do: (
-            {:ok, island} = String.to_atom(type) |> Island.new(%Coordinate{row: row, col: col}) ;
-            {island.type, island}
-          )
+        case Enum.reduce_while(island_.coordinates, map_set, fn coord, mapset ->
+               case MapSet.member(mapset, coord) do
+                 true -> {:halt, false}
+                false -> {:cont, MapSet.put(mapset, coord)}
+               end
+             end)
+        do
+           false -> {:halt, false}
+          mapset -> {:cont, { mapset, %{islandset | island_.type => island} }}
+        end
+      end)
+  end
 
   def hit?(guesses, opp_islands, %Coordinate{} = coord) do
     case Enum.find_value(opp_islands, :miss, fn {key, island} ->

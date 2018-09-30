@@ -6,7 +6,7 @@ defmodule IslandsEngine.Game.Server do
                                 # Used by:
   @timeout 60 * 60 * 24 * 1000  #  reply/2
   @players [:player1, :player2] #  Stages
-  @errors [:invalid_coordinate, :invalid_island, :invalid_coordinate, :unplaced_islands, :overlaps]
+  @errors [:invalid_coordinate, :invalid_island, :invalid_coordinate, :unplaced_islands, :overlapping_islands]
   # https://hexdocs.pm/elixir/Supervisor.html#module-module-based-supervisors
   @doc "Start a new game."
   def start_link(game, player) when is_binary(game) and is_binary(player),
@@ -39,10 +39,9 @@ defmodule IslandsEngine.Game.Server do
   def set_islands(pid, payload),
     do: GenServer.call(pid, {:set_islands, payload})
   def handle_call({:set_islands, %{player: player, islands: island_set}}, _caller, state) do
-    if IslandSet.valid?(island_set) do
+    with {_mapset, islands} = IslandSet.validate(island_set) do
       saved_player = player_data(state, [String.to_existing_atom(player)])
-      island_set = IslandSet.convert(island_set)
-      player = %{saved_player | stage: :ready, islands: %{island_set | placed: true}}
+      player = %{saved_player | stage: :ready, islands: islands}
       # Check if other player is ready.
       result = if player.key == :player1,
                  do:   Stage.check( player, player_data(state, [:player2]) ),
@@ -57,7 +56,7 @@ defmodule IslandsEngine.Game.Server do
                                          |> reply({:ok, player})
       end
     else
-      reply(state, {:error, :overlaps})
+      _ -> reply(state, {:error, :overlapping_islands})
     end
   end
 
