@@ -2,6 +2,7 @@ defmodule IslandsEngine.DataStructures.Coordinate do
   alias __MODULE__
   @enforce_keys [:row, :col]
       defstruct [:row, :col]
+  # NOTE: Put validation only on frontend...
   ## range should not be defined at coordinate-level
   @doc "A coordinate is a struct with two integer values."
   def new(row, col, validate \\ true, range \\ 1..10)

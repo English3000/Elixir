@@ -2,7 +2,7 @@ defmodule IslandsEngine.Game.Server do
   import Shorthand
   use GenServer, start: {__MODULE__, :start_link, []}, restart: :transient
   alias IslandsEngine.Game.Stage
-  alias IslandsEngine.DataStructures.{IslandSet, Island, Player, Coordinate}
+  alias IslandsEngine.DataStructures.{IslandSet, Player, Coordinate}
                                 # Used by:
   @timeout 60 * 60 * 24 * 1000  #  reply/2
   @players [:player1, :player2] #  Stages
@@ -38,8 +38,8 @@ defmodule IslandsEngine.Game.Server do
 
   def set_islands(pid, payload),
     do: GenServer.call(pid, {:set_islands, payload})
-  def handle_call({:set_islands, %{player: player, islands: island_set}}, _caller, state) do
-    with {_mapset, islands} = IslandSet.validate(island_set) do
+  def handle_call({:set_islands, %{"player"=> player, "islands"=> island_set}}, _caller, state) do
+    with {_mapset, islands} <- IslandSet.validate(island_set) do
       saved_player = player_data(state, [String.to_existing_atom(player)])
       player = %{saved_player | stage: :ready, islands: islands}
       # Check if other player is ready.
@@ -66,7 +66,7 @@ defmodule IslandsEngine.Game.Server do
       player = player_data(state, [player_atom])
     opponent = player_data(state, [player_atom |> Player.opponent])
     with {:ok, coord}            <- Coordinate.new(row, col),
-         {guesses, islands, key, game_status} <- IslandSet.hit?(player.guesses, opponent.islands, coord),
+         {guesses, _islands, key, game_status} <- IslandSet.hit?(player.guesses, opponent.islands, coord),
          {:ok, guesser, waiting} <- Stage.check(player, opponent, game_status)
     do
       state |> update_guesses(guesser, guesses)
@@ -112,8 +112,6 @@ defmodule IslandsEngine.Game.Server do
   # could refactor to 1 method
   defp update_player(state, player),
     do: %{state | player.key => player}
-  defp update_islands(state, player_atom, islands),
-    do: Map.update!(state, player_atom, &(%{&1 | islands: islands}) )
   defp update_guesses(state, player_atom, guesses),
     do: Map.update!(state, player_atom, &(%{&1 | guesses: guesses}) )
 end
