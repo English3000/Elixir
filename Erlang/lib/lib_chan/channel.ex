@@ -8,8 +8,8 @@
 #
 #   def start(config) do
 #     IO.inspect(config, label: "`lib_chan` starting")
-#     with {:ok, contents} = File.read(config),
-#                       [] = validate(contents) do
+#     with {:ok, contents} <- File.read(config),
+#                       [] <- validate(contents) do
 #       setup(contents)
 #     else
 #       {:error, reason} -> exit({:bad_config, reason})

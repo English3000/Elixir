@@ -28,7 +28,52 @@ defmodule Helper do # @ L 6757
     Enum.sort(dirs) |> Enum.map( &({&1, file_info(&1)}) )
   end
 
-  def find(path, regex, recursive, function, acc) # L 6866
+  # works! -- can implement with processes
+  def search(dir, regex, recurse) do
+    search(dir, regex, recurse, &([&1|&2]), []) |> Enum.reverse
+  end
+
+  def search(dir, regex, recurse, function, acc) do
+    case File.ls(dir) do
+      {:ok, dirs} -> search(dirs, dir, regex, recurse, function, acc)
+      {:error, _} -> acc
+    end
+  end
+
+  def search([file | tail], dir, regex, recurse, function, acc) do # could parallelize recursing thru list
+    path = Path.join([dir, file])
+    new_acc = file_type(path) |> search(path, regex, recurse, function, acc)
+    search(tail, dir, regex, recurse, function, new_acc)
+  end
+
+  def file_type(path) do
+    with {:ok, info} <- File.stat(path),
+         info.type in [:regular, :directory] do
+      info.type
+    else
+      _ -> :error
+    end
+  end
+
+  def search([], _dir, _regex, _recurse, _function, acc),
+    do: acc
+
+  def search(:regular, path, regex, recurse, function, acc) do
+    case Regex.run(regex, path, capture: :none) do
+       [] -> function.(path, acc)
+      nil -> acc
+    end
+  end
+
+  def search(:directory, path, regex, recurse, function, acc) do
+    case recurse do
+       true -> search(path, regex, recurse, function, acc) # CDs into next dir -- could parallelize here
+      false -> acc
+    end
+  end
+
+  def search(:error, path, regex, recurse, function, acc),
+    do: acc
 end
 
 # Helper.print_by_line(pid)
