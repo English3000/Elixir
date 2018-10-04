@@ -1,4 +1,4 @@
-defmodule GenServer.EmptyProcess do # L 10012
+defmodule GenServer.EmptyProcess do
   # iex> pid = __MODULE__.start
   # iex> send(pid, {:swap, &GenServer.FactorialProcess.process/0})
   # iex> __MODULE__.call(pid, {:factorial, 30})
