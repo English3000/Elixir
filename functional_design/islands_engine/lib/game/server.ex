@@ -65,9 +65,8 @@ defmodule IslandsEngine.Game.Server do
   def handle_call({:guess, player_atom, row, col}, _caller, state) do # frontend prevents duplicate guesses (so no need to check)
       player = player_data(state, [player_atom])
     opponent = player_data(state, [player_atom |> Player.opponent])
-    with {:ok, coord}            <- Coordinate.new(row, col),
-         {guesses, _islands, key, game_status} <- IslandSet.hit?(player.guesses, opponent.islands, coord),
-         {:ok, guesser, waiting} <- Stage.check(player, opponent, game_status)
+    with {guesses, _islands, key, game_status} <- IslandSet.hit?(player.guesses, opponent.islands, %Coordinate{row: row, col: col}),
+                       {:ok, guesser, waiting} <- Stage.check(player, opponent, game_status)
     do
       state |> update_guesses(guesser, guesses)
             |> update_player(guesser)

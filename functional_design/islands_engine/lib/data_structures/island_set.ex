@@ -4,7 +4,7 @@ defmodule IslandsEngine.DataStructures.IslandSet do
   @spec new :: %{}
   def new do
     for type <- Island.types, into: %{}, do: (
-      {:ok, island} = Island.new(type, %Coordinate{row: 0, col: 0}, false);
+      {:ok, island} = Island.new(type, %Coordinate{row: 0, col: 0});
       {type, island}
     )
   end
@@ -13,8 +13,7 @@ defmodule IslandsEngine.DataStructures.IslandSet do
     Enum.reduce_while(island_set, {MapSet.new, %{}},
       fn {type, island}, {map_set, islandset} when is_map(island) ->
         %{"row" => row, "col" => col} = get_in(island, ["bounds", "top_left"])
-        {:ok, coordinate} = Coordinate.new(row, col, false)
-        {:ok, island_} = Island.new(String.to_atom(type), coordinate)
+        {:ok, island_} = Island.new(String.to_atom(type), %Coordinate{row: row, col: col})
 
         case Enum.reduce_while(island_.coordinates, map_set, fn coord, mapset ->
                case MapSet.member?(mapset, coord) do

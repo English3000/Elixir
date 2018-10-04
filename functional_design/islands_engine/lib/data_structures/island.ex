@@ -4,25 +4,16 @@ defmodule IslandsEngine.DataStructures.Island do
       defstruct [:coordinates, :bounds, :type]
 
   @doc "An island is a mapset of coordinates that corresponds to a type atom."
-  def new(type, %Coordinate{} = top_left, placed \\ true) do
-    with        %{} = bounds <- bounds(type, top_left),
-         [_|_] = coordinates <- coordinates(type),
-          %MapSet{} = coords <- build_island(coordinates, top_left, placed) do
-      { :ok, %Island{coordinates: coords, bounds: bounds, type: type} }
-    else
-      error -> error
-    end
-  end
-  # Builds a mapset of coordinates, or errors out if invalid.
-  defp build_island(coords, start, validate) do
-    Enum.reduce_while(coords, MapSet.new, fn coord, acc ->
-      add_coordinate(acc, start, coord, validate)
-    end)
-  end
-  defp add_coordinate(coords, %Coordinate{row: row, col: col}, {row_offset, col_offset}, validate) do
-    case Coordinate.new(row + row_offset, col + col_offset, validate) do
-         {:ok, coord}               -> {:cont, MapSet.put(coords, coord)}
-      {:error, :invalid_coordinate} -> {:halt, {:error, :invalid_coordinate}}
+  def new(type, %Coordinate{row: row, col: col} = top_left) do
+    bounds = bounds(type, top_left)
+    coords = coordinates(type)
+
+    case is_list(coords) do
+       true -> coordinates = for {y, x} <- coords, into: MapSet.new,
+                               do: %Coordinate{row: row + y, col: col + x}
+
+               {:ok, %Island{coordinates: coordinates, bounds: bounds, type: type}}
+      false -> coords # error tuple
     end
   end
 
