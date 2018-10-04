@@ -1,6 +1,6 @@
 # {:ok, pid} = File.open "lib/8_files/ex.dat", [:read]
 
-defmodule Helper do # @ L 6757
+defmodule Helper do # @ Ch. 17 Programming with Sockets
   def print_by_line(pid) do
     case IO.binread(pid, :line) do
       :eof -> :eof
@@ -28,9 +28,9 @@ defmodule Helper do # @ L 6757
     Enum.sort(dirs) |> Enum.map( &({&1, file_info(&1)}) )
   end
 
-  # works! -- can implement with processes
   def search(dir, regex, recurse) do
     search(dir, regex, recurse, &([&1|&2]), []) |> Enum.reverse
+    # IO.inspect(:erlang.statistics(:runtime))
   end
 
   def search(dir, regex, recurse, function, acc) do
@@ -40,7 +40,7 @@ defmodule Helper do # @ L 6757
     end
   end
 
-  def search([file | tail], dir, regex, recurse, function, acc) do # could parallelize recursing thru list
+  def search([file | tail], dir, regex, recurse, function, acc) do
     path = Path.join([dir, file])
     new_acc = file_type(path) |> search(path, regex, recurse, function, acc)
     search(tail, dir, regex, recurse, function, new_acc)
@@ -67,13 +67,50 @@ defmodule Helper do # @ L 6757
 
   def search(:directory, path, regex, recurse, function, acc) do
     case recurse do
-       true -> search(path, regex, recurse, function, acc) # CDs into next dir -- could parallelize here
+       true -> search(path, regex, recurse, function, acc)
       false -> acc
     end
   end
 
   def search(:error, path, regex, recurse, function, acc),
     do: acc
+
+  # slower; prob b/c of `Enum.reject` && `List.flatten`
+  def concurrent_search(dir, regex, recurse) do
+    case File.ls(dir) do
+      {:ok, dirs} -> Enum.map( dirs, &(Task.async(fn ->
+                       concurrent_search(&1, dir, regex, recurse)
+                     end)) )
+                     |> Enum.map(&Task.await/1)
+                     |> Enum.reject(&(&1 in [nil, []]))
+                     |> List.flatten
+                     # IO.inspect(:erlang.statistics(:runtime))
+
+      {:error, _} -> []
+    end
+  end
+
+  def concurrent_search(:regular, path, regex, recurse) do
+    case Regex.run(regex, path, capture: :none) do
+       [] -> path
+      nil -> nil
+    end
+  end
+
+  def concurrent_search(:directory, path, regex, recurse) do
+    case recurse do
+       true -> concurrent_search(path, regex, recurse)
+      false -> nil
+    end
+  end
+
+  def concurrent_search(:error, path, regex, recurse),
+    do: nil
+
+  def concurrent_search(file, dir, regex, recurse) do
+    path = Path.join([dir, file])
+    file_type(path) |> concurrent_search(path, regex, recurse)
+  end
 end
 
 # Helper.print_by_line(pid)
