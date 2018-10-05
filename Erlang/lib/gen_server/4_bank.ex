@@ -1,4 +1,4 @@
-defmodule GenServer.Bank do # @ L 10275
+defmodule GenServer.Bank do
   @behaviour GenServer.Behaviour
 
   def start, do: GenServer.start_link(__MODULE__, [])

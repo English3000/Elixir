@@ -30,9 +30,9 @@ defmodule URL do
     do: body(tail, [head | list])
   defp body([], _),
     do: {[], []}
-  # not working -- other examples: https://andrealeopardi.com/posts/handling-tcp-connections-in-elixir/
-  def get(url) do                # https://elixir-lang.org/getting-started/mix-otp/task-and-gen-tcp.html
-    {:ok, socket} = :gen_tcp.connect(url, 80, :binary) # [:binary, packet: 0]
+
+  def get(url) do  # REVIEW
+    {:ok, socket} = :gen_tcp.connect(to_charlist(url), 80, [:binary, packet: 0])
     :ok = :gen_tcp.send(socket, "GET / HTTP/1.0\r\n\r\n")
     handle_response(socket, [])
   end
