@@ -1,6 +1,6 @@
 # {:ok, pid} = File.open "lib/8_files/ex.dat", [:read]
 
-defmodule Helper do # @ Ch. 17 Programming with Sockets
+defmodule Helper do
   def print_by_line(pid) do
     case IO.binread(pid, :line) do
       :eof -> :eof
