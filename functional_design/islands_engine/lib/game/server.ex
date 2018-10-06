@@ -30,7 +30,7 @@ defmodule IslandsEngine.Game.Server do
     do: GenServer.call(pid, {:add_player, player_name})
   def handle_call({:add_player, _player_name} = tuple, _caller, state) do
     case Stage.check(state.player2, tuple) do
-      {:ok, player2} -> state |> update_player(player2)
+      {:ok, player2} -> state |> put_in([player2.key], player2)
                               |> reply(:ok)
               :error -> reply(state, :error)
     end
@@ -40,19 +40,19 @@ defmodule IslandsEngine.Game.Server do
     do: GenServer.call(pid, {:set_islands, payload})
   def handle_call({:set_islands, %{"player"=> player, "islands"=> island_set}}, _caller, state) do
     with {_mapset, islands} <- IslandSet.validate(island_set) do
-      saved_player = player_data(state, [String.to_existing_atom(player)])
+      saved_player = Map.fetch!(state, String.to_existing_atom(player))
       player = %{saved_player | stage: :ready, islands: islands}
       # Check if other player is ready.
       result = if player.key == :player1,
-                 do:   Stage.check( player, player_data(state, [:player2]) ),
-                 else: Stage.check( player_data(state, [:player1]), player )
+                 do:   Stage.check(player, Map.fetch!(state, :player2)),
+               else: Stage.check(Map.fetch!(state, :player1), player)
 
       case result do
-        {:ok, player1, player2} -> state |> update_player(player1)
-                                         |> update_player(player2)
+        {:ok, player1, player2} -> state |> Map.put(player1.key, player1)
+                                         |> Map.put(player2.key, player2)
                                          |> reply({:ok, player})
 
-                         :error -> state |> update_player(player)
+                         :error -> state |> Map.put(player.key, player)
                                          |> reply({:ok, player})
       end
     else
@@ -60,18 +60,20 @@ defmodule IslandsEngine.Game.Server do
     end
   end
 
+  # frontend prevents duplicate guesses
   def guess_coordinate(pid, player_atom, row, col) when player_atom in @players,
     do: GenServer.call(pid, {:guess, player_atom, row, col})
-  def handle_call({:guess, player_atom, row, col}, _caller, state) do # frontend prevents duplicate guesses (so no need to check)
-      player = player_data(state, [player_atom])
-    opponent = player_data(state, [player_atom |> Player.opponent])
-    with {guesses, _islands, key, game_status} <- IslandSet.hit?(player.guesses, opponent.islands, %Coordinate{row: row, col: col}),
-                       {:ok, guesser, waiting} <- Stage.check(player, opponent, game_status)
+  def handle_call({:guess, player_atom, row, col}, _caller, state) do
+      player = Map.fetch!(state, player_atom)
+    opponent = Map.fetch!(state, player_atom |> Player.opponent)
+    with {guesses, island?, game_status} <- IslandSet.hit?(player.guesses, opponent.islands, %Coordinate{row: row, col: col}),
+             {:ok, guesser, waiting} <- Stage.check(player, opponent, game_status)
     do
-      state |> update_guesses(guesser, guesses)
-            |> update_player(guesser)
-            |> update_player(waiting)
-            |> reply({key, game_status})
+      guesser = Map.put(guesser, :guesses, guesses)
+
+      state |> Map.put(guesser.key, guesser)
+            |> Map.put(waiting.key, waiting)
+            |> reply({island?, game_status})
     else
       error -> reply(state, error)
     end
@@ -84,13 +86,9 @@ defmodule IslandsEngine.Game.Server do
   def registry_tuple(game),
     do: {:via, Registry, {Registry.Game, game}}
 
-  defp reply(state, {:error, msg} = result)
-    when msg in @errors, # redunant/coupled?
-      do: {:reply, result, state, @timeout}
-  defp reply(state, result)
-    when not is_tuple(result) or
-         elem(result, 0) != :error
-  do
+  defp reply(state, {:error, msg} = result) when msg in @errors, # redunant/coupled?
+    do: {:reply, result, state, @timeout}
+  defp reply(state, result) when not is_tuple(result) or elem(result, 0) != :error do
     if result != :error, do: :dets.insert(:game, {state.game, state})
     {:reply, result, state, @timeout}
   end
@@ -106,11 +104,4 @@ defmodule IslandsEngine.Game.Server do
     do: %{ game: game,
            player1: Player.new(player),
            player2: Player.new }
-  defp player_data(state, keys),
-    do: get_in(state, keys)
-  # could refactor to 1 method
-  defp update_player(state, player),
-    do: %{state | player.key => player}
-  defp update_guesses(state, player_atom, guesses),
-    do: Map.update!(state, player_atom, &(%{&1 | guesses: guesses}) )
 end

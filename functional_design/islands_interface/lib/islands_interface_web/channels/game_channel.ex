@@ -95,14 +95,24 @@ defmodule IslandsInterfaceWeb.GameChannel do  ## TODO: write tests ~ https://hex
                             {:noreply, channel}
     end
   end
-
+  # should the frontend handle this too, or just the backend?
+  #  - duplicate logic
+  #  + (-) latency
   def handle_in("guess_coordinate", params, %{topic: "game:" <> game} = channel) do
     %{ "player" => player,
           "row" => row,
           "col" => col } = params
 
     player = String.to_existing_atom(player)
-    via(game) |> Server.guess_coordinate(player, row, col)
+    case via(game) |> Server.guess_coordinate(player, row, col) do
+      {hit, status}    -> broadcast! channel, "game_status", m(player, status)
+                          broadcast! channel, "coordinate_guessed", m(row, col, hit, player_key: player)
+
+      :error           -> push channel, "error", %{reason: "Not your turn."}
+
+      {:error, reason} -> push channel, "error", m(reason)
+    end
+
     {:noreply, channel}
   end
 

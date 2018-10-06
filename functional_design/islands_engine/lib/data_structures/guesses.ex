@@ -6,7 +6,7 @@ defmodule IslandsEngine.DataStructures.Guesses do
   def new, do: %Guesses{}
 
   def put(%Guesses{} = guesses, :hit, %Coordinate{} = coord),
-    do: update_in(guesses.hits, &MapSet.put(&1, coord))
+    do: %{guesses | hits: MapSet.put(guesses.hits, coord)}
   def put(%Guesses{} = guesses, :miss, %Coordinate{} = coord),
-    do: update_in(guesses.misses, &MapSet.put(&1, coord))
+    do: %{guesses | misses: MapSet.put(guesses.misses, coord)}
 end

@@ -32,14 +32,11 @@ defmodule IslandsEngine.DataStructures.IslandSet do
 
   def hit?(guesses, opp_islands, %Coordinate{} = coord) do
     case Enum.find_value(opp_islands, :miss, fn {key, island} ->
-           case Island.hit?(island, coord) do
-             {:hit, island} -> {key, island}
-                      :miss -> false
-           end
+           if Island.hit?(island, coord), do: {key, island}
          end)
     do
-               :miss -> {Guesses.put(guesses, :miss, coord), false, false}
-      {key, _island} -> {Guesses.put(guesses, :hit,  coord), key,   filled?(guesses, opp_islands)}
+      :miss -> {Guesses.put(guesses, :miss, coord), false, false} # make more descriptive
+          _ -> {Guesses.put(guesses, :hit,  coord), true,  filled?(guesses, opp_islands)}
     end
   end
   defp filled?(guesses, opp_islands),
