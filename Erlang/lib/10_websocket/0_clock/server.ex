@@ -1,10 +1,10 @@
-defmodule WebSocket.Server do # L 7777
+defmodule WebSocket.Clock.Server do
   def start(browser) do
     send(browser, %{cmd: :fill_div, id: :clock, text: current_time()})
     process(browser)
   end
 
-  defp current_time do
+  def current_time do
     time = Time.utc_now
     "#{time.hour}:#{time.minute}:#{time.second}"
   end

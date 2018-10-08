@@ -57,10 +57,10 @@ function startSession(endpoint) {// https://developer.mozilla.org/en-US/docs/Web
 const send = (message) => websocket.send(message)
 
 
-function appendDiv(object){
+function append_div(object){
   let element = $("#" + object.id)
   element.append(object.text)
   element.animate({scrollTop: element.prop("scrollHeight")}, 1000)
 }
 
-const fillDiv = (object) => $("#" + object.id).html(object.text)
+const fill_div = (object) => $("#" + object.id).html(object.text)

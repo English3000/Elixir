@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>Clock</title>
+
+    <script type="text/javascript"
+            src="https://code.jquery.com/jquery-3.3.1.min.js"
+    			  integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+    			  crossorigin="anonymous"></script>
+
+    <script type="text/javascript"
+            src="../websocket.js"></script>
+
+    <link rel="stylesheet"
+          href="./styles.css"
+          type="text/css">
+  </head>
+  <body>
+    <div id="clock"></div>
+    <button id="start" class="live_button">start</button>
+    <button id="stop" class="live_button">stop</button>
+  </body>
+  <script>
+    $(document).ready(() => connect("localhost", 2000, "server"))
+  </script>
+</html>
