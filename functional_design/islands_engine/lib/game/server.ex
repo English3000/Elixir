@@ -67,7 +67,7 @@ defmodule IslandsEngine.Game.Server do
       player = Map.fetch!(state, player_atom)
     opponent = Map.fetch!(state, player_atom |> Player.opponent)
     with {guesses, island?, game_status} <- IslandSet.hit?(player.guesses, opponent.islands, %Coordinate{row: row, col: col}),
-             {:ok, guesser, waiting} <- Stage.check(player, opponent, game_status)
+                 {:ok, guesser, waiting} <- Stage.check(player, opponent, game_status)
     do
       guesser = Map.put(guesser, :guesses, guesses)
 
