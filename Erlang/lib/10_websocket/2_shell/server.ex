@@ -5,7 +5,7 @@ defmodule WebSocket.Shell.Server do
     process(browser, bindings, 1)
   end
 
-  def process(brwoser, bindings, n) do
+  def process(browser, bindings, n) do
     receive do
       {pid, %{entry: "input", text: string}} when pid == browser ->
         # L 7831
