@@ -4,7 +4,7 @@
 # in Elixir, using `Task.async/1,3` && `Task.await/2` is the equiv of `spawn` + `send` && selective `receive`
 #
 # `Task.await/2` is literally an amped up `receive` block: https://github.com/elixir-lang/elixir/blob/v1.7.3/lib/elixir/lib/task.ex#L504
-defmodule Parallel do # @ L 12212
+defmodule Parallel do
   @doc """
   `Parallel.map/2` works like `Enum.map/2`, except
   it creates one parallel process to evaluate each argument in `list`.
@@ -35,4 +35,40 @@ defmodule Parallel do # @ L 12212
   end
 
   def gather([], _), do: []
+
+
+  def map_reduce(list, acc, mapper, reducer) do
+    parent = self()
+    child = spawn(fn -> reduce(parent, list, acc, mapper, reducer) end)
+    receive do
+      {pid, result} when pid == child -> result
+    end
+  end
+
+  defp reduce(parent, list, acc, mapper, reducer) do
+    Process.flag(:trap_exit, true)
+    pid = self()
+    Enum.each(list, fn item ->
+      spawn_link(fn -> task(pid, item, mapper) end)
+      map = %{} |> collect(length(list))
+                |> Enum.reduce(acc, reducer)
+      send(parent, {self(), map})
+    end)
+  end
+
+  defp task(pid, item, mapper),
+    do: mapper.(pid, item)
+
+  defp collect(map, n) do
+    receive do
+      {key, value} -> case Map.has_key?(map, key) do
+                         true -> Map.update!(map, key, &[value | &1])
+                                 |> collect(n)
+                        false -> Map.put(map, key, value)
+                                 |> collect(n)
+                      end
+
+      {:EXIT, _, _reason} -> collect(map, n-1)
+    end
+  end
 end
