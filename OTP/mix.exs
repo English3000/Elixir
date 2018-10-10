@@ -1,11 +1,11 @@
-defmodule Otp.MixProject do
+defmodule OTP.MixProject do
   use Mix.Project
 
   def project do
     [
       app: :otp,
       version: "0.1.0",
-      elixir: "~> 1.7",
+      elixir: "~> 1.7.3",
       start_permanent: Mix.env() == :prod,
       deps: deps()
     ]
