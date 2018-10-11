@@ -18,9 +18,10 @@ defmodule OTP.Servers.Frequency do
   @spec deallocate(frequency :: pid) :: :ok
   @spec stop() :: :ok
 
-  def start, do: Process.register(spawn(__MODULE__, :init, []), :frequency)
+  def start, do: spawn(__MODULE__, :init, [])
+                 |> Process.register(:frequency)
 
-  def init, do: serve({@frequencies, %{}})
+  def init, do: serve({ @frequencies, %{} })
 
   defp serve(freqs) do
     receive do
@@ -38,8 +39,7 @@ defmodule OTP.Servers.Frequency do
 
   defp reply(pid, msg), do: send(pid, {:reply, msg})
 
-  defp allocate({[], _allocated} = freqs, _pid),
-    do: error(freqs)
+  defp allocate({[], _allocated} = freqs, _pid), do: error(freqs)
   defp allocate({[freq | tail], allocated}, pid),
     do: { {tail, Map.put(allocated, freq, pid)}, {:ok, freq} }
 
