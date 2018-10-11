@@ -6,11 +6,24 @@ defmodule OTP.Servers.Frequency.Behaviour do
                               |> serve(module)
 
 
-  def call(message, module) do
-    send(module, { :request, self(), message })
+  def call(message, module, timeout \\ 5000) do
+    ref = Process.monitor(module)
+
+    try do
+      send(module, { :request, { ref, self() }, message })
+    rescue
+      err -> if err != :timeout, do: nil, else: exit(err)
+    end
 
     receive do
-      {:reply, reply} -> reply
+      { :reply, reference, reply } when reference == ref ->
+        Process.demonitor(ref, [:flush])
+        reply
+
+      { :DOWN, reference, :process, _module, _reason } when reference == ref ->
+        { :error, :no_process }
+    after
+      timeout -> exit(:timeout)
     end
   end
 
@@ -25,7 +38,7 @@ defmodule OTP.Servers.Frequency.Behaviour do
     end
   end
 
-  def reply(message, caller), do: send(caller, {:reply, message})
+  def reply(message, {ref, caller}), do: send(caller, {:reply, ref, message})
 
   def stop(module) do
     send(module, { :stop, self() })

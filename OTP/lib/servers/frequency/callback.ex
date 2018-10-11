@@ -17,7 +17,7 @@ defmodule OTP.Servers.Frequency.Callback do
 
   defp allocate({[], _allocated} = freqs, _pid), do: error(freqs)
   defp allocate({[frequency | tail], allocated}, pid),
-    do: { {tail, Map.put(allocated, freq, pid)}, {:ok, freq} }
+    do: { {tail, Map.put(allocated, frequency, pid)}, {:ok, frequency} }
 
   def handle({:deallocate, frequency}, freqs),
     do: { deallocate(freqs, frequency), :ok }
