@@ -95,9 +95,7 @@ defmodule IslandsInterfaceWeb.GameChannel do  ## TODO: write tests ~ https://hex
                             {:noreply, channel}
     end
   end
-  # should the frontend handle this too, or just the backend?
-  #  + (-) latency
-  #  - duplicate logic
+
   def handle_in("guess_coordinate", params, %{topic: "game:" <> game} = channel) do
     %{ "player" => player,
           "row" => row,
