@@ -1,5 +1,4 @@
 defmodule OTP.Servers.Frequency do
-  # replace w/ MapSet -- more performant; write MapSet.get
   @frequencies [10, 11, 12, 13, 14, 15]
 
   defp call(msg) do
@@ -21,7 +20,7 @@ defmodule OTP.Servers.Frequency do
 
   def start, do: Process.register(spawn(__MODULE__, :init, []), :frequency)
 
-  def init, do: serve({@frequencies, []})
+  def init, do: serve({@frequencies, %{}})
 
   defp serve(freqs) do
     receive do
@@ -40,16 +39,17 @@ defmodule OTP.Servers.Frequency do
   defp reply(pid, msg), do: send(pid, {:reply, msg})
 
   defp allocate({[], _allocated} = freqs, _pid),
-    do: { freqs, {:error, :no_frequency} }
+    do: error(freqs)
   defp allocate({[freq | tail], allocated}, pid),
-    do: { {tail, [{freq, pid} | allocated]}, {:ok, freq} }
+    do: { {tail, Map.put(allocated, freq, pid)}, {:ok, freq} }
 
-  defp deallocate({free, allocated} = freqs, freq) do
-    case Enum.find(allocated, fn {fr, _pid} -> fr == freq end) do
-      nil -> { freqs, {:error, :no_frequency} }
-      _pid -> { {[freq | free], List.keydelete(allocated, freq, 0)}, :ok }
-    end
+  defp deallocate({unused, allocated} = freqs, freq) do
+    if map_size(allocated) == 0 or !Map.get(allocated, freq),
+      do:   error(freqs),
+      else: { {[freq | unused], Map.delete(allocated, freq)}, :ok }
   end
+
+  defp error(freqs), do: { freqs, {:error, :no_frequency} }
 
   @spec start() :: true
 end
