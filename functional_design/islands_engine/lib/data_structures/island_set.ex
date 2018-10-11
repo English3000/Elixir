@@ -4,7 +4,7 @@ defmodule IslandsEngine.DataStructures.IslandSet do
   @spec new :: %{}
   def new do
     for type <- Island.types, into: %{}, do: (
-      {:ok, island} = Island.new(type, %Coordinate{row: 0, col: 0});
+      {:ok, island} = Island.new(type);
       {type, island}
     )
   end
@@ -35,7 +35,7 @@ defmodule IslandsEngine.DataStructures.IslandSet do
            if Island.hit?(island, coord), do: {key, island}
          end)
     do
-      :miss -> {Guesses.put(guesses, :miss, coord), false, false} # make more descriptive
+      :miss -> {Guesses.put(guesses, :miss, coord), false, false} # NOTE: make more descriptive
           _ -> {Guesses.put(guesses, :hit,  coord), true,  filled?(guesses, opp_islands)}
     end
   end
