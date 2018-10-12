@@ -3,8 +3,7 @@ defmodule OTP.Frequency.GenServer do
 
   @frequencies [10, 11, 12, 13, 14, 15]
 
-  def start, do: GenServer.start_link(__MODULE__, [], name: :freq_server, timeout: 5000)
-
+  def start,   do: GenServer.start_link(__MODULE__, [], name: :freq_server) # defaults to `timeout: 5000`
   def init(_), do: { :ok, {@frequencies, %{}} }
 
   def allocate, do: GenServer.call(:freq_server, { :allocate, self() })
@@ -24,4 +23,8 @@ defmodule OTP.Frequency.GenServer do
     {:noreply, state}
   end
   def handle_info(_msg, state),                   do: {:noreply, state}
+
+  def stop,                       do: GenServer.cast(:freq_server, :stop)
+  def handle_cast(:stop, state),  do: {:stop, :normal, state} # returning a `:stop` tuple triggers `terminate/2`
+  def terminate(_reason, _state), do: :ok
 end
