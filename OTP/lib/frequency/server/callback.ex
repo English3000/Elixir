@@ -1,5 +1,5 @@
-defmodule OTP.Servers.Frequency.Callback do
-  alias OTP.Servers.Frequency.Behaviour
+defmodule OTP.Frequency.Server.Callback do
+  alias OTP.Frequency.Server.Behaviour
 
   @frequencies [10, 11, 12, 13, 14, 15]
 

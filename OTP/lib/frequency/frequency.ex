@@ -1,4 +1,4 @@
-defmodule OTP.Servers.Frequency do
+defmodule OTP.Frequency do
   @frequencies [10, 11, 12, 13, 14, 15]
 
   defp call(msg) do

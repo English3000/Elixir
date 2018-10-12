@@ -1,4 +1,4 @@
-defmodule OTP.Servers.Frequency.Behaviour do
+defmodule OTP.Frequency.Server.Behaviour do
   def start(module, args), do: spawn(__MODULE__, :init, [module, args])
                                |> Process.register(module)
 
