@@ -26,12 +26,13 @@ defmodule IslandsEngine.Game.Server do
     do: :ok
 
   # Stages
-  def add_player(pid, player_name) when is_binary(player_name),
-    do: GenServer.call(pid, {:add_player, player_name})
-  def handle_call({:add_player, _player_name} = tuple, _caller, state) do
+  def join_game(pid, player_name),
+    do: GenServer.call(pid, {:join_game, player_name})
+  def handle_call({:join_game, _player_name} = tuple, _caller, state) do
     case Stage.check(state.player2, tuple) do
-      {:ok, player2} -> state |> put_in([player2.key], player2)
-                              |> reply(:ok)
+      {:ok, player2} -> state_ = put_in(state, [player2.key], player2)
+                        reply(state_, {:ok, state_})
+
               :error -> reply(state, :error)
     end
   end
@@ -66,14 +67,14 @@ defmodule IslandsEngine.Game.Server do
   def handle_call({:guess, player_atom, row, col}, _caller, state) do
       player = Map.fetch!(state, player_atom)
     opponent = Map.fetch!(state, player_atom |> Player.opponent)
-    with {guesses, island?, game_status} <- IslandSet.hit?(player.guesses, opponent.islands, %Coordinate{row: row, col: col}),
-                 {:ok, guesser, waiting} <- Stage.check(player, opponent, game_status)
+    with {guesses, hit?, won?} <- IslandSet.hit?(player.guesses, opponent.islands, %Coordinate{row: row, col: col}),
+       {:ok, guesser, waiting} <- Stage.check(player, opponent, won?)
     do
       guesser = Map.put(guesser, :guesses, guesses)
 
       state |> Map.put(guesser.key, guesser)
             |> Map.put(waiting.key, waiting)
-            |> reply({island?, game_status})
+            |> reply({hit?, won?})
     else
       error -> reply(state, error)
     end

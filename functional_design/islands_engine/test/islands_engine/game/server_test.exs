@@ -14,7 +14,7 @@ defmodule Game.ServerTest do
 
     start_link(@player1)
     |> guessing_rule(:player1, 1,1)
-    |> add_player(@player2)
+    |> join(@player2)
     |> place_island(:player1, @coupled_island, @coupled_row, @coupled_col)
     |> invalid_coord(:player1, :dot, -3,3)   # error test
     |> invalid_island(:player1, :wrong, 3,3) # error test
@@ -34,9 +34,9 @@ defmodule Game.ServerTest do
     game
   end
 
-  defp add_player(game, player) do
+  defp join(game, player) do
     IO.puts "add_player/2"
-    Server.add_player(game, player)
+    Server.join(game, player)
     state = :sys.get_state(game)
     assert player == state.player2.name
     assert :players_set = state.rules.state

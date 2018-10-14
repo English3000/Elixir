@@ -1,38 +1,31 @@
-defmodule IslandsInterfaceWeb.GameChannel do  ## TODO: write tests ~ https://hexdocs.pm/phoenix/testing_channels.html
+defmodule IslandsInterfaceWeb.GameChannel do
+  # https://hexdocs.pm/phoenix/Phoenix.Channel.html
+  # https://hexdocs.pm/phoenix/testing_channels.html
   import Shorthand
   use IslandsInterfaceWeb, :channel
   alias IslandsInterfaceWeb.Presence
   alias IslandsEngine.Game.{Server, Supervisor}
-  @moduledoc "Need error broadcasts too..."
 
   @doc "Sends game state (except opponent's board) to frontend."
   @spec join(topic :: String.t, params :: map, channel :: Socket.t) ::
-       {:ok, Socket.t} |
-       {:ok, reply :: map, Socket.t} |
-    {:error, reply :: map}  ## NOTE: Perfect use case for Monad.
-  def join("game:" <> game, %{"screen_name" => player_name}, channel) do
-    functions = [&track_players/3, &register_player?/3, &add_player?/3, &get_state/3]
-         call = fn function, result -> function.(result, game, player_name) end
-    case Enum.reduce(functions, channel, call) do
-      {:error, reason} -> {:error, %{reason: append_players(reason, channel)}}
-         {:ok, state}  -> send(self(), {:after_join, "game_joined", state})
-                          {:ok, state, channel}  ## What happens if a player leaves the game temporarily?
+    {:ok, Socket.t} | {:ok, reply :: map, Socket.t} | {:error, reply :: map}
+  def join("game:" <> game, %{"screen_name" => player}, channel) do
+    result = track_players(channel, game, player)
+             |> register_player?(game, player)
+             |> add_player?(game, player)
+
+    case result do
+      {:ok, state} -> respond(state, player, channel)
+
+      :error -> { :error, %{reason: "Game at capacity. Players: #{Presence.list(channel)
+                                                                  |> Map.keys
+                                                                  |> Enum.join(", ")}."} }
     end
-  end
-  defp append_players(msg, channel) do
-    case msg do
-      "Game at capacity." -> msg <> " Players: #{Presence.list(channel) |> Map.keys |> Enum.join(", ")}."
-                        _ -> msg
-    end
-  end
-  def handle_info({:after_join, event, state}, channel) do
-    broadcast! channel, event, state
-    {:noreply, channel}
   end
   # Also restores game on crash.
   defp track_players(channel, game, player) do
     keys = Presence.list(channel) |> Map.keys
-    time = System.system_time(:seconds) # unnecessary w/ no match
+    time = System.system_time(:seconds)
     case length(keys) do
       0 -> case :dets.lookup(:game, game) do
                                [] -> Presence.track(channel, player, m(time))
@@ -52,39 +45,34 @@ defmodule IslandsInterfaceWeb.GameChannel do  ## TODO: write tests ~ https://hex
   end
   defp register_player?(result, game, player) do
     case result do
-       nil -> new_game(game, player) |> register_player?(game, player)
-
-      {:error, reason} -> {:error, reason}
+       nil -> Supervisor.start_game(game, player) |> register_player?(game, player)
 
       _pid -> state = m(game, player) |> Server.lookup_game
               {state.player1.name != player && state.player2.name != player, state}
     end
   end
-  defp new_game(game, player),
-    do: Supervisor.start_game(game, player)
   defp add_player?(result, game, player) do
     case result do
-      {false, state} -> remove_islands(state, ( if state.player1.name == player,
-                                                  do:   :player2,
-                                                  else: :player1 ))
-      { true, state} -> via(game) |> Server.add_player(player)
-               error -> error
+      {false, state} -> {:ok, state}
+      {true, _state} -> via(game) |> Server.join_game(player) # :: {:ok, state} | :error
     end
   end
-  defp get_state(result, game, player) do
-    case result do
-      :error -> {:error, "Game at capacity."}
-         :ok -> m(game, player) |> Server.lookup_game |> remove_islands(:player1)
-       tuple -> tuple
-    end
+  defp respond(state, player, channel) do
+    opp_atom = if state.player1.name == player, do: :player2, else: :player1
+    state_ = update_in(state, [opp_atom], &( Map.delete(&1, :islands) ))
+
+    send(self(), {:after_join, "game_joined", state_})
+    {:ok, state_, channel} ## What happens if a player leaves the game temporarily?
   end
-  defp remove_islands(state, opp_atom) when is_atom(opp_atom),
-    do: {:ok, update_in(state, [opp_atom], &( Map.delete(&1, :islands) ))}
+  def handle_info({:after_join, event, state}, channel) do
+    broadcast! channel, event, state
+    {:noreply, channel}
+  end
 
   @doc "<JS> channel.push(event, payload) => handle_in(event, payload, channel) <EX>"
   @spec handle_in(event :: String.t, payload :: any, channel :: Socket.t) ::
-    {:reply, {status :: atom} | {status :: atom, response :: map}, channel :: Socket.t } |
-    {:noreply,                                                     channel :: Socket.t}
+    {:reply, {atom} | {atom, map}, channel :: Socket.t } |
+    {:noreply,                     channel :: Socket.t}
 
   def handle_in("set_islands", payload, %{topic: "game:" <> game} = channel) do
     case via(game) |> Server.set_islands(payload) do
@@ -103,14 +91,19 @@ defmodule IslandsInterfaceWeb.GameChannel do  ## TODO: write tests ~ https://hex
 
     player = String.to_existing_atom(player)
     case via(game) |> Server.guess_coordinate(player, row, col) do
-      {hit, status} -> broadcast! channel, "game_status", m(player, status)
-                       broadcast! channel, "coordinate_guessed", m(row, col, hit, player_key: player)
+      :error       -> push channel, "error", %{reason: "Not your turn."}
 
-      :error        -> push channel, "error", %{reason: "Cannot attack there."}
+      {hit?, won?} ->
+        broadcast! channel, "game_status", m(won: won?, winner: player)
+        broadcast! channel, "coordinate_guessed", m(row, col, hit: hit?, player_key: player)
     end
 
     {:noreply, channel}
   end
+
+  @doc "Handles <JS> channel.leave()"
+  def terminate(_reason, channel),
+    do: broadcast! channel, "game_left", %{instruction: "left"}
 
   defp via(game),
     do: Server.registry_tuple(game)

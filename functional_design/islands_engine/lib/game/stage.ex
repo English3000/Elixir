@@ -1,5 +1,5 @@
 defmodule IslandsEngine.Game.Stage do
-  def check(%{stage: :none} = player, {:add_player, name}),
+  def check(%{stage: :none} = player, {:join_game, name}),
     do: { :ok, %{player | name: name, stage: :joined} }
   def check(%{stage: :ready} = player1, %{stage: :ready} = player2),
     do: { :ok, %{player1 | stage: :turn}, %{player2 | stage: :wait} }

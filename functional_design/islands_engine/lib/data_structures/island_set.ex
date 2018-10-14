@@ -35,8 +35,8 @@ defmodule IslandsEngine.DataStructures.IslandSet do
            if Island.hit?(island, coord), do: {key, island}
          end)
     do
-      :miss -> {Guesses.put(guesses, :miss, coord), false, false} # NOTE: make more descriptive
-          _ -> {Guesses.put(guesses, :hit,  coord), true,  filled?(guesses, opp_islands)}
+      :miss -> {Guesses.put(guesses, :miss, coord), :miss, false}
+          _ -> {Guesses.put(guesses, :hit,  coord), :hit,  filled?(guesses, opp_islands)}
     end
   end
   defp filled?(guesses, opp_islands),
