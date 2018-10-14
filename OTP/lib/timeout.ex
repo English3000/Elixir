@@ -1,4 +1,4 @@
-defmodule OTP.TimeoutServer do # L 2482
+defmodule OTP.TimeoutServer do
   use GenServer
 
   def start,   do: GenServer.start_link(__MODULE__, [], name: :timeout_server)
