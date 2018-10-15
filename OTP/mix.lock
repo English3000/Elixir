@@ -1,0 +1,3 @@
+%{
+  "gen_state_machine": {:hex, :gen_state_machine, "2.0.3", "477ea51b466a749ab23a0d6090e9e84073f41f9aa28c7efc40eac18f3d4a9f77", [:mix], [], "hexpm"},
+}
