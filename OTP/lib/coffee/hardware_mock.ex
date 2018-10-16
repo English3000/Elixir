@@ -3,10 +3,8 @@ defmodule OTP.Coffee.HardwareMock do
   Normally, this would be implemented in C,
   with functions triggered by sensors.
   """
-  def display(string, arg) do
-    IO.inspect(string, label: "Display")
-    IO.inspect(arg)
-  end
+  def display(string),
+    do: IO.puts "Display: #{string}"
 
   def return_change(payment),
     do: IO.puts "Machine: Returned #{payment} change"

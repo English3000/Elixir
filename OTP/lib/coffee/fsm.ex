@@ -13,7 +13,7 @@ defmodule OTP.Coffee.FSM do
   def init do
     Process.register(self(), __MODULE__)
     HardwareMock.reboot()
-    HardwareMock.display(@select, [])
+    HardwareMock.display @select
     selection()
   end
 
@@ -41,11 +41,11 @@ defmodule OTP.Coffee.FSM do
   def payment(type, price, paid) do
     receive do
       {:pay, coin} -> if coin + paid >= price do
-                        HardwareMock.display("Preparing drink", [])
+                        HardwareMock.display "Preparing drink"
                         HardwareMock.return_change(coin + paid - price)
                         HardwareMock.drop_cup
                         HardwareMock.prepare(type)
-                        HardwareMock.display("Remove drink", [])
+                        HardwareMock.display "Remove drink"
                         remove()
                       else
                         inserted = coin + paid
@@ -53,7 +53,7 @@ defmodule OTP.Coffee.FSM do
                         payment(type, price, inserted)
                       end
 
-      :cancel -> HardwareMock.display(@select)
+      :cancel -> HardwareMock.display @select
                  HardwareMock.return_change(paid)
                  selection()
 
@@ -63,7 +63,7 @@ defmodule OTP.Coffee.FSM do
 
   def remove do
     receive do
-      :cup_removed -> HardwareMock.display(@select, [])
+      :cup_removed -> HardwareMock.display @select
                       selection()
 
       {:pay, coin} -> HardwareMock.return_change(coin)
