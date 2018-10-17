@@ -46,7 +46,7 @@ defmodule IslandsEngine.Game.Server do
       # Check if other player is ready.
       result = if player.key == :player1,
                  do:   Stage.check(player, Map.fetch!(state, :player2)),
-               else: Stage.check(Map.fetch!(state, :player1), player)
+                 else: Stage.check(Map.fetch!(state, :player1), player)
 
       case result do
         {:ok, player1, player2} -> state |> Map.put(player1.key, player1)

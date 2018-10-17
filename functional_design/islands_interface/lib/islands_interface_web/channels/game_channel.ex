@@ -5,6 +5,7 @@ defmodule IslandsInterfaceWeb.GameChannel do
   use IslandsInterfaceWeb, :channel
   alias IslandsInterfaceWeb.Presence
   alias IslandsEngine.Game.{Server, Supervisor}
+  alias IslandsEngine.DataStructures.Player
 
   @doc "Sends game state (except opponent's board) to frontend."
   @spec join(topic :: String.t, params :: map, channel :: Socket.t) ::
@@ -61,11 +62,13 @@ defmodule IslandsInterfaceWeb.GameChannel do
     opp_atom = if state.player1.name == player, do: :player2, else: :player1
     state_ = update_in(state, [opp_atom], &( Map.delete(&1, :islands) ))
 
-    send(self(), {:after_join, "game_joined", state_})
+    send(self(), {:after_join, "game_joined", state_, Player.opponent(opp_atom)})
     {:ok, state_, channel} ## What happens if a player leaves the game temporarily?
   end
-  def handle_info({:after_join, event, state}, channel) do
-    broadcast! channel, event, state
+  def handle_info({:after_join, event, state, player_atom}, channel) do
+    opp_atom = Player.opponent(player_atom)
+    broadcast! channel, event, %{ player_atom => state[player_atom].stage, 
+                                     opp_atom => state[opp_atom].stage }
     {:noreply, channel}
   end
 
@@ -94,8 +97,8 @@ defmodule IslandsInterfaceWeb.GameChannel do
       :error       -> push channel, "error", %{reason: "Not your turn."}
 
       {hit?, won?} ->
-        broadcast! channel, "game_status", m(won: won?, winner: player)
         broadcast! channel, "coordinate_guessed", m(row, col, hit: hit?, player_key: player)
+        broadcast! channel, "game_status", m(won: won?, winner: player)
     end
 
     {:noreply, channel}
