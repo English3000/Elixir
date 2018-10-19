@@ -12,15 +12,14 @@ defmodule IslandsInterfaceWeb.GameChannel do
     {:ok, Socket.t} | {:ok, reply :: map, Socket.t} | {:error, reply :: map}
   def join("game:" <> game, %{"screen_name" => player}, channel) do
     result = track_players(channel, game, player)
-             |> register_player?(game, player)
+             |> register_player?(channel, game, player)
              |> add_player?(game, player)
 
     case result do
       {:ok, state} -> respond(state, player, channel)
 
-      :error -> { :error, %{reason: "Game at capacity. Players: #{Presence.list(channel)
-                                                                  |> Map.keys
-                                                                  |> Enum.join(", ")}."} }
+      :error -> players = Presence.list(channel) |> Map.keys |> Enum.join(", ")
+                { :error, %{reason: "Player not permitted. Playing: #{players}"} }
     end
   end
   # Also restores game on crash.
@@ -31,22 +30,27 @@ defmodule IslandsInterfaceWeb.GameChannel do
       0 -> case :dets.lookup(:game, game) do
                                [] -> Presence.track(channel, player, m(time))
 
-             [{_key, saved_game}] -> Presence.track(channel, saved_game.player1.name, m(time))
-                                     if saved_game.player2.name != nil,
-                                       do: Presence.track(channel, saved_game.player2.name, m(time))
+             [{_key, saved_game}] -> if player in [saved_game.player1.name, saved_game.player2.name],
+                                       do: Presence.track(channel, player, m(time))
            end
 
-      1 -> if hd(keys) != player,
-             do: Presence.track(channel, player, m(time))
+      1 -> [{_key, saved_game}] = :dets.lookup(:game, game)
+           if hd(keys) != player and
+              player in [saved_game.player1.name, saved_game.player2.name],
+                do: Presence.track(channel, player, m(time))
 
       2 -> nil
     end
 
-    via(game) |> Server.process?
+    if Presence.list(channel) |> Map.keys != keys,
+      do:   via(game) |> Server.process?,
+      else: :error
   end
-  defp register_player?(result, game, player) do
+  defp register_player?(result, channel, game, player) do
     case result do
-       nil -> Supervisor.start_game(game, player) |> register_player?(game, player)
+      :error -> :error
+
+       nil -> Supervisor.start_game(game, player) |> register_player?(channel, game, player)
 
       _pid -> state = m(game, player) |> Server.lookup_game
               {state.player1.name != player && state.player2.name != player, state}
@@ -54,6 +58,7 @@ defmodule IslandsInterfaceWeb.GameChannel do
   end
   defp add_player?(result, game, player) do
     case result do
+              :error -> :error
       {false, state} -> {:ok, state}
       {true, _state} -> via(game) |> Server.join_game(player) # :: {:ok, state} | :error
     end
@@ -67,8 +72,12 @@ defmodule IslandsInterfaceWeb.GameChannel do
   end
   def handle_info({:after_join, event, state, player_atom}, channel) do
     opp_atom = Player.opponent(player_atom)
-    broadcast! channel, event, %{ player_atom => state[player_atom].stage, 
+    broadcast! channel, event, %{ player_atom => state[player_atom].stage,
                                      opp_atom => state[opp_atom].stage }
+
+    if Presence.list(channel) |> Map.keys |> length() < 2, 
+      do: push channel, "game_left", %{instruction: "ready"}
+
     {:noreply, channel}
   end
 
@@ -92,13 +101,15 @@ defmodule IslandsInterfaceWeb.GameChannel do
           "row" => row,
           "col" => col } = params
 
-    player = String.to_existing_atom(player)
-    case via(game) |> Server.guess_coordinate(player, row, col) do
-      :error       -> push channel, "error", %{reason: "Not your turn."}
+    if Presence.list(channel) |> Map.keys |> length == 2 do
+      player = String.to_existing_atom(player)
+      case via(game) |> Server.guess_coordinate(player, row, col) do
+        :error       -> push channel, "error", %{reason: "Not your turn."}
 
-      {hit?, won?} ->
-        broadcast! channel, "coordinate_guessed", m(row, col, hit: hit?, player_key: player)
-        broadcast! channel, "game_status", m(won: won?, winner: player)
+        {hit?, won?} ->
+          broadcast! channel, "coordinate_guessed", m(row, col, hit: hit?, player_key: player)
+          broadcast! channel, "game_status", m(won: won?, winner: player)
+      end
     end
 
     {:noreply, channel}

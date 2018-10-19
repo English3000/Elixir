@@ -1,3 +1,10 @@
+## DONE! Next steps...
+
+- [ ] review backend logic -- refactor as concisely as possible
+- [ ] deploy app (maybe check if works for mobile 1st...)
+- [ ] write article re: channel-based React architecture
+- [ ] then could add statistical features
+
 ## CSR
 
 Originally, I had completed "Functional Web Development with Elixir, OTP, and Phoenix". I looked at the frontend provided by this book and saw a lot of duplicate logic. So I refined the backend to remove as much duplication as I could.

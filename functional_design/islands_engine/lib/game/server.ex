@@ -28,12 +28,19 @@ defmodule IslandsEngine.Game.Server do
   # Stages
   def join_game(pid, player_name),
     do: GenServer.call(pid, {:join_game, player_name})
-  def handle_call({:join_game, _player_name} = tuple, _caller, state) do
-    case Stage.check(state.player2, tuple) do
-      {:ok, player2} -> state_ = put_in(state, [player2.key], player2)
-                        reply(state_, {:ok, state_})
+  def handle_call({:join_game, player_name} = tuple, _caller, state) do
+    key = cond do
+            state.player2.name == player_name -> :player2
+            state.player1.name == player_name -> :player1
+                                         true -> nil
+          end
 
-              :error -> reply(state, :error)
+    with         false <- !key,
+         {:ok, player} <- Map.get(state, key) |> Stage.check(tuple) do
+      state_ = Map.put(state, key, player)
+      reply(state_, {:ok, state_})
+    else
+      _ -> reply(state, :error)
     end
   end
 
