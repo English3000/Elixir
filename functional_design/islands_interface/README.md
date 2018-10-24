@@ -1,9 +1,16 @@
 ## DONE! Next steps...
 
+> I should probably add tests to verify there are no bugs...
+> (but, I can list this and refactoring as "Next Steps" in my article)
+
+- [ ] mobile: + island setting functionality
+- [ ] BUG: on refresh, can't rejoin
+
+- [ ] deploy app
+- [ ] write article re: channel-based React architecture (&& document code accordingly)
 - [ ] review backend logic -- refactor as concisely as possible
-- [ ] deploy app (maybe check if works for mobile 1st...)
-- [ ] write article re: channel-based React architecture
-- [ ] then could add statistical features
+
+- [ ] later, could add statistical features (i.e. wins, losses, && versus)
 
 ## CSR
 

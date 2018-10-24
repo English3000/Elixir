@@ -70,12 +70,14 @@ defmodule IslandsInterfaceWeb.GameChannel do
     send(self(), {:after_join, "game_joined", state_, Player.opponent(opp_atom)})
     {:ok, state_, channel} ## What happens if a player leaves the game temporarily?
   end
+  # NOTE: Room for refactoring...
   def handle_info({:after_join, event, state, player_atom}, channel) do
     opp_atom = Player.opponent(player_atom)
     broadcast! channel, event, %{ player_atom => state[player_atom].stage,
                                      opp_atom => state[opp_atom].stage }
 
-    if Presence.list(channel) |> Map.keys |> length() < 2, 
+    if state[player_atom].stage != :joined and
+       Presence.list(channel) |> Map.keys |> length() < 2,
       do: push channel, "game_left", %{instruction: "ready"}
 
     {:noreply, channel}
