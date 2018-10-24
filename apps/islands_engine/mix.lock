@@ -1,0 +1,4 @@
+%{
+  "shorthand": {:hex, :shorthand, "0.0.3", "a9db1e0354e91af27944c6fc24d10bf2be52d43c1aa33dfffe4ec4f004b16dac", [:mix], [], "hexpm"},
+  "stream_data": {:hex, :stream_data, "0.4.2", "fa86b78c88ec4eaa482c0891350fcc23f19a79059a687760ddcf8680aac2799b", [:mix], [], "hexpm"},
+}

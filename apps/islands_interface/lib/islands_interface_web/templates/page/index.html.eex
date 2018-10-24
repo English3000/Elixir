@@ -1,0 +1,8 @@
+<p>
+  <%= form_tag("/test") do ##
+    [ tag(:input, type: "text", name: "name"),
+      tag(:input, type: "submit", value: "Play Islands!") ]
+  end %>
+</p>
+
+<div id="islands"></div>
