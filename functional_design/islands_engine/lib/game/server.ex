@@ -2,11 +2,11 @@ defmodule IslandsEngine.Game.Server do
   import Shorthand
   use GenServer, start: {__MODULE__, :start_link, []}, restart: :transient
   alias IslandsEngine.Game.Stage
-  alias IslandsEngine.DataStructures.{IslandSet, Island, Player, Coordinate}
+  alias IslandsEngine.DataStructures.{IslandSet, Player, Coordinate}
                                 # Used by:
   @timeout 60 * 60 * 24 * 1000  #  reply/2
   @players [:player1, :player2] #  Stages
-  @errors [:invalid_coordinate, :invalid_island, :invalid_coordinate, :unplaced_islands, :overlaps]
+  @errors [:invalid_coordinate, :invalid_island, :invalid_coordinate, :unplaced_islands, :overlapping_islands]
   # https://hexdocs.pm/elixir/Supervisor.html#module-module-based-supervisors
   @doc "Start a new game."
   def start_link(game, player) when is_binary(game) and is_binary(player),
@@ -26,75 +26,62 @@ defmodule IslandsEngine.Game.Server do
     do: :ok
 
   # Stages
-  def add_player(pid, player_name) when is_binary(player_name),
-    do: GenServer.call(pid, {:add_player, player_name})
-  def handle_call({:add_player, _player_name} = tuple, _caller, state) do
-    case Stage.check(state.player2, tuple) do
-      {:ok, player2} -> state |> update_player(player2)
-                              |> reply(:ok)
-              :error -> reply(state, :error)
-    end
-  end
+  def join_game(pid, player_name),
+    do: GenServer.call(pid, {:join_game, player_name})
+  def handle_call({:join_game, player_name} = tuple, _caller, state) do
+    key = cond do
+            state.player2.name == player_name -> :player2
+            state.player1.name == player_name -> :player1
+                                         true -> nil
+          end
 
-  def place_island(pid, player_atom, key, row, col) when player_atom in @players,
-    do: GenServer.call(pid, {:place_island, player_atom, key, row, col})
-  def handle_call({:place_island, player_atom, key, row, col}, _caller, state) do
-    player = player_data(state, [player_atom])
-    with  :ok          <- Stage.check(player, :place_island),
-         {:ok, coord}  <- Coordinate.new(row, col),
-         {:ok, island} <- Island.new(key, coord),                       # errors if island is out of bounds
-         %{} = islands <- IslandSet.put(player.islands, key, island) do # errors if island overlaps
-      state |> update_islands(player_atom, islands)
-            |> reply({:ok, island})
+    with         false <- !key,
+         {:ok, player} <- Map.get(state, key) |> Stage.check(tuple) do
+      state_ = Map.put(state, key, player)
+      reply(state_, {:ok, state_})
     else
-      error -> reply(state, error)
+      _ -> reply(state, :error)
     end
   end
 
-  def delete_island(pid, player_atom, key) when player_atom in @players,
-    do: GenServer.call(pid, {:delete_island, player_atom, key})
-  def handle_call({:delete_island, player_atom, key}, _caller, state) do
-    islands = player_data(state, [player_atom, :islands]) |> IslandSet.delete(key)
-    update_islands(state, player_atom, islands) |> reply({:ok, key})
-  end
+  def set_islands(pid, payload),
+    do: GenServer.call(pid, {:set_islands, payload})
+  def handle_call({:set_islands, %{"player"=> player, "islands"=> island_set}}, _caller, state) do
+    with {_mapset, islands} <- IslandSet.validate(island_set) do
+      saved_player = Map.fetch!(state, String.to_existing_atom(player))
+      player = %{saved_player | stage: :ready, islands: islands}
+      # Check if other player is ready.
+      result = if player.key == :player1,
+                 do:   Stage.check(player, Map.fetch!(state, :player2)),
+                 else: Stage.check(Map.fetch!(state, :player1), player)
 
-  def set_islands(pid, player_atom) when player_atom in @players,
-    do: GenServer.call(pid, {:set_islands, player_atom})
-  def handle_call({:set_islands, player_atom}, _caller, state) do
-    with {:ok, player} <- player_data(state, [player_atom]) |> Stage.check(:set_islands),
-                  true <- IslandSet.set?(player.islands)
-    do
-      # check if both players are ready
-      result = if player_atom == :player1,
-                 do:   Stage.check( player, player_data(state, [:player2]) ),
-                 else: Stage.check( player_data(state, [:player1]), player )
-
-      case result do # update state accordingly
-        {:ok, player1, player2} -> state |> update_player(player1)
-                                         |> update_player(player2)
+      case result do
+        {:ok, player1, player2} -> state |> Map.put(player1.key, player1)
+                                         |> Map.put(player2.key, player2)
                                          |> reply({:ok, player})
 
-                         :error -> state |> update_player(player)
+                         :error -> state |> Map.put(player.key, player)
                                          |> reply({:ok, player})
       end
     else
-      error -> reply(state, error)
+      _ -> reply(state, {:error, :overlapping_islands})
     end
   end
 
+  # frontend prevents duplicate guesses
   def guess_coordinate(pid, player_atom, row, col) when player_atom in @players,
     do: GenServer.call(pid, {:guess, player_atom, row, col})
-  def handle_call({:guess, player_atom, row, col}, _caller, state) do # frontend prevents duplicate guesses (so no need to check)
-      player = player_data(state, [player_atom])
-    opponent = player_data(state, [player_atom |> Player.opponent])
-    with {:ok, coord}            <- Coordinate.new(row, col),
-         {guesses, islands, key, game_status} <- IslandSet.hit?(player.guesses, opponent.islands, coord),
-         {:ok, guesser, waiting} <- Stage.check(player, opponent, game_status)
+  def handle_call({:guess, player_atom, row, col}, _caller, state) do
+      player = Map.fetch!(state, player_atom)
+    opponent = Map.fetch!(state, player_atom |> Player.opponent)
+    with {guesses, hit?, won?} <- IslandSet.hit?(player.guesses, opponent.islands, %Coordinate{row: row, col: col}),
+       {:ok, guesser, waiting} <- Stage.check(player, opponent, won?)
     do
-      state |> update_guesses(guesser, guesses)
-            |> update_player(guesser)
-            |> update_player(waiting)
-            |> reply({key, game_status})
+      guesser = Map.put(guesser, :guesses, guesses)
+
+      state |> Map.put(guesser.key, guesser)
+            |> Map.put(waiting.key, waiting)
+            |> reply({hit?, won?})
     else
       error -> reply(state, error)
     end
@@ -107,13 +94,9 @@ defmodule IslandsEngine.Game.Server do
   def registry_tuple(game),
     do: {:via, Registry, {Registry.Game, game}}
 
-  defp reply(state, {:error, msg} = result)
-    when msg in @errors, # redunant/coupled?
-      do: {:reply, result, state, @timeout}
-  defp reply(state, result)
-    when not is_tuple(result) or
-         elem(result, 0) != :error
-  do
+  defp reply(state, {:error, msg} = result) when msg in @errors, # redunant/coupled?
+    do: {:reply, result, state, @timeout}
+  defp reply(state, result) when not is_tuple(result) or elem(result, 0) != :error do
     if result != :error, do: :dets.insert(:game, {state.game, state})
     {:reply, result, state, @timeout}
   end
@@ -129,13 +112,4 @@ defmodule IslandsEngine.Game.Server do
     do: %{ game: game,
            player1: Player.new(player),
            player2: Player.new }
-  defp player_data(state, keys),
-    do: get_in(state, keys)
-  # could refactor to 1 method
-  defp update_player(state, player),
-    do: %{state | player.key => player}
-  defp update_islands(state, player_atom, islands),
-    do: Map.update!(state, player_atom, &(%{&1 | islands: islands}) )
-  defp update_guesses(state, player_atom, guesses),
-    do: Map.update!(state, player_atom, &(%{&1 | guesses: guesses}) )
 end

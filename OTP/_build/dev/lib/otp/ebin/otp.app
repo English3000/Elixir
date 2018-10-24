@@ -1,0 +1,10 @@
+{application,otp,
+             [{applications,[kernel,stdlib,elixir,logger]},
+              {description,"otp"},
+              {modules,['Elixir.OTP.Frequency',
+                        'Elixir.OTP.Frequency.GenServer',
+                        'Elixir.OTP.Frequency.Server.Behaviour',
+                        'Elixir.OTP.Frequency.Server.Callback',
+                        'Elixir.OTP.Monitor','Elixir.OTP.TimeoutServer']},
+              {registered,[]},
+              {vsn,"0.1.0"}]}.

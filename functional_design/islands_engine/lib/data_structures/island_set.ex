@@ -1,36 +1,43 @@
 defmodule IslandsEngine.DataStructures.IslandSet do
   alias IslandsEngine.DataStructures.{Island, Coordinate, Guesses}
-  @doc "An islandset is a map of islands by type atom."
-  def new, do: %{} # change to generate unplaced islandset
+  @doc "An island-set is a map of islands, with types for keys."
+  @spec new :: %{}
+  def new do
+    for type <- Island.types, into: %{}, do: (
+      {:ok, island} = Island.new(type);
+      {type, island}
+    )
+  end
 
-  def delete(islands, key),
-    do: Map.delete(islands, key)
+  def validate(island_set) do
+    Enum.reduce_while(island_set, {MapSet.new, %{}},
+      fn {type, island}, {map_set, islandset} when is_map(island) ->
+        %{"row" => row, "col" => col} = get_in(island, ["bounds", "top_left"])
+        {:ok, island_} = Island.new(String.to_atom(type), %Coordinate{row: row, col: col})
 
-  def put(islands, key, %Island{} = island),
-    do: if collision?(islands, key, island),
-          do:   {:error, :overlaps},
-          else: Map.put(islands, key, island)
-  defp collision?(islands, new_key, new_island),
-    do: Enum.any?(islands, fn {key, island} ->
-          not MapSet.disjoint?(island.coordinates, new_island.coordinates)
-        end)
+        case Enum.reduce_while(island_.coordinates, map_set, fn coord, mapset ->
+               case MapSet.member?(mapset, coord) do
+                 true -> {:halt, false}
+                false -> {:cont, MapSet.put(mapset, coord)}
+               end
+             end)
+        do
+           false -> {:halt, false}
+          mapset -> { :cont, {mapset, Map.put(islandset, String.to_atom(type), island_)} }
+        end
 
-  @spec set?(%{}) :: boolean
-  def set?(islands),
-    do: if Enum.all?( Island.types, &(Map.has_key?(islands, &1)) ),
-          do:   true,
-          else: {:error, :unplaced_islands}
+         _, sets -> {:cont, sets}
+      end)
+  end
 
   def hit?(guesses, opp_islands, %Coordinate{} = coord) do
     case Enum.find_value(opp_islands, :miss, fn {key, island} ->
-           case Island.hit?(island, coord) do
-             {:hit, island} -> {key, island}
-                      :miss -> false
-           end
+           if Island.hit?(island, coord), do: {key, island}
          end)
     do
-              :miss -> {Guesses.put(guesses, :miss, coord), false, false}
-      {key, island} -> {Guesses.put(guesses, :hit,  coord), key,   filled?(guesses, opp_islands)}
+      :miss -> {Guesses.put(guesses, :miss, coord), :miss, false}
+          _ -> guessed = Guesses.put(guesses, :hit,  coord)
+               {guessed, :hit,  filled?(guessed, opp_islands)}
     end
   end
   defp filled?(guesses, opp_islands),
