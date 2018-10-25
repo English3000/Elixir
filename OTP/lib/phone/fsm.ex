@@ -18,7 +18,7 @@ defmodule OTP.Phone.FSM do
 
   # NOTE: Try to refactor down
 
-  @spec start_link(hash) :: {:ok, pid}
+  @spec start_link(String.t) :: {:ok, pid}
   def start_link(hash),
     do: GenStateMachine.start_link(__MODULE__, [hash], name: __MODULE__)
   def init([hash]) do
@@ -93,10 +93,10 @@ defmodule OTP.Phone.FSM do
     { :next_state, :connected, data }
   end
 
-  def receiving(:cast, {:action, :accept}, data) do
-    accept(caller)
-    { :next_state, :connected, data }
-  end
+  # def receiving(:cast, {:action, :accept}, data) do
+  #   accept(caller)
+  #   { :next_state, :connected, data }
+  # end
   def receiving(:cast, {:action, :reject}, {hash, caller}) do
     reject(caller)
     { :next_state, :idle, hash }
@@ -125,7 +125,7 @@ defmodule OTP.Phone.FSM do
   end
 
   # API
-  @type action :: {:outbound, phone_number} | :accept | :reject | :hang_up
+  @type action :: {:outbound, String.t} | :accept | :reject | :hang_up
   @spec action(pid, action) :: :ok
   @doc "Called by `controller.ex`"
   def action(pid, {:outbound, hash}),
