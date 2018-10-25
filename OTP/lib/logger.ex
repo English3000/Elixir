@@ -14,7 +14,7 @@ defmodule OTP.GenStage.Logger do
   end
 
   def handle_call(event, _from, {term, count} = state) do
-    IO.inspect(event, label)
+    IO.inspect(event, "Event")
     IO.inspect(state)
     { :reply, :ok, [event], {term, count+1} }
   end

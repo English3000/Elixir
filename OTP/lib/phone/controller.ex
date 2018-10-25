@@ -19,10 +19,10 @@ defmodule OTP.Phone.Controller do
   def reply(:connected) do
     clear()
 
-    if status in [:connected, :outbound] do
-      pid = self()
-      Process.put(pid, spawn(fn -> FSM.action(:hang_up, pid) end))
-    end
+    # if status in [:connected, :outbound] do
+    #   pid = self()
+    #   Process.put(pid, spawn(fn -> FSM.action(:hang_up, pid) end))
+    # end
   end
   def reply(:inbound) do
     clear()
@@ -37,7 +37,7 @@ defmodule OTP.Phone.Controller do
     case Process.get(self()) do
       nil                    -> :ok
 
-      pid when self() == pid -> exit(pid, :kill)
+      pid when self() == pid -> :erlang.exit(pid, :kill)
                                 Process.delete(pid)
     end
   end
