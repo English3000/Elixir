@@ -31,7 +31,7 @@ For a complete listing of commands and their use:
 - [ ] mobile: + island setting functionality
 - [ ] BUG: on refresh, can't rejoin
 
-- [ ] deploy app
+- [ ] deploy app (`git subtree push --prefix functional_design/islands gigalixir master`)
 - [ ] write article re: channel-based React architecture (&& document code accordingly)
 - [ ] review backend logic -- refactor as concisely as possible
 
