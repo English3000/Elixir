@@ -1,4 +1,4 @@
-defmodule OTP.Supervisor do # @ OTP Supervisors
+defmodule OTP.Supervisor do # @ Starting the Supervisor
   @moduledoc """
   iex> OTP.Supervisor.start([{OTP.Coffee.FSM, :start_link, []}], name: :sup)
   Machine: Rebooted hardware
