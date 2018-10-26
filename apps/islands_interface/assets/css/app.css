@@ -1,0 +1,85 @@
+#opponent_board, #own_board {
+  display: inline-block;
+  padding-right: 50px;
+  vertical-align: top;
+}
+
+.row::before {
+  content: none !important;
+}
+
+.board_title {
+  color: black;
+  font-size: 18pt;
+  text-transform: capitalize;
+}
+
+.box {
+  width: 29px;
+  height: 29px;
+  text-align: center;
+}
+
+.coordinate {
+  width: 30px;
+  height: 30px;
+  border: 1px solid black;
+  margin-right: -1px;
+  margin-top: -1px;
+  background: blue;
+  position: relative;
+}
+
+.hit {
+  background-color: green;
+}
+
+.island {
+  background-color: tan;
+}
+
+.miss {
+  background-color: black;
+}
+
+.positioned_island_image {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 10;
+}
+
+.message_box {
+  border: 1px solid black;
+  margin-left: 30px;
+  margin-top: 50px;
+  padding: 15px;
+  font-size: 14px;
+  text-align: center;
+  text-decoration: none;
+}
+
+.button {
+  background-color: green;
+  border: none;
+  color: black;
+  padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 14px;
+  margin-left: 30px;
+  margin-right: 50px;
+}
+
+caption {
+  margin-left: 30px;
+}
+
+img {
+  margin-right: 25px;
+}
+
+main {
+  width: 1000px;
+}

@@ -55,7 +55,7 @@ Love every part of your stack! Try WRAP:
 ### _Phoenix (backend framework)_
 * [Learn Phoenix](https://pragprog.com/book/phoenix/programming-phoenix)
   * [Updates to Phoenix](https://medium.com/wemake-services/why-changes-in-phoenix-1-3-are-so-important-2d50c9bdabb9) (just do `⌘ + f` for _Creating schema_--the rest is dated)
-    > Because Elixir is a functional programming language, Phoenix uses schemas rather than models. A schema defines a struct's fields, its relationships to other structs, and changeset(s) for it (which handle validations and constraints). 
+    > Because Elixir is a functional programming language, Phoenix uses schemas rather than models. A schema defines a struct's fields, its relationships to other structs, and changeset(s) for it (which handle validations and constraints).
     >
     > [`mix phx.gen.context`](https://hexdocs.pm/phoenix/Mix.Tasks.Phx.Gen.Context.html) generates a context which holds the API for all schemas within that context (in an object-oriented language, these functions would be defined within each model). For example, instead of defining functions for user authentication within `/lib/<APP>_web/models/user.ex`, one should generate an `Accounts` context and write the functions in `/lib/<APP>/accounts/accounts.ex` (`User` will be passed as an argument).
   * [Phoenix Presence](http://whatdidilearn.info/2018/03/11/using-phoenix-presence.html)
@@ -77,7 +77,7 @@ Love every part of your stack! Try WRAP:
   * [Making an `absolute` element pressable](https://stackoverflow.com/questions/36938742/touchablehighlight-not-clickable-if-position-absolute?rq=1)
   > **Note:** I haven't found clear/explicit [documentation](http://phoenixframework.org/blog/static-assets) for using `react-native-web` SSR with Phoenix.
   * [Alternative way to SSR](https://medium.com/@chvanikoff/phoenix-react-love-story-reph-1-c68512cfe18)
-  * [Add type-checking with Flow](https://flow.org/en/docs/install/) 
+  * [Add type-checking with Flow](https://flow.org/en/docs/install/)
 * [Underscore.js](https://underscorejs.org/#) -- library with functional programming methods
 * [`|>`](https://www.npmjs.com/package/babel-plugin-transform-pipeline) and [pattern `match`](https://www.npmjs.com/package/babel-plugin-js-pattern-matching) JavaScript plugins
 * **IDEA:** [ReactEX](https://elixirforum.com/t/elixirscript/2409/36)
