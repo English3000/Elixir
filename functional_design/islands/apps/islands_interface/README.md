@@ -1,3 +1,22 @@
+**TO DEPLOY APP:** `git subtree push --prefix functional_design/islands gigalixir master`
+
+If issue, `git pull --rebase gigalixir master`
+
+_(In the future, don't make project a sub-directory...)_
+
+## DONE! Next steps...
+
+> I should probably add tests to verify there are no bugs...
+> (but, I can list this and refactoring as "Next Steps" in my article)
+
+- [ ] mobile: + island setting functionality
+- [ ] BUG: on refresh, can't rejoin
+
+- [ ] write article re: channel-based React architecture (&& document code accordingly)
+- [ ] review backend logic -- refactor as concisely as possible
+
+- [ ] later, could add statistical features (i.e. wins, losses, && versus)
+
 Release successfully built!
 To start the release you have built,
 you can use one of the following tasks:
@@ -22,20 +41,6 @@ If you started a release elsewhere, and wish to connect to it:
 For a complete listing of commands and their use:
 
     > `_build/prod/rel/islands/bin/islands help`
-
-## DONE! Next steps...
-
-> I should probably add tests to verify there are no bugs...
-> (but, I can list this and refactoring as "Next Steps" in my article)
-
-- [ ] mobile: + island setting functionality
-- [ ] BUG: on refresh, can't rejoin
-
-- [ ] deploy app (`git subtree push --prefix functional_design/islands gigalixir master`)
-- [ ] write article re: channel-based React architecture (&& document code accordingly)
-- [ ] review backend logic -- refactor as concisely as possible
-
-- [ ] later, could add statistical features (i.e. wins, losses, && versus)
 
 ## CSR
 

@@ -66,6 +66,10 @@ exports.config = {
   },
 
   npm: {
+    aliases: {
+      "react-native-svg": "svgs",
+      "react-native": "react-native-web"
+    },
     enabled: true
   }
 };

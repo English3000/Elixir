@@ -18,6 +18,8 @@ defmodule IslandsInterfaceWeb.Router do
 
     get "/", PageController, :index
     post "/test", PageController, :test ##
+
+    get "/favicon.ico", PageController, :index
   end
 
   # Other scopes may use custom stacks.
