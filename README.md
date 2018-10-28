@@ -120,6 +120,8 @@ Instead of passing a `data` prop down the entire component hierarchy (which is w
 ### _Deploying Your App_
 To deploy your frontend and backend separately, [deploy your frontend `/build` to a CDN](https://medium.com/@omgwtfmarc/deploying-create-react-app-to-s3-or-cloudfront-48dae4ce0af), and [deploy your backend](https://gigalixir.readthedocs.io/en/latest/main.html#getting-started-guide) to a Plaform-as-a-Service below, with some [configurations](https://shift.infinite.red/how-to-set-up-a-cdn-in-phoenix-af89074e0a62).
 
+* [deploy on mobile](https://codeburst.io/how-to-deploy-a-create-react-native-app-to-the-appstore-229a8fa36fb1) [(Expo guide)](https://docs.expo.io/versions/latest/distribution/building-standalone-apps)
+
 * [Heroku](https://hexdocs.pm/phoenix/heroku.html) has some limitations
 * [Gigalixir](http://gigalixir.readthedocs.io/en/latest/main.html) is a platform-as-a-service without those limitations
 > ["I chose to use Gigalixir for hosting my application so that I could get the Heroku-like ease-of-use that it provides, while being able to still learn and use features of Elixir that make it special (like ETS and hot upgrades)."](https://medium.com/@b1ackmartian/deployment-to-gigalixir-using-travis-ci-46329167082e)
