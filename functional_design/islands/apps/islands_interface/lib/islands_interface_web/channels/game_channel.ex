@@ -42,7 +42,7 @@ defmodule IslandsInterfaceWeb.GameChannel do
     case result do
       :error -> :error
 
-       nil -> Supervisor.start_game(game, player) |> IO.inspect() |> register_player?(channel, game, player)
+       nil -> Supervisor.start_game(game, player) |> register_player?(channel, game, player)
 
       _pid -> state = m(game, player) |> Server.lookup_game
               {state.player1.name != player && state.player2.name != player, state}
