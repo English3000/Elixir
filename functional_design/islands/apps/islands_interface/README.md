@@ -10,7 +10,6 @@ _(In the future, don't make project a sub-directory...)_
 > (but, I can list this and refactoring as "Next Steps" in my article)
 
 - [ ] mobile: + island setting functionality
-- [ ] BUG: on refresh, can't rejoin
 
 - [ ] write article re: channel-based React architecture (&& document code accordingly)
 - [ ] review backend logic -- refactor as concisely as possible
