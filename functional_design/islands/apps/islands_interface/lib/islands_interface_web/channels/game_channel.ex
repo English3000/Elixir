@@ -30,13 +30,15 @@ defmodule IslandsInterfaceWeb.GameChannel do
       0 -> case :dets.lookup(:game, game) do
                                [] -> Presence.track(channel, player, m(time))
 
-             [{_key, saved_game}] -> if player in [saved_game.player1.name, saved_game.player2.name],
+             [{_key, saved_game}] -> if ( !saved_game.player2.name or
+                                           player in [saved_game.player1.name, saved_game.player2.name] ),
                                        do: Presence.track(channel, player, m(time))
            end
 
       1 -> [{_key, saved_game}] = :dets.lookup(:game, game)
            if hd(keys) != player and
-              player in [saved_game.player1.name, saved_game.player2.name],
+            ( !saved_game.player2.name or
+              player in [saved_game.player1.name, saved_game.player2.name] ),
                 do: Presence.track(channel, player, m(time))
 
       2 -> nil
@@ -70,6 +72,29 @@ defmodule IslandsInterfaceWeb.GameChannel do
     send(self(), {:after_join, "game_joined", state_, Player.opponent(opp_atom)})
     {:ok, state_, channel} ## What happens if a player leaves the game temporarily?
   end
+  # defp track_players(_channel, _game, _player, keys) when length(keys) == 2,
+  #   do: :error
+  # defp track_players(channel, game, player, keys) do
+  #   time = System.system_time(:seconds)
+  #
+  #   case :dets.lookup(:game, game) do
+  #                       [] -> Supervisor.start_game(game, player)
+  #                             [{_key, saved_game}] = :dets.lookup(:game, game)
+  #                             Presence.track(channel, player, m(time))
+  #                             {false, saved_game}
+  #     [{_key, saved_game}] ->
+  #       if player not in keys do
+  #         cond do
+  #           saved_game.player2.name == nil -> Presence.track(channel, player, m(time))
+  #                                             {true, saved_game}
+  #           player in [saved_game.player1.name, saved_game.player2.name] == true ->
+  #             Presence.track(channel, player, m(time))
+  #             {false, saved_game}
+  #           true -> :error
+  #         end
+  #       end
+  #   end
+  # end
   # NOTE: Room for refactoring...
   def handle_info({:after_join, event, state, player_atom}, channel) do
     opp_atom = Player.opponent(player_atom)

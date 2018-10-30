@@ -30,9 +30,9 @@ defmodule IslandsEngine.Game.Server do
     do: GenServer.call(pid, {:join_game, player_name})
   def handle_call({:join_game, player_name} = tuple, _caller, state) do
     key = cond do
-            state.player2.name == player_name -> :player2
-            state.player1.name == player_name -> :player1
-                                         true -> nil
+            state.player2.name in [player_name, nil] -> :player2
+            state.player1.name == player_name        -> :player1
+                                                true -> nil
           end
 
     with         false <- !key,
