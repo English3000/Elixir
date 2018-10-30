@@ -1,3 +1,4 @@
+# NOTE: Room for refactoring...
 defmodule IslandsInterfaceWeb.GameChannel do
   # https://hexdocs.pm/phoenix/Phoenix.Channel.html
   # https://hexdocs.pm/phoenix/testing_channels.html
@@ -25,34 +26,23 @@ defmodule IslandsInterfaceWeb.GameChannel do
   # Also restores game on crash.
   defp track_players(channel, game, player) do
     keys = Presence.list(channel) |> Map.keys
-    time = System.system_time(:seconds)
-    case length(keys) do
-      0 -> case :dets.lookup(:game, game) do
-                               [] -> Presence.track(channel, player, m(time))
-
-             [{_key, saved_game}] -> if ( !saved_game.player2.name or
-                                           player in [saved_game.player1.name, saved_game.player2.name] ),
-                                       do: Presence.track(channel, player, m(time))
-           end
-
-      1 -> [{_key, saved_game}] = :dets.lookup(:game, game)
-           if hd(keys) != player and
-            ( !saved_game.player2.name or
-              player in [saved_game.player1.name, saved_game.player2.name] ),
-                do: Presence.track(channel, player, m(time))
-
-      2 -> nil
+    with    true <- player not in keys and length(keys) < 2,
+      saved_game <- :dets.lookup(:game, game),
+            true <- saved_game == [] or player?(saved_game, player)
+    do
+      Presence.track(channel, player, %{time: System.system_time(:seconds)})
+      via(game) |> Server.process?
+    else
+      _ -> :error
     end
-
-    if Presence.list(channel) |> Map.keys != keys,
-      do:   via(game) |> Server.process?,
-      else: :error
   end
+  defp player?([{_key, game}], player),
+    do: !game.player2.name or player in [game.player1.name, game.player2.name]
   defp register_player?(result, channel, game, player) do
     case result do
       :error -> :error
 
-       nil -> Supervisor.start_game(game, player) |> register_player?(channel, game, player)
+       nil -> Supervisor.start_game(game, player) |> IO.inspect() |> register_player?(channel, game, player)
 
       _pid -> state = m(game, player) |> Server.lookup_game
               {state.player1.name != player && state.player2.name != player, state}
@@ -72,30 +62,7 @@ defmodule IslandsInterfaceWeb.GameChannel do
     send(self(), {:after_join, "game_joined", state_, Player.opponent(opp_atom)})
     {:ok, state_, channel} ## What happens if a player leaves the game temporarily?
   end
-  # defp track_players(_channel, _game, _player, keys) when length(keys) == 2,
-  #   do: :error
-  # defp track_players(channel, game, player, keys) do
-  #   time = System.system_time(:seconds)
-  #
-  #   case :dets.lookup(:game, game) do
-  #                       [] -> Supervisor.start_game(game, player)
-  #                             [{_key, saved_game}] = :dets.lookup(:game, game)
-  #                             Presence.track(channel, player, m(time))
-  #                             {false, saved_game}
-  #     [{_key, saved_game}] ->
-  #       if player not in keys do
-  #         cond do
-  #           saved_game.player2.name == nil -> Presence.track(channel, player, m(time))
-  #                                             {true, saved_game}
-  #           player in [saved_game.player1.name, saved_game.player2.name] == true ->
-  #             Presence.track(channel, player, m(time))
-  #             {false, saved_game}
-  #           true -> :error
-  #         end
-  #       end
-  #   end
-  # end
-  # NOTE: Room for refactoring...
+
   def handle_info({:after_join, event, state, player_atom}, channel) do
     opp_atom = Player.opponent(player_atom)
     broadcast! channel, event, %{ player_atom => state[player_atom].stage,

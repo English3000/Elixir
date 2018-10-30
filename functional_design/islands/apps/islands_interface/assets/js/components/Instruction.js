@@ -10,7 +10,7 @@ function renderInstruction(instruction, opponent){
     case "left":
       return `Opponent ${opponent} left game.`
     case "ready":
-      return "Waiting for other player..."
+      return "Waiting for other player to set islands."
     case "turn":
       return "YOUR TURN: Click on a square to attack."
     case "wait":
