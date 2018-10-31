@@ -2,7 +2,7 @@
 
 If issue, `git pull --rebase gigalixir master`
 
-_(In the future, don't make project a sub-directory...)_
+_(In the future, don't make project a sub-directory)_
 
 ## DONE! Next steps...
 
