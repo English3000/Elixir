@@ -17,9 +17,6 @@ defmodule IslandsInterfaceWeb.Router do
     pipe_through :browser # Use the default browser stack
 
     get "/", PageController, :index
-    post "/test", PageController, :test ##
-
-    get "/favicon.ico", PageController, :index
   end
 
   # Other scopes may use custom stacks.
