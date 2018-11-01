@@ -15,6 +15,8 @@ use Mix.Config
 # which you typically run after static files are built.
 config :islands_interface, IslandsInterfaceWeb.Endpoint,
   load_from_system_env: true,
+  http: [port: {:system, "PORT"}],
+  server: true,
   url: [host: "islands.gigalixirapp.com", port: 80],
   static_url: [scheme: "https", host: "d1ejsiwlpkcw2o.cloudfront.net", port: 80],
   cache_static_manifest: "priv/static/cache_manifest.json"
