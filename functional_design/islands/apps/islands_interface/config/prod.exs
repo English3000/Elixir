@@ -18,7 +18,7 @@ config :islands_interface, IslandsInterfaceWeb.Endpoint,
   http: [port: {:system, "PORT"}],
   server: true,
   url: [host: "islands.gigalixirapp.com", port: 80],
-  static_url: [scheme: "https", host: "d1ejsiwlpkcw2o.cloudfront.net", port: 80],
+  # static_url: [scheme: "https", host: "d1ejsiwlpkcw2o.cloudfront.net", port: 80],
   cache_static_manifest: "priv/static/cache_manifest.json"
 
 # Do not print debug messages in production
