@@ -21,6 +21,7 @@ defmodule OTP.Supervisor do # @ Starting the Supervisor
              |> serve()
   end
 
+  @doc "Generates local process registry for child processes."
   def start_children(children) do
     for {module, function, args} <- children do
                         # { :ok, pid }

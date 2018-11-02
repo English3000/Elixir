@@ -8,22 +8,24 @@ defmodule IslandsEngine.Game.Server do
   @players [:player1, :player2] #  Stages
   @errors [:invalid_coordinate, :invalid_island, :invalid_coordinate, :unplaced_islands, :overlapping_islands]
   # https://hexdocs.pm/elixir/Supervisor.html#module-module-based-supervisors
+  @spec start_link(String.t, String.t) :: { :ok, pid } | :ignore | { :error, {} | term }
   @doc "Start a new game."
   def start_link(game, player) when is_binary(game) and is_binary(player),
     do: GenServer.start_link(__MODULE__, m(game, player), name: game |> registry_tuple)
+  @spec init(%{}) :: { :ok, %{} }
   @doc "Sets process's initial state, or stops process on timeout."
   def init(payload) do
-    send(self(), {:set_state, payload})
-    {:ok, new_game(payload)}
+    send(self(), {:set_state, payload}) # REVIEW book
+    { :ok, new_game(payload) }
   end
+
   def handle_info({:set_state, payload}, _state),
-    do: {:noreply, lookup_game(payload), @timeout}
+    do: { :noreply, lookup_game(payload), @timeout }
   def handle_info(:timeout, state),
-    do: {:stop, {:shutdown, :timeout}, state}
-  def terminate({:shutdown, :timeout}, state),
-    do: :dets.delete(:game, state.game); :ok
-  def terminate(_reason, _state),
-    do: :ok
+    do: { :stop, {:shutdown, :timeout}, state }
+
+  def terminate({:shutdown, :timeout}, state), do: :dets.delete(:game, state.game); :ok
+  def terminate(_reason, _state),              do: :ok
 
   # Stages
   def join_game(pid, player_name),
