@@ -13,23 +13,22 @@ defmodule IslandsEngine.Game.Server do
   def start_link(game, player) when is_binary(game) and is_binary(player),
     do: GenServer.start_link(__MODULE__, m(game, player), name: game |> registry_tuple)
   @spec init(%{}) :: { :ok, %{} }
-  @doc "Sets process's initial state, or stops process on timeout."
+  @doc "On startup, sends `:set_state` message, then sets process state to new game."
   def init(payload) do
-    send(self(), {:set_state, payload}) # REVIEW book
+    send(self(), {:set_state, payload})
     { :ok, new_game(payload) }
   end
-
-  def handle_info({:set_state, payload}, _state),
-    do: { :noreply, lookup_game(payload), @timeout }
+  # On receiving `:set_state` message from `init/1`, updates process state.
+  def handle_info({:set_state, payload}, state),
+    do: {:noreply, lookup_game(payload, state), @timeout}
   def handle_info(:timeout, state),
-    do: { :stop, {:shutdown, :timeout}, state }
+    do: {:stop, {:shutdown, :timeout}, state}
 
   def terminate({:shutdown, :timeout}, state), do: :dets.delete(:game, state.game); :ok
   def terminate(_reason, _state),              do: :ok
 
   # Stages
-  def join_game(pid, player_name),
-    do: GenServer.call(pid, {:join_game, player_name})
+  def join_game(pid, player_name), do: GenServer.call(pid, {:join_game, player_name})
   def handle_call({:join_game, player_name} = tuple, _caller, state) do
     key = cond do
             state.player2.name in [player_name, nil] -> :player2
@@ -46,8 +45,7 @@ defmodule IslandsEngine.Game.Server do
     end
   end
 
-  def set_islands(pid, payload),
-    do: GenServer.call(pid, {:set_islands, payload})
+  def set_islands(pid, payload), do: GenServer.call(pid, {:set_islands, payload})
   def handle_call({:set_islands, %{"player"=> player, "islands"=> island_set}}, _caller, state) do
     with {_mapset, islands} <- IslandSet.validate(island_set) do
       saved_player = Map.fetch!(state, String.to_existing_atom(player))
@@ -90,11 +88,9 @@ defmodule IslandsEngine.Game.Server do
   end
 
   # Helpers
-  def process?(tuple),
-    do: GenServer.whereis(tuple)
+  def process?(tuple), do: GenServer.whereis(tuple)
   @doc "Generates `:via` tuple for a named process."
-  def registry_tuple(game),
-    do: {:via, Registry, {Registry.Game, game}}
+  def registry_tuple(game), do: {:via, Registry, {Registry.Game, game}}
 
   defp reply(state, {:error, msg} = result) when msg in @errors, # redunant/coupled?
     do: {:reply, result, state, @timeout}
@@ -103,12 +99,14 @@ defmodule IslandsEngine.Game.Server do
     {:reply, result, state, @timeout}
   end
 
-  def lookup_game(%{game: game} = payload) do
-    state = case :dets.lookup(:game, game) do
-              [{_key, saved_game}] -> saved_game
-                                [] -> new_game(payload)
-            end
-    :dets.insert(:game, {game, state}); state
+  def lookup_game(%{game: game} = payload, state \\ nil) do
+    case :dets.lookup(:game, game) do
+      [{_key, saved_game}] -> saved_game
+
+                        [] -> state = if state, do: state, else: new_game(payload)
+                              :dets.insert(:game, {game, state})
+                              state
+    end
   end
   defp new_game(%{game: game, player: player}),
     do: %{ game: game,

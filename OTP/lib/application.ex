@@ -1,4 +1,4 @@
-defmodule OTP.Application do # @ Distributed Applications
+defmodule OTP.Application do
   use Application # https://hexdocs.pm/elixir/Application.html#module-the-application-callback-module
   @moduledoc """
   `application.ex` is where a project's supervisor is spawned.
