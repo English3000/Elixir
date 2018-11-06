@@ -3,6 +3,8 @@ defmodule IslandsEngine.Game.Supervisor do
   alias IslandsEngine.Game.Server
 
   @moduledoc """
+  A custom Supervisor. (See: https://hexdocs.pm/elixir/Supervisor.html#module-module-based-supervisors)
+
   1st 2 functions start supervisor.
   2nd 2 start & stop a child process.
   """

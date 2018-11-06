@@ -7,7 +7,7 @@ defmodule IslandsEngine.Game.Server do
   @timeout 60 * 60 * 24 * 1000  #  reply/2
   @players [:player1, :player2] #  Stages
   @errors [:invalid_coordinate, :invalid_island, :invalid_coordinate, :unplaced_islands, :overlapping_islands]
-  # https://hexdocs.pm/elixir/Supervisor.html#module-module-based-supervisors
+
   @spec start_link(String.t, String.t) :: { :ok, pid } | :ignore | { :error, {} | term }
   @doc "Start a new game."
   def start_link(game, player) when is_binary(game) and is_binary(player),
