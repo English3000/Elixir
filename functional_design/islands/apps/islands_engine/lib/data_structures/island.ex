@@ -1,9 +1,11 @@
 defmodule IslandsEngine.DataStructures do
   defmodule Coordinate do
+    @derive Jason.Encoder
     defstruct [row: 0, col: 0]
   end
 
   defmodule Island do
+    @derive Jason.Encoder
     @enforce_keys [:coordinates, :bounds, :type]
         defstruct [:coordinates, :bounds, :type]
 

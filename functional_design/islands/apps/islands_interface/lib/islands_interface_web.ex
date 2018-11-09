@@ -20,26 +20,28 @@ defmodule IslandsInterfaceWeb do
   def controller do
     quote do
       use Phoenix.Controller, namespace: IslandsInterfaceWeb
+
       import Plug.Conn
-      import IslandsInterfaceWeb.Router.Helpers
       import IslandsInterfaceWeb.Gettext
+      alias IslandsInterfaceWeb.Router.Helpers, as: Routes
     end
   end
 
   def view do
     quote do
-      use Phoenix.View, root: "lib/islands_interface_web/templates",
-                        namespace: IslandsInterfaceWeb
+      use Phoenix.View,
+        root: "lib/islands_interface_web/templates",
+        namespace: IslandsInterfaceWeb
 
       # Import convenience functions from controllers
-      import Phoenix.Controller, only: [get_flash: 2, view_module: 1]
+      import Phoenix.Controller, only: [get_flash: 1, get_flash: 2, view_module: 1]
 
       # Use all HTML functionality (forms, tags, etc)
       use Phoenix.HTML
 
-      import IslandsInterfaceWeb.Router.Helpers
       import IslandsInterfaceWeb.ErrorHelpers
       import IslandsInterfaceWeb.Gettext
+      alias IslandsInterfaceWeb.Router.Helpers, as: Routes
     end
   end
 

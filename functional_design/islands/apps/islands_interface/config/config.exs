@@ -3,24 +3,27 @@
 #
 # This configuration file is loaded before any dependency and
 # is restricted to this project.
+
+# General application configuration
 use Mix.Config
 
 # Configures the endpoint
 config :islands_interface, IslandsInterfaceWeb.Endpoint,
   url: [host: "localhost"],
-  secret_key_base: "yBYywnJZtXVqflz7EMnQpoh7pU7KrlCqiYvqgg2vOxp4HA0VQHJaSz0c8YBqLxwu",
+  secret_key_base: "ZAkHxVgWrkFJ75ModyOThpdzkPjuaR9VFmirbZqm0V1p5Ai1Sw4tu+SQrHxngSpY",
   render_errors: [view: IslandsInterfaceWeb.ErrorView, accepts: ~w(html json)],
-  pubsub: [name: IslandsInterface.PubSub,
-           adapter: Phoenix.PubSub.PG2]
+  pubsub: [name: IslandsInterface.PubSub, adapter: Phoenix.PubSub.PG2]
 
 # Configures Elixir's Logger
 config :logger, :console,
   format: "$time $metadata[$level] $message\n",
-  metadata: [:user_id]
+  metadata: [:request_id]
 
-config :shorthand,
-  variable_args: 7
+# Use Jason for JSON parsing in Phoenix
+config :phoenix, :json_library, Jason
+
+config :shorthand, variable_args: 7
 
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.
-import_config "#{Mix.env}.exs"
+import_config "#{Mix.env()}.exs"

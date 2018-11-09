@@ -1,5 +1,15 @@
+defimpl Jason.Encoder, for: [MapSet, Range, Stream] do
+  def encode(struct, opts) do
+    struct
+    |> Enum.to_list
+    |> Jason.Encode.list(opts)
+  end
+end
+
 defmodule IslandsEngine.DataStructures.Guesses do
   alias IslandsEngine.DataStructures.{Coordinate, Guesses}
+
+  @derive Jason.Encoder
   defstruct hits:   MapSet.new,
             misses: MapSet.new
 

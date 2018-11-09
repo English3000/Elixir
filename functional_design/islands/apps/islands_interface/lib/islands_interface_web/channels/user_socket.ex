@@ -2,11 +2,7 @@ defmodule IslandsInterfaceWeb.UserSocket do
   use Phoenix.Socket
 
   ## Channels
-  channel "game:*", IslandsInterfaceWeb.GameChannel ##
-
-  ## Transports
-  transport :websocket, Phoenix.Transports.WebSocket
-  # transport :longpoll, Phoenix.Transports.LongPoll
+  channel "game:*", IslandsInterfaceWeb.GameChannel
 
   # Socket params are passed from the client and can
   # be used to verify and authenticate a user. After
@@ -19,9 +15,7 @@ defmodule IslandsInterfaceWeb.UserSocket do
   #
   # See `Phoenix.Token` documentation for examples in
   # performing token verification on connect.
-  def connect(_params, socket) do
-    {:ok, socket}
-  end
+  def connect(_params, socket, _connect_info), do: {:ok, socket}
 
   # Socket id's are topics that allow you to identify all sockets for a given user:
   #

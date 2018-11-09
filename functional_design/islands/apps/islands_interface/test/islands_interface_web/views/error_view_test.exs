@@ -1,16 +1,15 @@
 defmodule IslandsInterfaceWeb.ErrorViewTest do
   use IslandsInterfaceWeb.ConnCase, async: true
 
-  # Bring render/3 and render_to_string/3 for testing custom views
-  import Phoenix.View
+  import Phoenix.View # Bring render/3 and render_to_string/3 for testing custom views
+
+  alias IslandsInterfaceWeb.ErrorView
 
   test "renders 404.html" do
-    assert render_to_string(IslandsInterfaceWeb.ErrorView, "404.html", []) ==
-           "Not Found"
+    assert "Not Found" == render_to_string(ErrorView, "404.html", [])
   end
 
   test "renders 500.html" do
-    assert render_to_string(IslandsInterfaceWeb.ErrorView, "500.html", []) ==
-           "Internal Server Error"
+    assert "Internal Server Error" == render_to_string(ErrorView, "500.html", [])
   end
 end

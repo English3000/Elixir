@@ -14,7 +14,7 @@ defmodule IslandsInterfaceWeb.Router do
   end
 
   scope "/", IslandsInterfaceWeb do
-    pipe_through :browser # Use the default browser stack
+    pipe_through :browser
 
     get "/", PageController, :index
   end
