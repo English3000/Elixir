@@ -1,4 +1,6 @@
-**TODO:** Migrate code to Phoenix 1.4.0 project && get build working
+* There's some issue with the umbrella's asset pipeline on deploy...
+
+> ANSWER: Comment /priv/static in islands_interface/.gitignore
 
 **TO DEPLOY APP:** `git subtree push --prefix functional_design/islands gigalixir master`
 
