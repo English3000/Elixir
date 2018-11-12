@@ -1,4 +1,4 @@
-defmodule OTP.Supervisor do # @ Starting the Supervisor
+defmodule OTP.Supervisor do # @ L 4695
   @moduledoc """
   iex> OTP.Supervisor.start([{OTP.Coffee.FSM, :start_link, []}], name: :sup)
   Machine: Rebooted hardware
@@ -14,12 +14,20 @@ defmodule OTP.Supervisor do # @ Starting the Supervisor
     { :ok, pid }
   end
 
-  def init(children) do
-    Process.flag(:trap_exit, true)
+  # def init(children) do
+  #   Process.flag(:trap_exit, true)
+  #
+  #   children
+  #   |> start_children()
+  #   |> serve
+  # end
 
-    children |> start_children()
-             |> serve()
-  end
+  def start_link, do: Supervisor.start_link(__MODULE__, __MODULE__, [])
+
+                   # Supervisor spec
+  def init(_), do: { :ok, {{:rest_for_one, 2, 3_600}, [child(:freq_overload), child(:frequency)]} }
+
+  def child(module), do: {module, {module, :start_link, []}, :permanent, 2_000, :worker, [__MODULE__]}
 
   @doc "Generates local process registry for child processes."
   def start_children(children) do
