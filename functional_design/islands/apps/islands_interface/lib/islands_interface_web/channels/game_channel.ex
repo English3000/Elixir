@@ -77,8 +77,8 @@ defmodule IslandsInterfaceWeb.GameChannel do
                                      opp_atom => %{name: opp_name, stage: opp_stage} }
 
     if player_stage != :joined and
-       channel |> Presence.list() |> Map.keys() |> length() < 2,
-      do: push channel, "game_left", %{instruction: "ready"}
+       channel |> Presence.list() |> Map.keys() |> length < 2,
+      do: push channel, "message", %{instruction: "ready"}
 
     {:noreply, channel}
   end
@@ -92,6 +92,7 @@ defmodule IslandsInterfaceWeb.GameChannel do
     case Server.registry_tuple(game) |> Server.set_islands(payload) do
          {:ok, player} -> if player.key == :player2 and player.stage == :wait,
                             do: message(channel, "turn")
+
                           push channel, "islands_set", player
                           {:noreply, channel}
 
