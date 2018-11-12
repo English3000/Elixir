@@ -112,10 +112,12 @@ export default class Game extends React.Component{
       }).receive( "error", ({reason}) => this.setState({ message: {error: reason} }) )
       gameChannel.on( "game_joined", ({player1, player2}) => {
         const {payload, id} = this.state
-        this.setState({ payload: merge({}, payload, {player1: {stage: player1}, player2: {stage: player2}}), message: {instruction: id === "player1" ? player1 : player2} })
+        this.setState({ payload: merge({}, payload, {player1: {stage: player1.stage}, player2: {name: player2.name, stage: player2.stage}}), message: {instruction: id === "player1" ? player1.stage : player2.stage} })
       })
-      gameChannel.on( "islands_set", playerData =>
-        this.setState({ payload: merge({}, this.state.payload, {[playerData.key]: playerData}), message: {instruction: playerData.stage} }) )
+      gameChannel.on( "islands_set", playerData => {
+        console.log(playerData.stage);
+        this.setState({ payload: merge({}, this.state.payload, {[playerData.key]: playerData}), message: {instruction: playerData.stage} })
+      })
       gameChannel.on( "coordinate_guessed", ({player_key}) => {
         const instruction = (player_key === this.state.id) ? "wait" : "turn"
         this.setState({ message: {instruction} })
@@ -124,7 +126,7 @@ export default class Game extends React.Component{
         if (won) { const instruction = winner ? "won" : "lost"
                    this.setState({ message: {instruction} }) }
       })
-      gameChannel.on( "game_left", ({instruction}) => this.setState({ message: {instruction} }) )
+      gameChannel.on( "message", ({instruction}) => this.setState({ message: {instruction} }) )
     }
   }
   opponent(){

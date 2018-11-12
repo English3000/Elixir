@@ -1,4 +1,4 @@
-defimpl Jason.Encoder, for: [MapSet, Range, Stream] do
+defimpl Jason.Encoder, for: MapSet do
   def encode(struct, opts) do
     struct
     |> Enum.to_list
