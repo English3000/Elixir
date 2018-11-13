@@ -9,28 +9,28 @@ defmodule IslandsInterfaceWeb.GameChannel do
   alias IslandsEngine.DataStructures.Player
 
   @doc "Sends game state (except opponent's board) to frontend."
-  @spec join(topic :: String.t, params :: map, channel :: Socket.t) ::
+  @spec join(topic :: String.t, params :: map, socket :: Socket.t) ::
     {:ok, Socket.t} | {:ok, reply :: map, Socket.t} | {:error, reply :: map}
-  def join("game:" <> game, %{"screen_name" => player}, channel) do
-    result = track_players(channel, game, player)
-             |> register_player?(channel, game, player)
+  def join("game:" <> game, %{"screen_name" => player}, socket) do
+    result = track_players(socket, game, player)
+             |> register_player?(socket, game, player)
              |> add_player?(game, player)
 
     case result do
-      {:ok, state} -> respond(state, player, channel)
+      {:ok, state} -> respond(state, player, socket)
 
-      :error -> players = Presence.list(channel) |> Map.keys |> Enum.join(", ")
+      :error -> players = Presence.list(socket) |> Map.keys |> Enum.join(", ")
                 { :error, %{reason: "Player not permitted. Playing: #{players}"} }
     end
   end
   # Also restores game on crash.
-  defp track_players(channel, game, player) do
-    keys = Presence.list(channel) |> Map.keys
+  defp track_players(socket, game, player) do
+    keys = Presence.list(socket) |> Map.keys
     with    true <- player not in keys and length(keys) < 2,
       saved_game <- :dets.lookup(:game, game),
             true <- saved_game == [] or player?(saved_game, player)
     do
-      Presence.track(channel, player, %{time: System.system_time(:seconds)})
+      Presence.track(socket, player, %{time: System.system_time(:seconds)})
       game |> Server.registry_tuple() |> GenServer.whereis
     else
       _ -> :error
@@ -39,11 +39,11 @@ defmodule IslandsInterfaceWeb.GameChannel do
   defp player?([{_key, game}], player),
     do: !game.player2.name or player in [game.player1.name, game.player2.name]
 
-  defp register_player?(result, channel, game, player) do
+  defp register_player?(result, socket, game, player) do
     case result do
       :error -> :error
 
-         nil -> Supervisor.start_game(game, player) |> register_player?(channel, game, player)
+         nil -> Supervisor.start_game(game, player) |> register_player?(socket, game, player)
 
         _pid -> state = Server.lookup_game(m(game, player))
                 %{ player1: %{name: name1}, player2: %{name: name2} } = state
@@ -59,52 +59,52 @@ defmodule IslandsInterfaceWeb.GameChannel do
     end
   end
 
-  defp respond(%{player1: %{name: name1}} = state, player, channel) do
+  defp respond(%{player1: %{name: name1}} = state, player, socket) do
     opp_atom = if player == name1, do: :player2, else: :player1
     state_ = update_in( state, [opp_atom], &Map.delete(&1, :islands) )
 
     send(self(), {:after_join, "game_joined", state_, opp_atom})
-    {:ok, state_, channel}
+    {:ok, state_, socket}
   end
 
-  def handle_info({:after_join, event, state, opp_atom}, channel) do
+  def handle_info({:after_join, event, state, opp_atom}, socket) do
     player_atom = Player.opponent(opp_atom)
 
     %{name: player_name, stage: player_stage} = Map.get(state, player_atom)
     %{name: opp_name,    stage: opp_stage}    = Map.get(state, opp_atom)
 
-    broadcast! channel, event, %{ player_atom => %{name: player_name, stage: player_stage},
+    broadcast! socket, event, %{ player_atom => %{name: player_name, stage: player_stage},
                                      opp_atom => %{name: opp_name, stage: opp_stage} }
 
     if player_stage != :joined and
-       channel |> Presence.list() |> Map.keys() |> length < 2,
-      do: push channel, "message", %{instruction: "ready"}
+       socket |> Presence.list() |> Map.keys() |> length < 2,
+      do: push socket, "message", %{instruction: "ready"}
 
-    {:noreply, channel}
+    {:noreply, socket}
   end
 
-  @doc "<JS> channel.push(event, payload) => handle_in(event, payload, channel) <EX>"
-  @spec handle_in(event :: String.t, payload :: any, channel :: Socket.t) ::
-    {:reply, {atom} | {atom, map}, channel :: Socket.t } |
-    {:noreply,                     channel :: Socket.t}
+  @doc "<JS> socket.push(event, payload) => handle_in(event, payload, socket) <EX>"
+  @spec handle_in(event :: String.t, payload :: any, socket :: Socket.t) ::
+    {:reply, {atom} | {atom, map}, socket :: Socket.t } |
+    {:noreply,                     socket :: Socket.t}
 
-  def handle_in("set_islands", payload, %{topic: "game:" <> game} = channel) do
+  def handle_in("set_islands", payload, %{topic: "game:" <> game} = socket) do
     case Server.registry_tuple(game) |> Server.set_islands(payload) do
          {:ok, player} -> if player.key == :player2 and player.stage == :wait,
-                            do: message(channel, "turn")
+                            do: message(socket, "turn")
 
-                          push channel, "islands_set", player
-                          {:noreply, channel}
+                          push socket, "islands_set", player
+                          {:noreply, socket}
 
-      {:error, reason} -> push channel, "error", m(reason)
-                          {:noreply, channel}
+      {:error, reason} -> push socket, "error", m(reason)
+                          {:noreply, socket}
     end
   end
 
   def handle_in("guess_coordinate",
                 %{"player"=> key, "row"=> row, "col"=> col},
-                %{topic: "game:" <> game} = channel) do
-    n = channel
+                %{topic: "game:" <> game} = socket) do
+    n = socket
         |> Presence.list
         |> Map.keys
         |> length
@@ -112,19 +112,19 @@ defmodule IslandsInterfaceWeb.GameChannel do
     if n == 2 do
       player = String.to_existing_atom(key)
       case Server.registry_tuple(game) |> Server.guess_coordinate(player, row, col) do
-        :error       -> push channel, "error", %{reason: "Not your turn."}
+        :error       -> push socket, "error", %{reason: "Not your turn."}
 
         {hit?, won?} ->
-          broadcast! channel, "coordinate_guessed", m(row, col, hit: hit?, player_key: player)
-          broadcast! channel, "game_status", m(won: won?, winner: player)
+          broadcast! socket, "coordinate_guessed", m(row, col, hit: hit?, player_key: player)
+          broadcast! socket, "game_status", m(won: won?, winner: player)
       end
     end
 
-    {:noreply, channel}
+    {:noreply, socket}
   end
 
-  @doc "Handles <JS> channel.leave()"
-  def terminate(_reason, channel), do: message(channel, "left")
+  @doc "Handles <JS> socket.leave()"
+  def terminate(_reason, socket), do: message(socket, "left")
 
-  defp message(channel, instruction), do: broadcast! channel, "message", m(instruction)
+  defp message(socket, instruction), do: broadcast! socket, "message", m(instruction)
 end

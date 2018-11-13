@@ -110,7 +110,7 @@ defmodule IslandsEngine.Game.Server do
     end
   end
 
-  defp new_game(%{game: game, player: player}), do: %{
+  def new_game(%{game: game, player: player}), do: %{
     game:    game,
     player1: Player.new(player),
     player2: Player.new
