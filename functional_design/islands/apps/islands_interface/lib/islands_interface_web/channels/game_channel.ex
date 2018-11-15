@@ -36,8 +36,8 @@ defmodule IslandsInterfaceWeb.GameChannel do
       _ -> :error
     end
   end
-  defp player?([{_key, game}], player),
-    do: !game.player2.name or player in [game.player1.name, game.player2.name]
+  defp player?([{ _key, %{player1: %{name: name1}, player2: %{name: name2}} }], player),
+    do: !name2 or player in [name1, name2]
 
   defp register_player?(result, socket, game, player) do
     case result do

@@ -2,26 +2,23 @@ defmodule IslandsInterface.MixProject do
   use Mix.Project
 
   def project, do: [
-    app: :islands_interface,
-    version: "0.1.0",
-    elixir: "~> 1.7",
-    elixirc_paths: elixirc_paths(Mix.env()),
-    compilers: [:phoenix, :gettext] ++ Mix.compilers(),
-    build_path: "​​../../_build",
-    config_path: "​​../../config/config.exs",
-    deps_path: "../../deps",
-    lockfile: "../../mix.lock",
-    build_embedded: Mix.env == :prod,
+    app:             :islands_interface,
+    version:         "0.1.0",
+    elixir:          "~> 1.7",
+    elixirc_paths:   elixirc_paths(Mix.env()),
+    compilers:       [:phoenix, :gettext] ++ Mix.compilers(),
+    build_path:      "​​../../_build",
+    config_path:     "​​../../config/config.exs",
+    deps_path:       "../../deps",
+    lockfile:        "../../mix.lock",
+    build_embedded:  Mix.env == :prod,
     start_permanent: Mix.env() == :prod,
-    deps: deps()
+    deps:            deps()
   ]
 
-  # Configuration for the OTP application.
-  #
-  # Type `mix help compile.app` for more information.
-  def application, do: [
-    mod: {IslandsInterface.Application, []},
-    extra_applications: [:islands_engine, :logger, :runtime_tools]
+  def application, do: [ # Type `mix help compile.app` for more information.
+    mod:                {IslandsInterface.Application, []},
+    extra_applications: [:logger, :runtime_tools, :islands_engine]
   ]
 
   # Specifies which paths to compile per environment.
