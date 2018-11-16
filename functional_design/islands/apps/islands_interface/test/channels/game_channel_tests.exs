@@ -1,4 +1,4 @@
-defmodule IslandsInterfaceWeb.GameChannelTest do
+defmodule IslandsInterfaceWeb.GameChannelTests do
   use IslandsInterfaceWeb.ChannelCase, async: true
 
   alias IslandsInterfaceWeb.{GameChannel, UserSocket}
@@ -43,17 +43,8 @@ defmodule IslandsInterfaceWeb.GameChannelTest do
     end
   end
 
-  describe ".track_players/3" do
-    test "tracks new player" do
-      #
-    end
+  # NOTE: Can't test `join/3` helpers b/c using `GameChannel` directly =>
+  # `** (FunctionClauseError) no function clause matching in Phoenix.Tracker.track/5`
 
-    test "doesn't track same player twice" do
-      #
-    end
-
-    test "doesn't track if error" do
-      #
-    end
-  end
+  # Can add tests for `handle_in/3` events, if run into bugs there.
 end
