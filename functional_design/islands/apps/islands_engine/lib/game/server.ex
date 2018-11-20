@@ -3,10 +3,8 @@ defmodule IslandsEngine.Game.Server do
   use GenServer, start: {__MODULE__, :start_link, []}, restart: :transient
   alias IslandsEngine.Game.Stage
   alias IslandsEngine.DataStructures.{IslandSet, Player, Coordinate}
-                                # Used by:
-  @timeout 60 * 60 * 24 * 1000  #  reply/2
-  @players [:player1, :player2] #  Stages
-  @errors [:invalid_coordinate, :invalid_island, :invalid_coordinate, :unplaced_islands, :overlapping_islands]
+
+  @timeout 60 * 60 * 24 * 1000 # Used by: `reply/2`, `Stage`  
 
   @spec start_link(String.t, String.t) :: { :ok, pid } | :ignore | { :error, {} | term }
   @doc "Start a new game."
@@ -33,7 +31,7 @@ defmodule IslandsEngine.Game.Server do
     player = cond do
                player2.name in [name, nil] -> player2
                player1.name == name        -> player1
-                                      true -> nil
+               true                        -> nil
              end
 
     with          true <- is_map(player),
@@ -71,7 +69,7 @@ defmodule IslandsEngine.Game.Server do
   end
 
   # frontend prevents duplicate guesses
-  def guess_coordinate(pid, player_atom, row, col) when player_atom in @players,
+  def guess_coordinate(pid, player_atom, row, col) when player_atom in [:player1, :player2],
     do: GenServer.call(pid, {:guess, player_atom, row, col})
   def handle_call({:guess, player_atom, row, col}, _caller, state) do
     player   = Map.fetch!(state, player_atom)
@@ -90,7 +88,8 @@ defmodule IslandsEngine.Game.Server do
   end
 
   # Helpers
-  defp reply(state, {:error, msg} = result) when msg in @errors, # redunant/coupled?
+  @errors [:invalid_coordinate, :invalid_island, :invalid_coordinate, :unplaced_islands, :overlapping_islands]
+  defp reply(state, {:error, msg} = result) when msg in @errors,
     do: {:reply, result, state, @timeout}
   defp reply(state, result) when not is_tuple(result) or elem(result, 0) != :error do
     if result != :error, do: :dets.insert(:game, {state.game, state})
