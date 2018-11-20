@@ -1,6 +1,32 @@
 defmodule Spiral do
-  @doc "Given the dimension, return a square matrix of numbers in clockwise spiral order."
   # NOTE: Could use keyword list w/ number-atom keys
+  @doc ~S"""
+  Given the dimension, return a square matrix of numbers in clockwise spiral order.
+
+
+  ### Pattern
+
+  traverse by dimension (right)
+  traverse by dimension - 1 (down)
+  traverse by dimension - 1 (left)
+  traverse by dimension - 2 (up)
+  traverse by dimension - 2 (right)
+  ...
+  traverse by 0
+
+
+  ### Diagram
+
+  col: 0    1    2    3       (A) :right, {0, 0}, 1, 4, true ; new_count - 1 = 4
+  {    1    2    3    4
+    { nil, nil, nil, nil },
+                              (B) :down, {1, 3}, 5, 3, false ; new_count - 1 = 7
+                               ROW
+    { nil, nil, nil, nil }, 5   1
+    { nil, nil, nil, nil }, 6   2
+    { nil, nil, nil, nil }, 7   3
+  }   10    9    8            (C) :left, {3, 2}, 8, 3, true ; new_count - 1 = 10
+  """
   @spec matrix(dimension :: integer) :: [ [integer] ]
   def matrix(0), do: []
   def matrix(dimension) do
@@ -12,33 +38,7 @@ defmodule Spiral do
     traverse(table, :right, {0,0}, 1, dimension, true)
     |> Tuple.to_list
     |> Enum.map(&Tuple.to_list(&1))
-    # low  = 1
-    # high = dimension
-    #
-    # head = Enum.reduce(low..high, {}, &Tuple.append(&2, &1))
-    #
-    # multiple = low + 1
-    # new_low  = low + high
-    # new_high = high * multiple - 1
-    #
-    # tail = Enum.reduce( new_low..new_high, {}, &Tuple.append(&2, Tuple.duplicate(&1, dimension)) )
-    #
-    # table = Tuple.insert_at(tail, 0, head)
-    #
-    # left(table, new_high + 1, new_high * (multiple + 1) - multiple, dimension)
   end
-
-  # col: 0    1    2    3       (A) :right, {0, 0}, 1, 4, true ; new_count - 1 = 4
-  # {    1    2    3    4
-  #   { nil, nil, nil, nil },
-  #                             (B) :down, {1, 3}, 5, 3, false ; new_count - 1 = 7
-  #                              ROW
-  #   { nil, nil, nil, nil }, 5   1
-  #
-  #   { nil, nil, nil, nil }, 6   2
-  #
-  #   { nil, nil, nil, nil }, 7   3
-  # }   10    9    8            (C) :left, {3, 2}, 8, 3, true ; new_count - 1 = 10
 
   @type table :: {{integer | nil}}
   @spec traverse(table,
@@ -83,14 +83,6 @@ defmodule Spiral do
     do: { count + steps,
           (if decrement?, do: steps - 1, else: steps) }
 
-  # traverse by dimension (right)
-  # traverse by dimension - 1 (down)
-  # traverse by dimension - 1 (left)
-  # traverse by dimension - 2 (up)
-  # traverse by dimension - 2 (right)
-  # ...
-  # traverse by 0
-
   defp traverse_row(tuple, operator, range, col) do
     Enum.reduce(range, {tuple, col}, fn number, {tuple, col} ->
       { put_elem(tuple, col, number), operator.(col, 1) }
@@ -108,46 +100,4 @@ defmodule Spiral do
       { put_elem(table, row, tuple), operator.(row, 1) }
     end)
   end
-  # defp traverse(table, :right, {row, col}, count, steps, decrement?) do
-  #   {new_count, new_steps} = check_params(count, steps, decrement?)
-  #
-  #   tuple                = elem(table, row)
-  #   {new_tuple, new_col} = Enum.reduce(count..(new_count - 1), {tuple, col},
-  #                            fn number, {tuple, col} ->
-  #                              { put_elem(tuple, col, number), col + 1 }
-  #                            end)
-  #
-  #   table
-  #   |> put_elem(row, new_tuple)
-  #   |> traverse(:down, {row + 1, new_col}, new_count, new_steps, !decrement?)
-  # end
-
-  # defp traverse(table, :down, {row, col}, count, steps, decrement?) do
-  #   {new_count, new_steps} = check_params(count, steps, decrement?)
-  #
-  #   {new_table, new_row} = Enum.reduce(count..(new_count - 1), {table, row},
-  #                            fn number, {table, row} ->
-  #                              tuple = table
-  #                                      |> elem(row)
-  #                                      |> put_elem(col, number)
-  #
-  #                              { put_elem(table, row, tuple), row + 1 }
-  #                            end)
-  #
-  #   traverse(new_table, :left, {new_row, col - 1}, new_count, new_steps, !decrement?)
-  # end
-
-  # defp traverse(table, :left, {row, col}, count, steps, decrement?) do
-  #   {new_count, new_steps} = check_params(count, steps, decrement?)
-  #
-  #   tuple                = elem(table, row)
-  #   {new_tuple, new_col} = Enum.reduce(count..(new_count - 1), {tuple, col},
-  #                            fn number, {tuple, col} ->
-  #                              { put_elem(tuple, col, number), col - 1 }
-  #                            end)
-  #
-  #   table
-  #   |> put_elem(row, new_tuple)
-  #   |> traverse(:up, {row - 1, new_col}, new_count, new_steps, !decrement?)
-  # end
 end
