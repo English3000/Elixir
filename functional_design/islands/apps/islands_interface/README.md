@@ -1,3 +1,5 @@
+- [ ] TODO: See `Game.js:139`
+
 * There's some issue with the umbrella's asset pipeline on deploy...
 
 > ANSWER: Comment /priv/static in islands_interface/.gitignore
@@ -10,13 +12,7 @@ _(In the future, don't make project a sub-directory)_
 
 ## DONE! Next steps...
 
-> I should probably add tests to verify there are no bugs...
-> (but, I can list this and refactoring as "Next Steps" in my article)
-
 - [ ] mobile: + island setting functionality
-
-- [ ] write article re: channel-based React architecture (&& document code accordingly)
-- [ ] review backend logic -- refactor as concisely as possible
 
 - [ ] later, could add statistical features (i.e. wins, losses, && versus)
 

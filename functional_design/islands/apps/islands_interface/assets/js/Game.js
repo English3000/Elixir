@@ -136,6 +136,8 @@ export default class Game extends React.Component{
     return payload ? payload[opp].name : null
   }
   // Handles server crashes (browser handles its own): refetches game by rejoining it via query string.
+  // TODO: Change history type so on restart, preserves game page. (Presently, sends `GET /`, going to login form.)
+  //       Additionally, protect against accessing a game via query string.
   componentDidMount(){
     const query = history.location.search
     if (query.length > 1) {
