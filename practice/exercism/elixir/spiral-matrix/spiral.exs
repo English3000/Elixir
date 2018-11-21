@@ -21,16 +21,18 @@ defmodule Spiral do
   {    1    2    3    4
     { nil, nil, nil, nil },
                               (B) :down, {1, 3}, 5, 3, false ; new_count - 1 = 7
-                               ROW
-    { nil, nil, nil, nil }, 5   1
-    { nil, nil, nil, nil }, 6   2
+           13   14             ROW
+12  { nil, nil, nil, nil }, 5   1
+11  { nil, nil, nil, nil }, 6   2
+           16   15
     { nil, nil, nil, nil }, 7   3
   }   10    9    8            (C) :left, {3, 2}, 8, 3, true ; new_count - 1 = 10
+
+(D) :up, {}
   """
   @spec matrix(dimension :: integer) :: [ [integer] ]
   def matrix(0), do: []
   def matrix(dimension) do
-    IO.puts("\ntest")
     table = nil
             |> Tuple.duplicate(dimension)
             |> Tuple.duplicate(dimension)
@@ -49,7 +51,6 @@ defmodule Spiral do
                  decrement? :: boolean) :: table
   defp traverse(table, _direction, _coords, _count, 0, _decrement?), do: table
   defp traverse(table, direction, {row, col} = coords, count, steps, decrement?) do
-    IO.inspect(coords)
     {new_count, new_steps} = check_params(count, steps, decrement?)
     range                  = count..(new_count - 1)
 
@@ -68,14 +69,15 @@ defmodule Spiral do
       |> traverse(new_direction, {operator.(row, 1), operator.(new_col, -1)}, new_count, new_steps, !decrement?)
     else
       {operator, new_direction} = case direction do
-                                    :up   -> {&+/2, :right}
-                                    :down -> {&-/2, :left}
+                                    :up   -> {&-/2, :right}
+                                    :down -> {&+/2, :left}
                                   end
+
 
       {new_table, new_row} = traverse_col(table, operator, range, coords)
 
       new_table
-      |> traverse(new_direction, {operator.(new_row, -1), operator.(col, 1)}, new_count, new_steps, !decrement?)
+      |> traverse(new_direction, {operator.(new_row, -1), operator.(col, -1)}, new_count, new_steps, !decrement?)
     end
   end
 
@@ -91,11 +93,9 @@ defmodule Spiral do
 
   defp traverse_col(table, operator, range, {row, col}) do
     Enum.reduce(range, {table, row}, fn number, {table, row} ->
-      IO.inspect(row)
       tuple = table
               |> elem(row)
               |> put_elem(col, number)
-              |> IO.inspect()
 
       { put_elem(table, row, tuple), operator.(row, 1) }
     end)
