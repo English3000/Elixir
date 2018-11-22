@@ -34,8 +34,7 @@ export default class Board extends React.Component{
   componentDidUpdate(prevProps){
     const owner = (this.props.attacker === "player1") ? "player2" : "player1"
 
-    if (prevProps.game[owner].stage === "joined")
-      this.renderBoard()
+    if (prevProps.game[owner].stage === "joined") this.renderBoard()
   }
 
   renderBoard(){

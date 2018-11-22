@@ -1,4 +1,6 @@
-- [ ] TODO: See `Game.js:139`
+TODO: 
+- [ ] fix prod bug
+- [ ] see `Game.js:139`
 
 * There's some issue with the umbrella's asset pipeline on deploy...
 
