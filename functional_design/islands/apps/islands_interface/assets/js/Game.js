@@ -64,7 +64,7 @@ export default class Game extends React.Component{
             {payload ?
               <TouchableOpacity key="exit" style={Platform.OS !== "web" ? {paddingTop: 24, marginLeft: -12} : {}}
                                 onPress={() => { socket.channels[0].leave()
-                                                 window.params = {}
+                                                 window.params = {game: "", player: ""}
                                                  history.push("/")
                                                  this.setState(INITIAL_STATE) }}>
                 <Text>EXIT</Text>
@@ -137,12 +137,12 @@ export default class Game extends React.Component{
     return payload ? payload[opp].name : null
   }
   // Handles server crashes (browser handles its own): refetches game by rejoining it via query string.
-  // TODO: Protect against accessing a game via query string.
   componentDidMount(){
-    const query = history.location.search
-    if (window.userToken && query.length > 1) {
+    const query = history.location.search,
+          {game, player} = window.params
+
+    if ( [query, game, player].every(string => string.length > 1) )
       this.joinGame(queryString.parse(query))
-    }
   }
 }
 
