@@ -7,6 +7,11 @@
 
     <title>IslandsInterface · Phoenix Framework</title>
     <link rel="stylesheet" href="<%= Routes.static_path(@conn, "/css/app.css") %>"/>
+
+    <script>
+      // TODO: The problem is this is the `conn` assigns, not the `socket` one.
+      window.params = {game: "<%= Map.get(assigns, :game) %>", player:  "<%= Map.get(assigns, :player) %>"}
+    </script>
   </head>
 
   <body>

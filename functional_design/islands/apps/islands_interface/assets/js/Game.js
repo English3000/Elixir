@@ -64,6 +64,7 @@ export default class Game extends React.Component{
             {payload ?
               <TouchableOpacity key="exit" style={Platform.OS !== "web" ? {paddingTop: 24, marginLeft: -12} : {}}
                                 onPress={() => { socket.channels[0].leave()
+                                                 window.params = {}
                                                  history.push("/")
                                                  this.setState(INITIAL_STATE) }}>
                 <Text>EXIT</Text>
@@ -108,6 +109,7 @@ export default class Game extends React.Component{
           const {player1, player2} = payload
           if (player1.name === player) this.setState({ form: false, message: {instruction: player1.stage}, payload, id: "player1" })
           if (player2.name === player) this.setState({ form: false, message: {instruction: player2.stage}, payload, id: "player2" })
+          window.params = {game, player}
           history.push(`/?game=${game}&player=${player}`)
       }).receive( "error", ({reason}) => this.setState({ message: {error: reason} }) )
       gameChannel.on( "game_joined", ({player1, player2}) => {
@@ -135,11 +137,10 @@ export default class Game extends React.Component{
     return payload ? payload[opp].name : null
   }
   // Handles server crashes (browser handles its own): refetches game by rejoining it via query string.
-  // TODO: Change history type so on restart, preserves game page. (Presently, sends `GET /`, going to login form.)
-  //       Additionally, protect against accessing a game via query string.
+  // TODO: Protect against accessing a game via query string.
   componentDidMount(){
     const query = history.location.search
-    if (query.length > 1) {
+    if (window.userToken && query.length > 1) {
       this.joinGame(queryString.parse(query))
     }
   }

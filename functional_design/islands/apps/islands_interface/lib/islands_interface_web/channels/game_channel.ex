@@ -59,13 +59,20 @@ defmodule IslandsInterfaceWeb.GameChannel do
     end
   end
 
-  defp respond(%{player1: %{name: name1}} = state, player, socket) do
+  defp respond(%{game: game, player1: %{name: name1}} = state, player, socket) do
     opp_atom = if player == name1, do: :player2, else: :player1
-    state_ = update_in( state, [opp_atom], &Map.delete(&1, :islands) )
+    state_   = update_in( state, [opp_atom], &Map.delete(&1, :islands) )
 
     send(self(), {:after_join, "game_joined", state_, opp_atom})
-    {:ok, state_, socket}
+
+    {:ok, state_, save(%{"game" => game, "player" => player}, socket)}
   end
+
+  def save(%{"game" => "",   "player" => ""},     socket), do: socket
+  def save(%{"game" => game, "player" => player}, socket), do: socket
+                                                               |> assign(:game, game)
+                                                               |> assign(:player, player)
+  # def save(_, socket),                                     do: socket
 
   def handle_info({:after_join, event, state, opp_atom}, socket) do
     player_atom = Player.opponent(opp_atom)

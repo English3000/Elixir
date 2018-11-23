@@ -2,8 +2,6 @@ defmodule PropertyBasedTestingTest do
   use ExUnit.Case
   use PropCheck # types from here, NOT Elixir
 
-  # NOTE: Run `MIX_ENV=test mix propcheck.clean` if generator becomes buggy
-
   def boolean(_), do: true
 
   property "works" do

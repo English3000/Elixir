@@ -1,4 +1,4 @@
-defmodule IslandsInterfaceWeb.GameChannelTests do
+defmodule IslandsInterfaceWeb.GameChannelTest do
   use IslandsInterfaceWeb.ChannelCase, async: true
 
   alias IslandsInterfaceWeb.{GameChannel, UserSocket}
@@ -8,11 +8,12 @@ defmodule IslandsInterfaceWeb.GameChannelTests do
     do: socket(UserSocket)
         |> subscribe_and_join(GameChannel, "game:" <> game, %{"screen_name" => player})
 
+  IO.write "IslandsInterfaceWeb.GameChannel\n"
+
   describe ".join/3 [INTEGRATION TEST]" do
     @game1 "game1"
     @player1 "player1"
     test "works" do
-      IO.write "\nIslandsInterfaceWeb.GameChannel "
 
       {:ok, result, _socket} = join_(@game1, @player1)
 
