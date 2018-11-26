@@ -14,8 +14,7 @@ defmodule IslandsInterface.Application do
                              name:     IslandsInterface.Supervisor)
   end
 
-  # Tell Phoenix to update the endpoint configuration
-  # whenever the application is updated.
+  @doc "Updates endpoint config whenever app is updated."
   def config_change(changed, _new, removed) do
     IslandsInterfaceWeb.Endpoint.config_change(changed, removed)
     :ok

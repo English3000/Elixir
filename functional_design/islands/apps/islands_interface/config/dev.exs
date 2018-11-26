@@ -1,16 +1,12 @@
 use Mix.Config
 
-# For development, we disable any cache and enable
-# debugging and code reloading.
-#
-# The watchers configuration can be used to run external
-# watchers to your application. For example, we use it
-# with webpack to recompile .js and .css sources.
+# For development, we disable any cache and enable debugging.
+# Webpack uses `:watchers` to recompile JS && CSS.
 config :islands_interface, IslandsInterfaceWeb.Endpoint,
   http: [port: 4000],
-  debug_errors: true,
-  code_reloader: true,
-  check_origin: false,
+  debug_errors:  true,
+  code_reloader: false,
+  check_origin:  false,
   watchers: [
     node: [
       "node_modules/webpack/bin/webpack.js",

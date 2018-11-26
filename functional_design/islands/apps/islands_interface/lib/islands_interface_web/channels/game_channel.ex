@@ -1,9 +1,8 @@
-# NOTE: Room for refactoring...
 defmodule IslandsInterfaceWeb.GameChannel do
-  # https://hexdocs.pm/phoenix/Phoenix.Channel.html
-  # https://hexdocs.pm/phoenix/testing_channels.html
-  import Shorthand
   use IslandsInterfaceWeb, :channel
+
+  import Shorthand
+
   alias IslandsInterfaceWeb.Presence
   alias IslandsEngine.Game.{Server, Supervisor}
   alias IslandsEngine.DataStructures.Player
@@ -23,7 +22,7 @@ defmodule IslandsInterfaceWeb.GameChannel do
                 { :error, %{reason: "Player not permitted. Playing: #{players}"} }
     end
   end
-  # Also restores game on crash.
+
   defp track_players(socket, game, player) do
     keys = Presence.list(socket) |> Map.keys
     with    true <- player not in keys and length(keys) < 2,
@@ -53,26 +52,20 @@ defmodule IslandsInterfaceWeb.GameChannel do
 
   defp add_player?(result, game, player) do
     case result do
-              :error -> :error
+      :error         -> :error
       {false, state} -> {:ok, state}
       {true, _state} -> Server.registry_tuple(game) |> Server.join_game(player) # :: {:ok, state} | :error
     end
   end
 
-  defp respond(%{game: game, player1: %{name: name1}} = state, player, socket) do
+  defp respond(%{player1: %{name: name1}} = state, player, socket) do
     opp_atom = if player == name1, do: :player2, else: :player1
     state_   = update_in( state, [opp_atom], &Map.delete(&1, :islands) )
 
     send(self(), {:after_join, "game_joined", state_, opp_atom})
 
-    {:ok, state_, save(%{"game" => game, "player" => player}, socket)}
+    {:ok, state_, socket}
   end
-
-  def save(%{"game" => "",   "player" => ""},     socket), do: socket
-  def save(%{"game" => game, "player" => player}, socket), do: socket
-                                                               |> assign(:game, game)
-                                                               |> assign(:player, player)
-  # def save(_, socket),                                     do: socket
 
   def handle_info({:after_join, event, state, opp_atom}, socket) do
     player_atom = Player.opponent(opp_atom)

@@ -7,12 +7,10 @@ defmodule IslandsInterfaceWeb.Router do
     plug :fetch_flash
     plug :protect_from_forgery
     plug :put_secure_browser_headers
-    plug :signed_in?
+    plug :block_query
   end
   # Protects against accessing game via query string.
-  # TODO: Unfortunately, redirects if server crashes...
-  defp signed_in?(%{assigns: %{game: _, player: _}} = conn, _opts), do: conn
-  defp signed_in?(conn, _opts) do
+  defp block_query(conn, _opts) do
     case Map.get(conn, :query_string) do
       "" -> conn
 

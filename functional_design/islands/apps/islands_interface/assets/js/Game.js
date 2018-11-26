@@ -64,7 +64,6 @@ export default class Game extends React.Component{
             {payload ?
               <TouchableOpacity key="exit" style={Platform.OS !== "web" ? {paddingTop: 24, marginLeft: -12} : {}}
                                 onPress={() => { socket.channels[0].leave()
-                                                 window.params = {game: "", player: ""}
                                                  history.push("/")
                                                  this.setState(INITIAL_STATE) }}>
                 <Text>EXIT</Text>
@@ -109,7 +108,6 @@ export default class Game extends React.Component{
           const {player1, player2} = payload
           if (player1.name === player) this.setState({ form: false, message: {instruction: player1.stage}, payload, id: "player1" })
           if (player2.name === player) this.setState({ form: false, message: {instruction: player2.stage}, payload, id: "player2" })
-          window.params = {game, player}
           history.push(`/?game=${game}&player=${player}`)
       }).receive( "error", ({reason}) => this.setState({ message: {error: reason} }) )
       gameChannel.on( "game_joined", ({player1, player2}) => {
@@ -131,18 +129,18 @@ export default class Game extends React.Component{
     }
   }
   opponent(){
-    const {payload, id} = this.state,
-          opp = (id === "player1") ? "player2" : "player1"
+    if (payload) {
+      const {payload, id} = this.state,
+            opp = (id === "player1") ? "player2" : "player1"
 
-    return payload ? payload[opp].name : null
+      return payload[opp].name
+    }
   }
-  // Handles server crashes (browser handles its own): refetches game by rejoining it via query string.
+  // On server crash, rejoins game via query string.
+  // NOTE: Page reloads only in `:dev` b/c of `:phoenix_live_reload`
   componentDidMount(){
-    const query = history.location.search,
-          {game, player} = window.params
-
-    if ( [query, game, player].every(string => string.length > 1) )
-      this.joinGame(queryString.parse(query))
+    const query = history.location.search
+    if (window.params && query.length > 1) this.joinGame(queryString.parse(query))
   }
 }
 

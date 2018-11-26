@@ -31,13 +31,13 @@ environment :dev do
   # dev mode.
   set dev_mode: true
   set include_erts: false
-  set cookie: :"JO959&JA@91|P88a)T2kuDWO&TU=t{Ia2LqwL5W8oliM2r]n4`G:]PTI<lWr(g(x"
+  set cookie: :">&B95&:B^J9ByWWry{9:]g]`]5l8rMJbt)x3>uiGDQU:H)OhqB(<>bZGFhaYD*4t"
 end
 
 environment :prod do
   set include_erts: true
   set include_src: false
-  set cookie: :"G)@y^Mk=[xx<O4j@3exiC!&je;zu%,r~lk)uzR,wSE2q3*WG5bk|c{J[kf$0&Z.h"
+  set cookie: :"h!9~S5%0X~[<.}M*wx$V9he:1iZeT~p;;UR*3b~x*`)_(^oi53S(2Uf^K{&rp12p"
 end
 
 # You may define one or more releases in this file.
@@ -46,11 +46,10 @@ end
 # will be used by default
 
 release :islands do
-  set version: "0.1.0"
+  set version: "0.2.0"
   set applications: [
     :runtime_tools,
     islands_engine: :permanent,
     islands_interface: :permanent
   ]
 end
-

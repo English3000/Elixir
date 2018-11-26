@@ -5,13 +5,8 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 
-    <title>IslandsInterface · Phoenix Framework</title>
+    <title>Play Islands!</title>
     <link rel="stylesheet" href="<%= Routes.static_path(@conn, "/css/app.css") %>"/>
-
-    <script>
-      // TODO: The problem is this is the `conn` assigns, not the `socket` one.
-      window.params = {game: "<%= Map.get(assigns, :game) %>", player:  "<%= Map.get(assigns, :player) %>"}
-    </script>
   </head>
 
   <body>

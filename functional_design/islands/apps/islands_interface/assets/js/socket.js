@@ -4,7 +4,7 @@ import { Platform } from "react-native"
 
 export const history = createHistory() // TODO: onBack, onRefresh => channel.leave()
                         // v-- path in `endpoint.ex`
-const socket = new Socket("/socket", {params: window.params})//, {params: {token: window.userToken}})
+const socket = new Socket("/socket")
 
 socket.connect()
 export default socket

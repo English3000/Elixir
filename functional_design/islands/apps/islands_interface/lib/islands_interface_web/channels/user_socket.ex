@@ -5,7 +5,7 @@ defmodule IslandsInterfaceWeb.UserSocket do
 
   channel "game:*", GameChannel
 
-  def connect(params, socket, _connect_info), do: {:ok, GameChannel.save(params, socket)}
+  def connect(_params, socket, _connect_info), do: {:ok, socket}
 
   # Socket id's are topics that allow you to identify all sockets for a given user:
   #
