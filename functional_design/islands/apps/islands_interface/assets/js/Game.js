@@ -111,7 +111,7 @@ export default class Game extends React.Component{
           history.push(`/?game=${game}&player=${player}`)
       }).receive( "error", ({reason}) => this.setState({ message: {error: reason} }) )
       gameChannel.on( "game_joined", ({player1, player2}) => {
-        const {payload, id} = this.state // BUG
+        const {payload, id} = this.state
         this.setState({ payload: merge({}, payload, {player1: {stage: player1.stage}, player2}), message: {instruction: id === "player1" ? player1.stage : player2.stage} })
       })
       gameChannel.on( "islands_set", playerData => {
