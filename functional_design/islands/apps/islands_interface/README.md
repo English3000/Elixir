@@ -1,5 +1,5 @@
 TODO:
-- [ ] fix prod bug (`Game.js:62`)
+- [ ] fix prod bug re: `payload`
 
 
 * There's some issue with the umbrella's asset pipeline on deploy...

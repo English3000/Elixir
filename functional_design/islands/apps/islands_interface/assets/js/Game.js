@@ -24,7 +24,7 @@ const INITIAL_STATE = { form: {game: "", player: "", complete: false},
 export default class Game extends React.Component{
   constructor(){
     super()
-    this.state = history.location.search.length > 1 ? { form: false } : INITIAL_STATE
+    this.state = history.location.search.length > 1 ? merge({}, INITIAL_STATE, {form: false}) : INITIAL_STATE
   }
 
   render(){
@@ -98,6 +98,7 @@ export default class Game extends React.Component{
 
     this.setState({form})
   }
+  // TODO: Add frontend channel tests
   joinGame(params){
     const {game, player} = params
     if (game.length > 0 && player.length > 0) {
