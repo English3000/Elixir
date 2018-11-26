@@ -13,7 +13,8 @@ config :islands_interface, IslandsInterfaceWeb.Endpoint,
   http:  [:inet6, port: System.get_env("PORT") || 4000],
   url:   [host: "islands.gigalixirapp.com", port: 80],
   cache_static_manifest: "priv/static/cache_manifest.json",
-  server: true
+  load_from_system_env:  true,
+  server:                true
 
 # Do not print debug messages in production
 config :logger, level: :info
