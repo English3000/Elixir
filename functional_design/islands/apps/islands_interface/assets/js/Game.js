@@ -129,10 +129,9 @@ export default class Game extends React.Component{
     }
   }
   opponent(){
+    const {payload, id} = this.state
     if (payload) {
-      const {payload, id} = this.state,
-            opp = (id === "player1") ? "player2" : "player1"
-
+      const opp = (id === "player1") ? "player2" : "player1"
       return payload[opp].name
     }
   }
@@ -140,7 +139,7 @@ export default class Game extends React.Component{
   // NOTE: Page reloads only in `:dev` b/c of `:phoenix_live_reload`
   componentDidMount(){
     const query = history.location.search
-    if (window.params && query.length > 1) this.joinGame(queryString.parse(query))
+    if (query.length > 1) this.joinGame(queryString.parse(query))
   }
 }
 
