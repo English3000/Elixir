@@ -6,7 +6,7 @@ It uses OTP, DETS, and Phoenix Channels in a Battleship-esque game.
 
 ## Gameplay
 
-![join game](../join_game.gif)
+![join game](../join_game/Still JPG (640x356).jpg)
 
 ![set islands](../set_islands.gif)
 
