@@ -1,4 +1,7 @@
-# Islands
+# [Islands](http://islands.gigalixirapp.com/)
 
-**TODO: Add description**
+...is an Elixir/Phoenix umbrella project.
 
+It uses OTP, DETS, and Phoenix Channels in a Battleship-esque game.
+
+## Gameplay
