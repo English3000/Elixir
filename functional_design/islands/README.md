@@ -6,14 +6,11 @@ It uses OTP, DETS, and Phoenix Channels in a Battleship-esque game.
 
 ## Gameplay
 
-#### Join a game.
-
+### Join a game.
 ![join game](../join_game.gif)
 
-#### Set your islands...
+### Set your islands...
+![set islands](../set_islands-640px.gif)
 
-![set islands](../set_islands.gif)
-
-#### Attack!
-
+### Attack!
 ![guess coordinate](../guess_coordinate.gif)
