@@ -5,7 +5,7 @@ defmodule IslandsInterface.MixProject do
     app:             :islands_interface,
     version:         "0.1.0",
     elixir:          "~> 1.7",
-    elixirc_paths:   elixirc_paths(Mix.env),
+    elixirc_paths:   elixirc_paths(Mix.env), # specifies paths to compile per env
     compilers:       [:phoenix, :gettext] ++ Mix.compilers,
     build_path:      "​​../../_build",
     config_path:     "​​../../config/config.exs",
@@ -16,11 +16,10 @@ defmodule IslandsInterface.MixProject do
     deps:            deps()
   ]
 
-  # Specifies which paths to compile per environment.
   defp elixirc_paths(:test), do: ["lib", "test"]
   defp elixirc_paths(_),     do: ["lib"]
 
-  defp deps, do: [
+  defp deps, do: [# compile-time deps
     {:phoenix, "~> 1.4.0"},
     {:phoenix_pubsub, "~> 1.1"},
     {:phoenix_html, "~> 2.11"},
@@ -32,7 +31,7 @@ defmodule IslandsInterface.MixProject do
     {:islands_engine, in_umbrella: true}
   ]
 
-  def application, do: [ # `mix help compile.app`
+  def application, do: [# run-time deps
     mod:                {IslandsInterface.Application, []},
     extra_applications: [:logger, :runtime_tools, :islands_engine]
   ]

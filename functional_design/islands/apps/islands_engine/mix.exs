@@ -14,12 +14,12 @@ defmodule IslandsEngine.MixProject do
     deps:            deps()
   ]
 
-  defp deps, do: [ # compile-time deps
+  defp deps, do: [# compile-time deps
     {:stream_data, "~> 0.1", only: :test},
     {:shorthand, "~> 0.0.3"}
   ]
 
-  def application, do: [ # run-time deps
+  def application, do: [# run-time deps
     mod:                {IslandsEngine.Application, []},
     extra_applications: [:logger]
   ]
