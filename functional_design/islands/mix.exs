@@ -1,16 +1,11 @@
 defmodule Islands.MixProject do
-  use Mix.Project
+  use Mix.Project # https://hexdocs.pm/mix/Mix.Project.html
 
   def project, do: [
-    apps_path: "apps",
-    start_permanent: Mix.env() == :prod,
-    deps: deps()
+    apps_path:       "apps",
+    start_permanent: Mix.env == :prod,
+    deps:            deps()
   ]
-
-  # Dependencies listed here are available only for this
-  # project and cannot be accessed from applications inside
-  # the apps folder.
-  #
-  # Run "mix help deps" for examples and options.
-  defp deps, do: [ {:distillery, "~> 2.0"} ]
+  # Dependencies listed here aren't available to `/apps`
+  defp deps, do: [{:distillery, "~> 2.0"}] # `mix help deps`
 end

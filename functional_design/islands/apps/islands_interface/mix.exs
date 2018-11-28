@@ -16,11 +16,6 @@ defmodule IslandsInterface.MixProject do
     deps:            deps()
   ]
 
-  def application, do: [ # Type `mix help compile.app` for more information.
-    mod:                {IslandsInterface.Application, []},
-    extra_applications: [:logger, :runtime_tools, :islands_engine]
-  ]
-
   # Specifies which paths to compile per environment.
   defp elixirc_paths(:test), do: ["lib", "test"]
   defp elixirc_paths(_),     do: ["lib"]
@@ -35,5 +30,10 @@ defmodule IslandsInterface.MixProject do
     {:plug_cowboy, "~> 2.0"},
     {:shorthand, "~> 0.0.3"},
     {:islands_engine, in_umbrella: true}
+  ]
+
+  def application, do: [ # `mix help compile.app`
+    mod:                {IslandsInterface.Application, []},
+    extra_applications: [:logger, :runtime_tools, :islands_engine]
   ]
 end
