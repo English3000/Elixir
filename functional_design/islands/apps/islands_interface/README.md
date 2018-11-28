@@ -1,3 +1,5 @@
+> To update: `mix phx.digest` (set `config` `gzip: true`), `MIX_ENV=prod mix release --env=prod`
+
 * There's some issue with the umbrella's asset pipeline on deploy...
 
 > ANSWER: Comment /priv/static in islands_interface/.gitignore
