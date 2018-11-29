@@ -15,4 +15,6 @@ defmodule PropertyBasedTesting.MixProject do
   ]
 
   def application, do: [ extra_applications: [:logger] ]
+
+  defp deps, do: [{ :propcheck, "~> 1.1", only: [:dev, :test] }]
 end
