@@ -94,6 +94,8 @@ defmodule PropertyBasedTestingTest do
     end
   end
 
+  defp extract_keys(list), do: (for {k, _} <- list, do: k)
+
   @tag exercise: :Ch_3
   describe "~ Map.merge/3" do # doesn't test the function?? doesn't test multiple layers?? # No, only validates keys.
     property "has good coverage" do
@@ -111,29 +113,79 @@ defmodule PropertyBasedTestingTest do
     end
   end
 
-  defp extract_keys(list), do: (for {k, _} <- list, do: k)
+  # TODO: Move to second test module. @ L 2548
+  describe "collect/2" do
+    defp to_range(b, a) do
+      low = div(b, a) * a
 
-  property "Introducing, collect/2", [:verbose] do
-    forall string <- binary do
-      #        test               metric
-      collect( is_binary(string), string |> byte_size |> to_range(10) )
+      {low, low + a}
+    end
+
+    property "example", [:verbose] do
+      forall string <- binary do
+        #        test               metric
+        collect( is_binary(string), string |> byte_size |> to_range(10) )
+      end
+    end
+
+    defp key, do: oneof([range(1, 10), integer])
+
+    property "get map keys, incl. duplicates", [:verbose] do
+      forall kv <- list({key, any}) do
+        map = Map.new(kv)
+        for {key, _} <- kv, do: Map.fetch!(map, key)
+
+        collect(true, {:duplicates, length(kv) -
+        (List.keysort(kv, 0)
+        |> Enum.dedup_by(&elem(&1, 0))
+        |> length)
+        |> to_range(5) })
+      end
     end
   end
 
-  defp to_range(b, a) do
-    low = div(b, a) * a
+  describe "aggregate/2" do
+    @suits [:club, :diamond, :heart, :spade]
+    property "example", [:verbose] do
+      forall hand <- vector(5, { oneof(@suits), choose(1, 13) }),
+        do: aggregate(true, hand)
+    end
 
-    {low, low + a}
-  end
+    defp escape(_), do: true
 
-  property "get map keys, incl. duplicates" do
-    forall kv <- list({key, val}) do
-      map = Map.new(kv)
-      for {key, _} <- kv, do: Map.fetch!(map, key)
-      collect(true, {:duplicates, kv
-                                  |> List.keysort(0)
-                                  |> E# L 2298
-      |> to_range(5) })
+    defp classes(""), do: []
+    defp classes(string) do
+      %{true => letters,     false => rest}  = string
+                                               |> String.to_charlist
+                                               |> Enum.group_by(&letter?/1)
+
+      %{true => numbers,     false => rest}  = Enum.group_by(rest, &number?/1)
+      %{true => punctuation, false => other} = Enum.group_by(rest, &punctuation?/1)
+
+      [ letters:     stats(letters),
+        numbers:     stats(numbers),
+        punctuation: stats(punctuation),
+        other:       stats(other) ]
+    end
+
+    defp letter?(char),
+      do: (?a <= char and char <= ?z) or
+          (?A <= char and char <= ?Z)
+
+    defp number?(char), do: ?0 <= char and char <= ?9
+
+    defp punctuation?(char), do: char in '.,;:\'"-'
+
+    defp stats(charlist), do: charlist |> length |> to_range(5)
+
+    property "fake escaping test" do
+      forall string <- utf8 do
+        try do
+          aggregate(escape(string), classes(string))
+        rescue
+          value -> IO.inspect(value)
+        end
+      end
     end
   end
 end
