@@ -1,0 +1,5 @@
+<div id="vue">
+  <button v-on:click="upvotes++">
+    upvote {{upvotes}}
+  </button>
+</div>
