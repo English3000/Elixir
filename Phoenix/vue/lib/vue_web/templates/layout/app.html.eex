@@ -13,13 +13,7 @@
   <body>
     <%= render "_counter.html"    %>
     <%= render "_calculator.html" %>
-
-    <div id="computed">
-      a: {{a}}, b: {{b}}
-      <input v-model.number="a">
-
-      <pre>{{ $data }}</pre>
-    </div>
+    <%= render "_election.html"   %>
 
     <script type="text/javascript" src="<%= Routes.static_path(@conn, "/js/app.js") %>"></script>
   </body>

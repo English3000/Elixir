@@ -1,0 +1,7 @@
+<tr>
+  <td><%= @name %></td>
+
+  <td><button id="<%= @name %>" @click="vote_<%= @name %>">Vote</button></td>
+
+  <td>{{<%= @name %>}}</td>
+</tr>

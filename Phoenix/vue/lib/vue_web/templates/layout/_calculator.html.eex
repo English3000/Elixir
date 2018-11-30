@@ -1,16 +1,14 @@
 <div id="calculator">
-  <form>
-    <input  v-model.number="x" placeholder="number 1">
+  <input  v-model.number="x" placeholder="number 1">
 
-    <select v-model="operation">
-      <option> + </option>
-      <option> - </option>
-      <option> * </option>
-      <option> / </option>
-    </select>
+  <select v-model="operation">
+    <option> + </option>
+    <option> - </option>
+    <option> * </option>
+    <option> / </option>
+  </select>
 
-    <input  v-model.number="y" placeholder="number 2">
-  </form>
+  <input  v-model.number="y" placeholder="number 2">
 
   <h3 v-if="z">Result: {{x}} {{operation}} {{y}} = {{z}}</h3>
 </div>

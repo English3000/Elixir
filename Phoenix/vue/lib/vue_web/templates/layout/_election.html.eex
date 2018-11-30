@@ -1,0 +1,14 @@
+<div id="ballot">
+  <h3>Election</h3>
+
+  <table>
+    <th>Candidate</th> <th> </th> <th>Votes</th>
+    <%= render "_candidate.html", name: "A" %>
+    <%= render "_candidate.html", name: "B" %>
+    <%= render "_candidate.html", name: "C" %>
+    <%= render "_candidate.html", name: "D" %>
+    <%= render "_candidate.html", name: "nobody" %>
+  </table>
+
+  <input type="text" placeholder="Hack the election by pressing: DELETE" @keyup.delete="restart">
+</div>
