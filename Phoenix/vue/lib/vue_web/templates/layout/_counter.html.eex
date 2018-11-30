@@ -1,0 +1,9 @@
+<button id="inline-counter" @click="upvotes++">
+  inline upvote {{upvotes}}
+</button>
+
+<button id="method-counter" @click="upvote">
+  method upvote {{upvotes}}
+</button>
+
+<div style="padding-bottom:3rem;"></div>
