@@ -14,3 +14,24 @@
 </div>
 
 <!-- could setup algebra problems -->
+
+<script type="text/javascript">(function(){
+  let data = {
+    x:         null,
+    y:         null,
+    operation: "+"
+  }
+
+  function z(){
+    if (this.x && this.y) {
+      switch(this.operation){
+        case "+": return this.x + this.y
+        case "-": return this.x - this.y
+        case "*": return this.x * this.y
+        case "/": return this.x / this.y
+      }
+    }
+  }
+
+  new Vue({ el: "#calculator", data, computed: {z} })
+})()</script>

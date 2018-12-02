@@ -3,12 +3,34 @@
 
   <table>
     <th>Candidate</th> <th> </th> <th>Votes</th>
-    <%= render "_candidate.html", name: "A" %>
-    <%= render "_candidate.html", name: "B" %>
-    <%= render "_candidate.html", name: "C" %>
-    <%= render "_candidate.html", name: "D" %>
-    <%= render "_candidate.html", name: "nobody" %>
+    <%= for name <- ~w(A B C D nobody) do %>
+      <%= render "_candidate.html", name: name %>
+    <% end %>
   </table>
 
   <input type="text" placeholder="Hack the election by pressing: DELETE" @keyup.delete="restart">
 </div>
+
+<script type="text/javascript">(function(){
+
+  let methods = {
+    vote_A:      function(){ this.A++ },
+    vote_B:      function(){ this.B++ },
+    vote_C:      function(){ this.C++ },
+    vote_D:      function(){ this.D++ },
+    vote_nobody: function(){ this.nobody++ },
+
+    restart: function(){ Object.keys(data) .forEach(key => this[key] = 0) }
+  }
+
+  , data = {
+    A:      0,
+    B:      0,
+    C:      0,
+    D:      0,
+    nobody: 0,
+  }
+
+  new Vue({ el: "#ballot", methods, data })
+
+})()</script>
