@@ -1,0 +1,39 @@
+<div id="storyboard" style="margin-top:2rem;">
+  <input v-model="query" type="text" placeholder="Search for stories...">
+
+  <!-- <h2>Debugging:</h2>
+  <pre>{{ results }}</pre> -->
+
+  <div v-for="user in results">
+    <ul v-for="(stories, name) in user">
+      <li v-for="story in stories">
+        {{ name }} posted "{{ story }}"
+      </li>
+    </ul>
+  </div>
+</div>
+
+<script type="text/javascript">(function(){
+
+  // really, this is simulating backend data, making it an unrealistic example...
+  let users = {
+    Alex: ["I crashed my car today!",          "I ate someone's chocolate!" ] ,
+    John: ["Yesterday, someone stole my bag!", "Someone ate my chocolate..."]
+  }
+
+  , data = { query: "", users }
+
+  , computed = {
+    results: function(){return(
+
+              Object.entries(this.users)
+                .map(([name, stories]) => {
+                  return {[name]: stories.filter( story => story.includes(this.query) )}
+                })
+
+            )}
+  }
+
+  new Vue({ el: "#storyboard", data, computed })
+
+})()</script>

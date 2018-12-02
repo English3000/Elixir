@@ -1,8 +1,8 @@
-<div id="ballot">
-  <h3>Election</h3>
+<h3>Election</h3>
 
+<div id="ballot">
   <table>
-    <th>Candidate</th> <th> </th> <th>Votes</th>
+    <th style="padding-top: 0;">Candidate</th> <th> </th> <th>Votes</th>
     <%= for name <- ~w(A B C D nobody) do %>
       <%= render "_candidate.html", name: name %>
     <% end %>

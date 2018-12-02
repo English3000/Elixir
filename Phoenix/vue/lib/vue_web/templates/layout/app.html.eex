@@ -12,9 +12,12 @@
   </head>
 
   <body>
-    <%= render "_counter.html"    %>
-    <%= render "_calculator.html" %>
-    <%= render "_election.html"   %>
+    <%  border    = "<div style='border: 0.5px black solid; margin-bottom: 1.5rem;'></div>" %>
+    <%  templates = ~w(counter calculator election stories hero) %>
+    <!-- TODO: add dropdown nav -->
+    <%= for template <- templates, do:
+      {:safe, ["_#{template}.html" |> render() |> elem(1) | border]} %>
+          <!-- ^ convert into helper ^ -->
 
     <script type="text/javascript" src="<%= Routes.static_path(@conn, "/js/app.js") %>"></script>
   </body>

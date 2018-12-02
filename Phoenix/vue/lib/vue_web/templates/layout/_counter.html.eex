@@ -15,8 +15,6 @@
   method upvote {{upvotes}}
 </button>
 
-<div style="padding-bottom:3rem;"></div>
-
 <script type="text/javascript">
 
   new Vue({ el:      "#method-counter",

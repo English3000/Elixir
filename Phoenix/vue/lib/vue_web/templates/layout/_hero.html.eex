@@ -1,0 +1,22 @@
+<div id="vue-filter">
+  <h3>I need a #Hero...</h3>
+
+  <ul>
+    <li v-for="secret in secrets">{{ secret | revealed }}</li>
+  </ul>
+</div>
+
+<script type="text/javascript">
+
+  Vue.filter("revealed", ({hero, identity}) => `@${hero} is ${identity}!`)
+
+  let secrets = [
+    { hero: "Batman",     identity: "Bruce Wayne"  },
+    { hero: "Superman",   identity: "Clark Kent"   },
+    { hero: "Flash",      identity: "Jay Garrick"  },
+    { hero: "Spider-Man", identity: "Peter Parker" },
+  ]
+
+  new Vue({ el: "#vue-filter", data: {secrets} })
+
+</script>
