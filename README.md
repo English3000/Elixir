@@ -73,6 +73,7 @@ Love every part of your stack! Try WRAP:
 * [`react-native-web` setup](https://github.com/necolas/react-native-web/blob/master/packages/website/guides/getting-started.md) (can also server-side render)
   * Native [Litho (Android)](https://fblitho.com/) & [ComponentKit (iOS)](https://componentkit.org/) frameworks
   * [Lazy-loading/Code-splitting](https://reactjs.org/docs/code-splitting.html#reactlazy) ([**EXAMPLE**](https://hackernoon.com/effective-code-splitting-in-react-a-practical-guide-2195359d5d49))
+  * **Web-only** (incl. mobile browsers) _basic_ data viz [components](https://bvaughn.github.io/react-virtualized/#/components/Grid)
   * [Creating a link](https://reactnativecode.com/open-website-url-in-default-browser/)
   * [Making an `absolute` element pressable](https://stackoverflow.com/questions/36938742/touchablehighlight-not-clickable-if-position-absolute?rq=1)
   > **Note:** I haven't found clear/explicit [documentation](http://phoenixframework.org/blog/static-assets) for using `react-native-web` SSR with Phoenix.
