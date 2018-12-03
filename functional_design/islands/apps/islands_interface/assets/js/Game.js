@@ -6,10 +6,7 @@ import Gameplay from "./components/Gameplay.js"
 import socket, { channel, history } from "./socket.js"
 import queryString from "query-string"
 import merge from "lodash.merge"
-// import Loadable from "react-loadable"                                        comment prepends value to webpack IO
-// const Gameplay = Loadable({ loader: () => import("./components/Gameplay.js" /* webpackChunkName: "Gameplay" */),
-//                             loading: Loading })
-// Loading == util component like ErrorBoundary
+
 export const styles = StyleSheet.create({
   row: {flexDirection: "row"}
 })

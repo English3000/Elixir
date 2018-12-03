@@ -70,9 +70,9 @@ Love every part of your stack! Try WRAP:
   * [JSON API example](https://robots.thoughtbot.com/building-a-phoenix-json-api)
 
 ### _`react-native-web` (cross-platform frontend library)_
-* [React setup](https://medium.com/@diamondgfx/phoenix-v1-1-2-and-react-js-3dbd195a880a) _(you can skip the [whitelist](https://github.com/brunch/brunch/blob/master/CHANGELOG.md#brunch-22-jan-22-2016) &_ `$ brunch build` _steps)_
-  * [Code-splitting](https://reacttraining.com/react-router/web/guides/code-splitting) ([**EXAMPLE**](https://hackernoon.com/effective-code-splitting-in-react-a-practical-guide-2195359d5d49))
 * [`react-native-web` setup](https://github.com/necolas/react-native-web/blob/master/packages/website/guides/getting-started.md) (can also server-side render)
+  * Native [Litho (Android)](https://fblitho.com/) & [ComponentKit (iOS)](https://componentkit.org/) frameworks
+  * [Lazy-loading/Code-splitting](https://reactjs.org/docs/code-splitting.html#reactlazy) ([**EXAMPLE**](https://hackernoon.com/effective-code-splitting-in-react-a-practical-guide-2195359d5d49))
   * [Creating a link](https://reactnativecode.com/open-website-url-in-default-browser/)
   * [Making an `absolute` element pressable](https://stackoverflow.com/questions/36938742/touchablehighlight-not-clickable-if-position-absolute?rq=1)
   > **Note:** I haven't found clear/explicit [documentation](http://phoenixframework.org/blog/static-assets) for using `react-native-web` SSR with Phoenix.
@@ -80,10 +80,6 @@ Love every part of your stack! Try WRAP:
   * [Add type-checking with Flow](https://flow.org/en/docs/install/)
 * [Underscore.js](https://underscorejs.org/#) -- library with functional programming methods
 * [`|>`](https://www.npmjs.com/package/babel-plugin-transform-pipeline) and [pattern `match`](https://www.npmjs.com/package/babel-plugin-js-pattern-matching) JavaScript plugins
-* **IDEA:** [ReactEX](https://elixirforum.com/t/elixirscript/2409/36)
-  * [JavaScript's Rise](https://www.lform.com/blog/post/how-javascript-became-the-dominant-language-of-the-web)
-  * [The rise of JSX](https://medium.freecodecamp.org/react-s-jsx-the-other-side-of-the-coin-2ace7ab62b98)
-  * [The future of JavaScript... as a "VM"](https://codeburst.io/the-future-of-javascript-will-be-less-javascript-cea373eb57fd)
 
 ### _Absinthe (GraphQL backend)_
 * ["Getting" GraphQL](https://medium.com/@english3000.org/getting-graphql-40dd48dd53a1)
