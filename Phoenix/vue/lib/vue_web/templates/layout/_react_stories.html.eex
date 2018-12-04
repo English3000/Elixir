@@ -1,24 +1,3 @@
-<div id="react-input">
+<div id="react-storyboard">
   <input type="text" placeholder="Search for stories...">
 </div>
-
-<script type="text/javascript">(function(){
-
-  // Finish writing `stories` partial w/ React
-
-  function Input(){
-    const [query, setQuery] = React.useState("")
-
-    function handleChange(event){ setQuery(event.target.value) }
-
-    return React.createElement("input", {
-      type:        "text",
-      placeholder: "Search for stories... with React Hooks!",
-      value:        query,
-      onChange:     handleChange
-    })
-  }
-
-  ReactDOM.render(React.createElement(Input), document.getElementById("react-input") )
-
-})()</script>
