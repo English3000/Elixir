@@ -8,12 +8,16 @@
     <link rel="stylesheet" href="<%= Routes.static_path(@conn, "/css/app.css") %>"/>
     <script src="https://cdn.jsdelivr.net/npm/vue@2.5.17/dist/vue<%= if Mix.env == :prod, do: ".min" %>.js"></script>
 
+    <% env = if Mix.env == :dev, do: "development", else: "production.min" %>
+    <script crossorigin src="https://unpkg.com/react@16.7.0-alpha.2/umd/react.<%= env %>.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@16.7.0-alpha.2/umd/react-dom.<%= env %>.js"></script>
+
     <title>Learn Vue!</title>
   </head>
 
   <body>
     <%  border    = ~E"<div style='border: 0.5px black solid; margin-bottom: 1.5rem;'></div>" %>
-    <%  templates = ~w(counter calculator election stories hero) %>
+    <%  templates = ~w(counter calculator election react_stories stories hero) %>
 
     <%= for template <- templates, do: render("_#{template}.html") |> concat(border) %>
 
