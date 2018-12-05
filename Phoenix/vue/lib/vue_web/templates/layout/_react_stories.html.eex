@@ -1,3 +1,1 @@
-<div id="react-storyboard">
-  <input type="text" placeholder="Search for stories...">
-</div>
+<div id="react-storyboard"></div>
