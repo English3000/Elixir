@@ -1,3 +1,23 @@
+# IslandsInterface
+
+Most of the action, in this project, is in `/assets/js` which houses the game UI.
+
+Additionally, a socket + channel layer are used for stateful communication between the frontend and backend.
+
+Last, in `router.ex`, there is an extra plug to protect against direct requests to a game's URL.
+
+### On clone...
+
+To start your Phoenix server:
+
+  * Install dependencies with `mix deps.get`
+  * Install Node.js dependencies with `cd assets && npm install`
+  * Start Phoenix endpoint with `mix phx.server`
+
+Now you can visit [`localhost:4000`](http://localhost:4000) from your browser.
+
+## NOTES TO SELF
+
 > To update: `mix phx.digest` (set `config` `gzip: true`), `MIX_ENV=prod mix release --env=prod`
 
 * There's some issue with the umbrella's asset pipeline on deploy...
@@ -27,15 +47,3 @@ When I moved the logic to the backend, I realized I could go all the way with SS
 Why? Why does one add a backend to one's project in the first place? To track state. If saving didn't matter, a game could be built entirely on the frontend. As a result, validations should be on the frontend and on success, state should be sent to the backend using `handle_in`.
 
 The frontend should be a game on its own. The backend's job should be to receive game state and store it. In other words, the backend should consist of schemas (structs) rather than contexts (which should be moved to the frontend), and a server that simply saves to `dets` or restores a saved game.
-
-# IslandsInterface
-
-To start your Phoenix server:
-
-  * Install dependencies with `mix deps.get`
-  * Install Node.js dependencies with `cd assets && npm install`
-  * Start Phoenix endpoint with `mix phx.server`
-
-Now you can visit [`localhost:4000`](http://localhost:4000) from your browser.
-
-Ready to run in production? Please [check our deployment guides](https://hexdocs.pm/phoenix/deployment.html).
