@@ -35,5 +35,7 @@
   }
 
   new Vue({ el: "#storyboard", data, computed })
+  // to actually get data, would have default display via controller
+  // then, typing would send an AJAX request
 
 })()</script>

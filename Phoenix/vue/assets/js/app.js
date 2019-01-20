@@ -2,6 +2,7 @@ import css from "../css/app.css"
 import "phoenix_html"
 import React, { useState } from "react"
 import { render } from "react-dom"
+import Hook from "./hook.js"
 
 // really, this is simulating backend data, making it an unrealistic example...
 let reactUsers = {
@@ -43,3 +44,5 @@ function Storyboard({users}){
 }
 
 render( <Storyboard users={reactUsers}/>, document.getElementById("react-storyboard") )
+// can't do any better than this with React b/c hooks only work w/in components
+// i.e. to avoid duplicated HTML, would have to use jQuery/Vue

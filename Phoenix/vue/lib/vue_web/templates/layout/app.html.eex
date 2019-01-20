@@ -24,3 +24,26 @@
     <script type="text/javascript" src="<%= Routes.static_path(@conn, "/js/app.js") %>"></script>
   </body>
 </html>
+<!-- in all, I'd prob. be best off just using jQuery for stories search...
+
+document.getElementById("search").addEventListener("onKeydown",
+  event => $.get("/endpoint", data: {query: event.target.value})
+).then(payload => {
+  document.getElementById("stories") // replace children w/ payload stories
+})
+
+the problem here is this would re-render all children each search.
+React would absolutely do this more efficiently, even with the duplicate HTML.
+
+A work-around is to send the payload as an object where keys are a prop unique
+to each child (like React).
+Then, I would handroll a traversal of the children, checking that unique attribute
+against the payload object.
+If it was there, I wouldn't remove the child and I'd mark that payload result as rendered.
+If it wasn't there, I'd remove it.
+Then, I'd add all unrendered values in the payload.
+
+While this works, it would be a lot of JS logic that I get for free in React.
+Also, React has an optimized diffing algorithm. For this use-case, it doesn't
+make a difference, but usually it will.
+-->
