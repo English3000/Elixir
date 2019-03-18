@@ -4,7 +4,7 @@ defmodule IslandsEngine.Game.Server do
   alias IslandsEngine.Game.Stage
   alias IslandsEngine.DataStructures.{IslandSet, Player, Coordinate}
 
-  @timeout 60 * 60 * 24 * 1000 # Used by: `reply/2`, `Stage`  
+  @timeout 60 * 60 * 24 * 1000 # Used by: `reply/2`, `Stage`
 
   @spec start_link(String.t, String.t) :: { :ok, pid } | :ignore | { :error, {} | term }
   @doc "Start a new game."

@@ -1,6 +1,7 @@
 // We need to import the CSS so that webpack will load it.
 // The MiniCssExtractPlugin is used to separate it out into its own CSS file.
-import css from "../css/app.css"
+// @ts-ignore
+import css from "../css/app.css" // false positive: -(+)
 
 // Webpack automatically bundles all modules in your entry points.
 // Those entry points can be configured in "webpack.config.js".
@@ -9,8 +10,14 @@ import css from "../css/app.css"
 import "phoenix_html"
 
 // Import local files using relative paths
-import React from "react"
+import * as React from "react"
+// @ts-ignore
 import { AppRegistry } from "react-native"
-import Game from "./Game.js"
+import Game, { Undux } from "./Game"
 
-AppRegistry.runApplication( "Game", {rootTag: document.getElementById("islands")} )
+const App = () => <Undux.Container>
+                    <Game/>
+                  </Undux.Container>
+
+AppRegistry.registerComponent("App", () => App)
+AppRegistry.runApplication("App", {rootTag: document.getElementById("islands")})

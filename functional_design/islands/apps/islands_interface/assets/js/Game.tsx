@@ -1,10 +1,13 @@
-import React from "react" // `expo start` => https://blog.expo.io/announcing-expo-dev-tools-beta-c252cbeccb36
+import * as React from "react" // `expo start` => https://blog.expo.io/announcing-expo-dev-tools-beta-c252cbeccb36
 import { AppRegistry, StyleSheet, Platform, View, TextInput, Button, TouchableOpacity, Text } from "react-native"
-import ErrorBoundary from "./components/ErrorBoundary.js"
-import Instruction from "./components/Instruction.js"
-import Gameplay from "./components/Gameplay.js"
-import socket, { channel, history } from "./socket.js"
+import { createConnectedStore, withLogger, Store } from "undux"
+import ErrorBoundary from "./components/ErrorBoundary"
+import Instruction from "./components/Instruction"
+import Gameplay from "./components/Gameplay"
+import socket, { channel, history } from "./socket"
+// @ts-ignore
 import queryString from "query-string"
+// @ts-ignore
 import merge from "lodash.merge"
 
 export const styles = StyleSheet.create({
@@ -15,17 +18,43 @@ const custom = StyleSheet.create({
   input: {width: "50%", paddingLeft: 4, paddingBottom: 4}
 })
 
-const INITIAL_STATE = { form: {game: "", player: "", complete: false},
-                        payload: null, id: null, message: null }
+type Form          = {game: string, player: string, complete: boolean} | false
+type GameState     = {form: Form, id?: string, message?: string, payload?: object}
+type GameStore     = Store<GameState>
+type State         = {Game: GameStore}
+type Undux         = Store<State>
 
-export default class Game extends React.Component{
-  constructor(){
-    super()
-    this.state = history.location.search.length > 1 ? merge({}, INITIAL_STATE, {form: false}) : INITIAL_STATE
+const Form         = {game: "", player: "", complete: false}
+const GameState    = {form: Form} // TODO: createConnectedStore({form: Form})
+const GameStore    = createConnectedStore(GameState, withLogger)
+const State        = {Game: GameStore}
+export const Undux = createConnectedStore(State, withLogger)
+
+type Props = {store: Undux}
+/**
+ * 
+ * 
+ */
+class Game extends React.Component<Props>{
+  // NOTE: Can abstract
+  getStore(): GameStore {
+    // @ts-ignore
+    return this.props.store.get(this.constructor.name)
+  }
+
+  /**
+   * TODO
+   * 
+   */
+  // @ts-ignore
+  componentWillMount({store}: Props){
+    if (history.location.search.length > 1) {
+      this.getStore().set("form")(false)
+    }
   }
 
   render(){
-    const { form, message, payload, id } = this.state
+    const { form, message, payload, id } = this.getStore().getState()
     return (
       <ErrorBoundary>
         {form ? [
@@ -79,8 +108,9 @@ export default class Game extends React.Component{
       </ErrorBoundary>
     )
   }
-  handleInput(name, value){
-    const {game, player, complete} = this.state.form
+  handleInput(name: "game" | "player", value: string){
+    // @ts-ignore: Inputs only appear when `form` !== false
+    const {game, player, complete} = this.getStore().get("form")
     let   form
 
     if (name === "game") {
@@ -109,7 +139,7 @@ export default class Game extends React.Component{
           history.push(`/?game=${game}&player=${player}`)
       }).receive( "error", ({reason}) => this.setState({ message: {error: reason} }) )
       gameChannel.on( "game_joined", ({player1, player2}) => {
-        const {payload, id} = this.state
+        const {payload, id} = this.getStore().getState()
         this.setState({ payload: merge({}, payload, {player1: {stage: player1.stage}, player2}), message: {instruction: id === "player1" ? player1.stage : player2.stage} })
       })
       gameChannel.on( "islands_set", playerData => {
@@ -123,11 +153,11 @@ export default class Game extends React.Component{
         if (won) { const instruction = winner ? "won" : "lost"
                    this.setState({ message: {instruction} }) }
       })
-      gameChannel.on( "message", ({instruction}) => this.setState({ message: {instruction} }) )
+      gameChannel.on( "message", ({instruction}: {instruction: string}) => this.getStore().set("message")(instruction) )
     }
   }
   opponent(){
-    const {payload, id} = this.state
+    const {payload, id} = this.getStore().getState()
     if (payload) {
       const opp = (id === "player1") ? "player2" : "player1"
       return payload[opp].name
@@ -141,5 +171,7 @@ export default class Game extends React.Component{
   }
 }
 
-AppRegistry.registerComponent("Game", () => Game)
+const UnGame = Undux.withStore(Game)
+AppRegistry.registerComponent("Game", () => UnGame)
+export default UnGame
 // pre-CSR, git revert 3bda5318d1d7c7a7db3ac2bb33161435633546b5

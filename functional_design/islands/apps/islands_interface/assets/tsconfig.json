@@ -1,0 +1,13 @@
+{
+  "compilerOptions": {
+    "outDir": "../priv/static/js",
+    "sourceMap": true,
+    "noImplicitAny": true,
+    "module": "commonjs",
+    "target": "es5",
+    "jsx": "preserve"
+  },
+  "include": [
+    "./js/**/*"
+  ]
+}

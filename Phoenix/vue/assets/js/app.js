@@ -2,7 +2,6 @@ import css from "../css/app.css"
 import "phoenix_html"
 import React, { useState } from "react"
 import { render } from "react-dom"
-import Hook from "./hook.js"
 
 // really, this is simulating backend data, making it an unrealistic example...
 let reactUsers = {
