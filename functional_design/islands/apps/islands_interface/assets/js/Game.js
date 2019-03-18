@@ -1,7 +1,7 @@
 import React from "react" // `expo start` => https://blog.expo.io/announcing-expo-dev-tools-beta-c252cbeccb36
 import { AppRegistry, StyleSheet, Platform, View, TextInput, Button, TouchableOpacity, Text } from "react-native"
 import ErrorBoundary from "./components/ErrorBoundary.js"
-import Instruction from "./components/Instruction.js"
+import Instruction from "./components/Instruction"
 import Gameplay from "./components/Gameplay.js"
 import socket, { channel, history } from "./socket.js"
 import queryString from "query-string"
@@ -56,7 +56,11 @@ export default class Game extends React.Component{
 
         {message ?
           <View style={[styles.row, {justifyContent: "center"}]}>
-            <Instruction message={message} opponent={this.opponent()} style={Platform.OS !== "web" ? {paddingTop: 6, marginLeft: -3, marginBottom: 30} : {}}/>
+            <Instruction compiler="TypeScript"
+                         framework="React"
+                         message={message}
+                         opponent={this.opponent()}
+                         style={Platform.OS !== "web" ? {paddingTop: 6, marginLeft: -3, marginBottom: 30} : {}}/>
 
             {payload ?
               <TouchableOpacity key="exit" style={Platform.OS !== "web" ? {paddingTop: 24, marginLeft: -12} : {}}

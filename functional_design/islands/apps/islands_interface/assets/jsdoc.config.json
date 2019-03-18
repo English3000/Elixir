@@ -1,0 +1,13 @@
+{
+  "opts": {
+    "destination": "../../../docs/islands_interface",
+    "recurse": true
+  },
+  "source": {
+    "include": ["js"]
+  },
+  "plugins": ["plugins/markdown"],
+  "markdown": {
+    "tags": ["example"]
+  }
+}
