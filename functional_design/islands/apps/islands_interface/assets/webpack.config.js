@@ -1,10 +1,11 @@
-const path = require('path');
-const glob = require('glob');
-const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
-const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
-const CopyWebpackPlugin = require('copy-webpack-plugin');
-const { CheckerPlugin } = require('awesome-typescript-loader')
+const path                    = require('path'),
+      glob                    = require('glob'),
+      UglifyJsPlugin          = require('uglifyjs-webpack-plugin'),
+      OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin'),
+      MiniCssExtractPlugin    = require('mini-css-extract-plugin'),
+      CopyWebpackPlugin       = require('copy-webpack-plugin'),
+      { CheckerPlugin }       = require('awesome-typescript-loader'),
+      ErrorOverlayPlugin      = require('error-overlay-webpack-plugin')
 
 module.exports = (env, options) => ({
   devtool: 'source-map',
@@ -33,11 +34,12 @@ module.exports = (env, options) => ({
   plugins: [
     new MiniCssExtractPlugin({ filename: '../css/app.css' }),
     new CopyWebpackPlugin([{ from: 'static/', to: '../' }]),
-    new CheckerPlugin()
+    new CheckerPlugin(),
+    new ErrorOverlayPlugin(),
   ],
   resolve: {
     alias: {
-      'react-native$': 'react-native-web',
+      'react-native$':    'react-native-web',
       'react-native-svg': 'svgs'
     },
     extensions: ['.js', '.jsx', '.ts', '.tsx']

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, ComponentElement } from "react"
+import React, { useState, useEffect } from "react"
 import { AppRegistry, TouchableOpacity } from "react-native"
 import ErrorBoundary from "./ErrorBoundary.js"
 import socket, { guess_coordinate } from "../socket.js"

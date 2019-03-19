@@ -31,6 +31,7 @@
     "babel-loader": "^8.0.0",
     "copy-webpack-plugin": "^4.5.0",
     "css-loader": "^0.28.10",
+    "error-overlay-webpack-plugin": "^0.1.7",
     "jsdoc": "^3.5.5",
     "mini-css-extract-plugin": "^0.4.0",
     "optimize-css-assets-webpack-plugin": "^4.0.0",
