@@ -3,7 +3,7 @@ import { AppRegistry, StyleSheet, Platform, Text } from "react-native"
 import ErrorBoundary from "./ErrorBoundary.js"
 import { styles } from "../Game.js"
 // coupled to IslandsEngine.Game.Stage atoms
-function renderInstruction(instruction: string, opponent: string){
+function renderInstruction(instruction : string, opponent : string){
   switch (instruction) {
     case "joined":
       return "Drag your islands onto the board!"
@@ -26,7 +26,7 @@ function renderInstruction(instruction: string, opponent: string){
 
 type Message = {error ?: string, instruction ?: string}
 type Props   = {message : Message, opponent : string, style : object}
-function Instruction({message, opponent, style} : Props){
+export default function Instruction({message, opponent, style} : Props){
   return (
     <ErrorBoundary>
       <Text style={[custom.instruction, style]}>

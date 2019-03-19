@@ -1,12 +1,13 @@
 {
   "compilerOptions": {
     "jsx":    "react",
-    "module": "commonjs",
+    "module": "es6",
     "target": "es5",
 
     "outDir":  "../priv/static/js",
 
     "allowSyntheticDefaultImports": true,
+    "extendedDiagnostics":          true,
     "sourceMap":                    true,
   },
   "include": ["js"]

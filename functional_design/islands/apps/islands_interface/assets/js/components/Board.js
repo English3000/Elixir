@@ -2,9 +2,8 @@ import React from "react"
 import { AppRegistry, Platform, StyleSheet, TouchableOpacity, View } from "react-native"
 import { styles } from "../Game.js"
 import ErrorBoundary from "./ErrorBoundary.js"
-import Tile from "./Tile.js"
+import Tile from "./Tile"
 import { unit } from "./Island.js"
-import socket from "../socket.js"
 import _ from "underscore"
 
 export default class Board extends React.Component{
@@ -19,7 +18,8 @@ export default class Board extends React.Component{
                                     row={row}
                                     col={col}
                                     attacker={props.attacker}
-                                    player={props.player}/> )) }
+                                    player={props.player}
+                                    isIsland={false}/> )) }
   }
 
   render(){ return <ErrorBoundary>

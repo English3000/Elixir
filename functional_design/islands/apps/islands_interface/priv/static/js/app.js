@@ -1215,7 +1215,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react_native__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-native */ "./node_modules/react-native-web/dist/index.js");
 /* harmony import */ var _components_ErrorBoundary_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./components/ErrorBoundary.js */ "./js/components/ErrorBoundary.js");
 /* harmony import */ var _components_Instruction__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./components/Instruction */ "./js/components/Instruction.tsx");
-/* harmony import */ var _components_Instruction__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_components_Instruction__WEBPACK_IMPORTED_MODULE_3__);
 /* harmony import */ var _components_Gameplay_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./components/Gameplay.js */ "./js/components/Gameplay.js");
 /* harmony import */ var _socket_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./socket.js */ "./js/socket.js");
 /* harmony import */ var query_string__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! query-string */ "./node_modules/query-string/index.js");
@@ -1341,9 +1340,7 @@ function (_React$Component) {
         style: [styles.row, {
           justifyContent: "center"
         }]
-      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_components_Instruction__WEBPACK_IMPORTED_MODULE_3___default.a, {
-        compiler: "TypeScript",
-        framework: "React",
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_components_Instruction__WEBPACK_IMPORTED_MODULE_3__["default"], {
         message: message,
         opponent: this.opponent(),
         style: react_native__WEBPACK_IMPORTED_MODULE_1__["Platform"].OS !== "web" ? {
@@ -1538,7 +1535,7 @@ function (_React$Component) {
         return payload[opp].name;
       }
     } // On server crash, rejoins game via query string.
-    // NOTE: Page reloads only in `:dev` b/c of `:phoenix_live_reload`
+    // NOTE: Page reloads in `:dev` b/c of `:phoenix_live_reload`
 
   }, {
     key: "componentDidMount",
@@ -1575,13 +1572,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_2__);
 /* harmony import */ var react_native__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! react-native */ "./node_modules/react-native-web/dist/index.js");
 /* harmony import */ var _Game_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./Game.js */ "./js/Game.js");
-// We need to import the CSS so that webpack will load it.
-// The MiniCssExtractPlugin is used to separate it out into its own CSS file.
- // Webpack automatically bundles all modules in your entry points.
-// Those entry points can be configured in "webpack.config.js".
-// Import dependencies
 
- // Import local files using relative paths
 
 
 
@@ -1607,11 +1598,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react_native__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-native */ "./node_modules/react-native-web/dist/index.js");
 /* harmony import */ var _Game_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../Game.js */ "./js/Game.js");
 /* harmony import */ var _ErrorBoundary_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./ErrorBoundary.js */ "./js/components/ErrorBoundary.js");
-/* harmony import */ var _Tile_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./Tile.js */ "./js/components/Tile.js");
+/* harmony import */ var _Tile__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./Tile */ "./js/components/Tile.tsx");
 /* harmony import */ var _Island_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./Island.js */ "./js/components/Island.js");
-/* harmony import */ var _socket_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../socket.js */ "./js/socket.js");
-/* harmony import */ var underscore__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! underscore */ "./node_modules/underscore/underscore.js");
-/* harmony import */ var underscore__WEBPACK_IMPORTED_MODULE_7___default = /*#__PURE__*/__webpack_require__.n(underscore__WEBPACK_IMPORTED_MODULE_7__);
+/* harmony import */ var underscore__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! underscore */ "./node_modules/underscore/underscore.js");
+/* harmony import */ var underscore__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(underscore__WEBPACK_IMPORTED_MODULE_6__);
 function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -1638,7 +1628,6 @@ function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || func
 
 
 
-
 var Board =
 /*#__PURE__*/
 function (_React$Component) {
@@ -1652,9 +1641,9 @@ function (_React$Component) {
     _this = _possibleConstructorReturn(this, _getPrototypeOf(Board).call(this, props));
     var cursor = props.game[props.attacker].islands ? "pointer" : "default";
     _this.state = {
-      board: underscore__WEBPACK_IMPORTED_MODULE_7___default.a.map(underscore__WEBPACK_IMPORTED_MODULE_7___default.a.range(10), function (row) {
-        return underscore__WEBPACK_IMPORTED_MODULE_7___default.a.map(underscore__WEBPACK_IMPORTED_MODULE_7___default.a.range(10), function (col) {
-          return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Tile_js__WEBPACK_IMPORTED_MODULE_4__["default"], {
+      board: underscore__WEBPACK_IMPORTED_MODULE_6___default.a.map(underscore__WEBPACK_IMPORTED_MODULE_6___default.a.range(10), function (row) {
+        return underscore__WEBPACK_IMPORTED_MODULE_6___default.a.map(underscore__WEBPACK_IMPORTED_MODULE_6___default.a.range(10), function (col) {
+          return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Tile__WEBPACK_IMPORTED_MODULE_4__["default"], {
             key: "tile".concat(row, ",").concat(col),
             style: [custom.tile, react_native__WEBPACK_IMPORTED_MODULE_1__["Platform"].OS === "web" ? {
               cursor: cursor
@@ -1662,7 +1651,8 @@ function (_React$Component) {
             row: row,
             col: col,
             attacker: props.attacker,
-            player: props.player
+            player: props.player,
+            isIsland: false
           });
         });
       })
@@ -1678,7 +1668,7 @@ function (_React$Component) {
           marginHorizontal: Object(_Island_js__WEBPACK_IMPORTED_MODULE_5__["unit"])(1),
           borderWidth: 0.5
         }
-      }, underscore__WEBPACK_IMPORTED_MODULE_7___default.a.map(this.state.board, function (row, i) {
+      }, underscore__WEBPACK_IMPORTED_MODULE_6___default.a.map(this.state.board, function (row, i) {
         return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_native__WEBPACK_IMPORTED_MODULE_1__["View"], {
           key: i,
           style: _Game_js__WEBPACK_IMPORTED_MODULE_2__["styles"].row
@@ -1710,9 +1700,9 @@ function (_React$Component) {
             enemy = game[attacker];
 
         if (owner.islands) {
-          underscore__WEBPACK_IMPORTED_MODULE_7___default.a.each(Object.values(owner.islands), function (island) {
-            return underscore__WEBPACK_IMPORTED_MODULE_7___default.a.each(island.coordinates, function (coord) {
-              return board[coord.row][coord.col] = react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Tile_js__WEBPACK_IMPORTED_MODULE_4__["default"], {
+          underscore__WEBPACK_IMPORTED_MODULE_6___default.a.each(Object.values(owner.islands), function (island) {
+            return underscore__WEBPACK_IMPORTED_MODULE_6___default.a.each(island.coordinates, function (coord) {
+              return board[coord.row][coord.col] = react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Tile__WEBPACK_IMPORTED_MODULE_4__["default"], {
                 key: "island".concat(coord.row, ",").concat(coord.col),
                 style: [custom.tile, react_native__WEBPACK_IMPORTED_MODULE_1__["Platform"].OS === "web" ? {
                   cursor: "default"
@@ -1727,7 +1717,7 @@ function (_React$Component) {
           });
         }
 
-        underscore__WEBPACK_IMPORTED_MODULE_7___default.a.each(enemy.guesses.hits, function (coord) {
+        underscore__WEBPACK_IMPORTED_MODULE_6___default.a.each(enemy.guesses.hits, function (coord) {
           return board[coord.row][coord.col] = react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_ErrorBoundary_js__WEBPACK_IMPORTED_MODULE_3__["default"], {
             key: "hit".concat(coord.row, ",").concat(coord.col)
           }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_native__WEBPACK_IMPORTED_MODULE_1__["TouchableOpacity"], {
@@ -1739,7 +1729,7 @@ function (_React$Component) {
           }));
         });
 
-        underscore__WEBPACK_IMPORTED_MODULE_7___default.a.each(enemy.guesses.misses, function (coord) {
+        underscore__WEBPACK_IMPORTED_MODULE_6___default.a.each(enemy.guesses.misses, function (coord) {
           return board[coord.row][coord.col] = react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_ErrorBoundary_js__WEBPACK_IMPORTED_MODULE_3__["default"], {
             key: "miss".concat(coord.row, ",").concat(coord.col)
           }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_native__WEBPACK_IMPORTED_MODULE_1__["TouchableOpacity"], {
@@ -2092,15 +2082,19 @@ react_native__WEBPACK_IMPORTED_MODULE_1__["AppRegistry"].registerComponent("Game
 /*!***************************************!*\
   !*** ./js/components/Instruction.tsx ***!
   \***************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return Instruction; });
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var react_native__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-native */ "./node_modules/react-native-web/dist/index.js");
+/* harmony import */ var _ErrorBoundary_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./ErrorBoundary.js */ "./js/components/ErrorBoundary.js");
 
-Object.defineProperty(exports, "__esModule", { value: true });
-var react_1 = __webpack_require__(/*! react */ "./node_modules/react/index.js");
-var react_native_1 = __webpack_require__(/*! react-native */ "./node_modules/react-native-web/dist/index.js");
-var ErrorBoundary_js_1 = __webpack_require__(/*! ./ErrorBoundary.js */ "./js/components/ErrorBoundary.js");
+
+
 // coupled to IslandsEngine.Game.Stage atoms
 function renderInstruction(instruction, opponent) {
     switch (instruction) {
@@ -2124,15 +2118,15 @@ function renderInstruction(instruction, opponent) {
 }
 function Instruction(_a) {
     var message = _a.message, opponent = _a.opponent, style = _a.style;
-    return (react_1.default.createElement(ErrorBoundary_js_1.default, null,
-        react_1.default.createElement(react_native_1.Text, { style: [custom.instruction, style] }, message.error ?
+    return (react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_ErrorBoundary_js__WEBPACK_IMPORTED_MODULE_2__["default"], null,
+        react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_native__WEBPACK_IMPORTED_MODULE_1__["Text"], { style: [custom.instruction, style] }, message.error ?
             "ERROR: " + message.error.replace(/_/, " ") + "." :
             renderInstruction(message.instruction, opponent))));
 }
-var custom = react_native_1.StyleSheet.create({
-    instruction: { textAlign: "center", fontSize: react_native_1.Platform.OS === "web" ? 24 : 18, margin: 18 }
+var custom = react_native__WEBPACK_IMPORTED_MODULE_1__["StyleSheet"].create({
+    instruction: { textAlign: "center", fontSize: react_native__WEBPACK_IMPORTED_MODULE_1__["Platform"].OS === "web" ? 24 : 18, margin: 18 }
 });
-react_native_1.AppRegistry.registerComponent("Instruction", function () { return Instruction; });
+react_native__WEBPACK_IMPORTED_MODULE_1__["AppRegistry"].registerComponent("Instruction", function () { return Instruction; });
 
 
 /***/ }),
@@ -2332,10 +2326,10 @@ react_native__WEBPACK_IMPORTED_MODULE_1__["AppRegistry"].registerComponent("Isla
 
 /***/ }),
 
-/***/ "./js/components/Tile.js":
-/*!*******************************!*\
-  !*** ./js/components/Tile.js ***!
-  \*******************************/
+/***/ "./js/components/Tile.tsx":
+/*!********************************!*\
+  !*** ./js/components/Tile.tsx ***!
+  \********************************/
 /*! exports provided: default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -2347,105 +2341,36 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react_native__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-native */ "./node_modules/react-native-web/dist/index.js");
 /* harmony import */ var _ErrorBoundary_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./ErrorBoundary.js */ "./js/components/ErrorBoundary.js");
 /* harmony import */ var _socket_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../socket.js */ "./js/socket.js");
-function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
-
-function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
-
-function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
-
-function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
-
-function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
-
-function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
 
 
 
 
+function Tile(props) {
+    var attacker = props.attacker, player = props.player, isIsland = props.isIsland, style = props.style, _a = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(isIsland ? "brown" : "blue"), backgroundColor = _a[0], setColor = _a[1];
+    Object(react__WEBPACK_IMPORTED_MODULE_0__["useEffect"])(function () {
+        _socket_js__WEBPACK_IMPORTED_MODULE_3__["default"].channels[0].on("coordinate_guessed", function (_a) {
+            var player_key = _a.player_key, row = _a.row, col = _a.col, hit = _a.hit;
+            if (attacker === player_key && props.row === row && props.col === col) {
+                switch (hit) {
+                    case "hit":
+                        setColor("green");
+                        break;
+                    case "miss":
+                        setColor("darkblue");
+                        break;
+                }
+            }
+        });
+    }, []);
+    return (react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_ErrorBoundary_js__WEBPACK_IMPORTED_MODULE_2__["default"], null,
+        react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_native__WEBPACK_IMPORTED_MODULE_1__["TouchableOpacity"], { style: [style, { backgroundColor: backgroundColor }], onPress: function () {
+                // @ts-ignore
+                return ["blue", "brown"].includes(backgroundColor) && attacker === player ?
+                    Object(_socket_js__WEBPACK_IMPORTED_MODULE_3__["guess_coordinate"])(_socket_js__WEBPACK_IMPORTED_MODULE_3__["default"].channels[0], attacker, props.row, props.col) : null;
+            } })));
+}
+react_native__WEBPACK_IMPORTED_MODULE_1__["AppRegistry"].registerComponent("Tile", function () { return Tile; });
 
-
-var Tile =
-/*#__PURE__*/
-function (_React$Component) {
-  _inherits(Tile, _React$Component);
-
-  function Tile(props) {
-    var _this;
-
-    _classCallCheck(this, Tile);
-
-    _this = _possibleConstructorReturn(this, _getPrototypeOf(Tile).call(this, props));
-    _this.state = {
-      backgroundColor: props.isIsland ? "brown" : "blue",
-      isTurn: props.isTurn
-    };
-    return _this;
-  }
-
-  _createClass(Tile, [{
-    key: "render",
-    value: function render() {
-      var _this$props = this.props,
-          attacker = _this$props.attacker,
-          player = _this$props.player,
-          row = _this$props.row,
-          col = _this$props.col,
-          isIsland = _this$props.isIsland,
-          style = _this$props.style,
-          backgroundColor = this.state.backgroundColor;
-      return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_ErrorBoundary_js__WEBPACK_IMPORTED_MODULE_2__["default"], null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_native__WEBPACK_IMPORTED_MODULE_1__["TouchableOpacity"], {
-        style: [style, {
-          backgroundColor: backgroundColor
-        }],
-        onPress: function onPress() {
-          return ["blue", "brown"].includes(backgroundColor) && attacker === player ? Object(_socket_js__WEBPACK_IMPORTED_MODULE_3__["guess_coordinate"])(_socket_js__WEBPACK_IMPORTED_MODULE_3__["default"].channels[0], attacker, row, col) : null;
-        }
-      }));
-    }
-  }, {
-    key: "componentDidMount",
-    value: function componentDidMount() {
-      var _this2 = this;
-
-      var _this$props2 = this.props,
-          attacker = _this$props2.attacker,
-          player = _this$props2.player;
-      _socket_js__WEBPACK_IMPORTED_MODULE_3__["default"].channels[0].on("coordinate_guessed", function (_ref) {
-        var player_key = _ref.player_key,
-            row = _ref.row,
-            col = _ref.col,
-            hit = _ref.hit;
-
-        if (attacker === player_key && _this2.props.row === row && _this2.props.col === col) {
-          switch (hit) {
-            case "hit":
-              return _this2.setState({
-                backgroundColor: "green"
-              });
-
-            case "miss":
-              return _this2.setState({
-                backgroundColor: "darkblue"
-              });
-          }
-        }
-      });
-    }
-  }]);
-
-  return Tile;
-}(react__WEBPACK_IMPORTED_MODULE_0___default.a.Component);
-
-
-react_native__WEBPACK_IMPORTED_MODULE_1__["AppRegistry"].registerComponent("Tile", function () {
-  return Tile;
-});
 
 /***/ }),
 

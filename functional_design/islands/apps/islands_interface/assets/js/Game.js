@@ -56,9 +56,7 @@ export default class Game extends React.Component{
 
         {message ?
           <View style={[styles.row, {justifyContent: "center"}]}>
-            <Instruction compiler="TypeScript"
-                         framework="React"
-                         message={message}
+            <Instruction message={message}
                          opponent={this.opponent()}
                          style={Platform.OS !== "web" ? {paddingTop: 6, marginLeft: -3, marginBottom: 30} : {}}/>
 
@@ -138,7 +136,7 @@ export default class Game extends React.Component{
     }
   }
   // On server crash, rejoins game via query string.
-  // NOTE: Page reloads only in `:dev` b/c of `:phoenix_live_reload`
+  // NOTE: Page reloads in `:dev` b/c of `:phoenix_live_reload`
   componentDidMount(){
     const query = history.location.search
     if (query.length > 1) this.joinGame(queryString.parse(query))

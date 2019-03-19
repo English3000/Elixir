@@ -5,7 +5,7 @@ const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const { CheckerPlugin } = require('awesome-typescript-loader')
-// https://www.typescriptlang.org/docs/handbook/react-&-webpack.html
+
 module.exports = (env, options) => ({
   devtool: 'source-map',
   optimization: {
