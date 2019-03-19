@@ -1,12 +1,13 @@
 {
   "compilerOptions": {
-    "allowJs": true,
-    "outDir": "../priv/static/js",
-    "sourceMap": true,
-    "noImplicitAny": true,
+    "jsx":    "react",
     "module": "commonjs",
     "target": "es5",
-    "jsx": "preserve"
+
+    "outDir":  "../priv/static/js",
+
+    "allowSyntheticDefaultImports": true,
+    "sourceMap":                    true,
   },
   "include": ["js"]
 }

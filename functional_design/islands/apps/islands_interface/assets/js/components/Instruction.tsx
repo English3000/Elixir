@@ -1,6 +1,5 @@
-import * as React from "react"
+import React from "react"
 import { AppRegistry, StyleSheet, Platform, Text } from "react-native"
-// @ts-ignore
 import ErrorBoundary from "./ErrorBoundary.js"
 import { styles } from "../Game.js"
 // coupled to IslandsEngine.Game.Stage atoms

@@ -25,18 +25,9 @@ module.exports = (env, options) => ({
   module: {
     rules: [
       { test: /\.tsx?$/, loader: 'awesome-typescript-loader' },
-      { enforce: 'pre', test: /\.jsx?$/, loader: 'source-map-loader' },
-      {
-        test: /\.jsx?$/,
-        exclude: /node_modules/,
-        use: {
-          loader: 'babel-loader'
-        }
-      },
-      {
-        test: /\.css$/,
-        use: [MiniCssExtractPlugin.loader, 'css-loader']
-      }
+      { test: /\.jsx?$/, exclude: /node_modules/, enforce: 'pre', loader: 'source-map-loader' },
+      { test: /\.jsx?$/, exclude: /node_modules/, use: {loader: 'babel-loader'} },
+      { test: /\.css$/, use: [MiniCssExtractPlugin.loader, 'css-loader'] }
     ]
   },
   plugins: [
