@@ -1,0 +1,23 @@
+schema {
+  query: RootQueryType
+}
+
+type Link {
+  description: String
+  id: ID!
+  postedBy: User
+  url: String!
+}
+
+type RootQueryType {
+  # Lists all links
+  allLinks: [Link!]!
+}
+
+type User {
+  email: String!
+  id: ID!
+  name: String
+  password: String!
+}
+
