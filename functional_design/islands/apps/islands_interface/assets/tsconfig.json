@@ -6,8 +6,13 @@
 
     "outDir":  "../priv/static/js",
 
+    "allowJs":                      true,
     "allowSyntheticDefaultImports": true,
+    "downlevelIteration":           true,
     "extendedDiagnostics":          true,
+    "noImplicitAny":                true,
+    "noUnusedLocals":               true,
+    "noUnusedParameters":           true,
     "sourceMap":                    true,
   },
   "include": ["js"]

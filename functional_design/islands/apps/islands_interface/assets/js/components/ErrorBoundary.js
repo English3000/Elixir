@@ -1,6 +1,7 @@
 import React, { Component, Fragment } from "react"
 import { AppRegistry, View, Text } from "react-native"
 
+// NOTE: JS class component b/c `componentDidCatch/1` not yet supported by React Hooks
 export default class ErrorBoundary extends Component {
   constructor() {
     super()
@@ -16,4 +17,4 @@ export default class ErrorBoundary extends Component {
   }
 }
 
-AppRegistry.registerComponent("ErrorBoundary", () => ErrorBoundary)
+AppRegistry.registerComponent("ErrorBoundary.js", () => ErrorBoundary)

@@ -20,14 +20,14 @@ defmodule IslandsInterface.MixProject do
   defp elixirc_paths(_),     do: ["lib"]
 
   defp deps, do: [# compile-time deps
-    {:phoenix, "~> 1.4.0"},
+    {:phoenix,        "~> 1.4.0"},
     {:phoenix_pubsub, "~> 1.1"},
-    {:phoenix_html, "~> 2.11"},
+    {:phoenix_html,   "~> 2.11"},
     # {:phoenix_live_reload, "~> 1.2", only: :dev},
-    {:gettext, "~> 0.11"},
-    {:jason, "~> 1.0"},
-    {:plug_cowboy, "~> 2.0"},
-    {:shorthand, "~> 0.0.3"},
+    {:gettext,        "~> 0.11"},
+    {:jason,          "~> 1.0"},
+    {:plug_cowboy,    "~> 2.0"},
+    {:shorthand,      "~> 0.0.3"},
     {:islands_engine, in_umbrella: true}
   ]
 
