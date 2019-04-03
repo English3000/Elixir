@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react"
+import React, { useRef, useState, useEffect } from "react"
 import { AppRegistry, Dimensions, PanResponder, Animated } from "react-native"
 import ErrorBoundary from "./ErrorBoundary.js"
 import { Undux } from "../Game"
@@ -15,11 +15,10 @@ type Props = { island : {}, topLeft : number }
 export default function Island({island, topLeft} : Props){
   // @ts-ignore
   const {coordinates, bounds, type}     = island,
-        [onBoard, setOnBoard]           = useState(-1),
+        onBoard : React.MutableRefObject<number> = useRef(),
         [{pan, panResponder}, setState] = useState({pan: new Animated.ValueXY(), panResponder: {}}),
         {GameStore, GameplayStore}      = Undux.useStores(),
         player                          = GameStore.get("id")
-
   // NOTE: Add mobile locating -- currently islands appear immediately below board
   //        && maybe -5px flush of left edge
   // @ts-ignore
@@ -33,6 +32,7 @@ export default function Island({island, topLeft} : Props){
 
   useEffect(() => {
     console.log("effect")
+    if (!onBoard.current) onBoard.current = -1
     // @ts-ignore
     const {x, y} = pan
 
@@ -41,16 +41,12 @@ export default function Island({island, topLeft} : Props){
       const {height, width}  = island.bounds,
             [row, col]       = locate(x, y),
             inBounds         = (row >= 0 && row + height <= 10 && col >= 0 && col + width <= 10) ? 1 : -1,
-            same             = inBounds === onBoard,
+            same             = inBounds === onBoard.current,
             {count, islands} = GameplayStore.getState()
 
-      console.log("onBoard", onBoard)
       if (!same) {
-        console.log("inBounds", inBounds)
         GameplayStore.set("count")((count + inBounds))
-        Promise.resolve(
-          setOnBoard(inBounds)
-        ).then(() => console.log("onBoard'", onBoard))
+        onBoard.current = inBounds
       }
 
       const island_ = merge({}, islands[type], {bounds: {top_left: {row, col}}})
@@ -72,7 +68,7 @@ export default function Island({island, topLeft} : Props){
         onPanResponderRelease
       })
     })
-  }, [])
+  }, [GameplayStore])
 
   return (
     <ErrorBoundary>

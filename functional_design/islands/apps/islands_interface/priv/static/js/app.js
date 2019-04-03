@@ -1790,7 +1790,7 @@ var height = (_a = react_native__WEBPACK_IMPORTED_MODULE_1__["Dimensions"].get("
 function Island(_a) {
     var island = _a.island, topLeft = _a.topLeft;
     // @ts-ignore
-    var coordinates = island.coordinates, bounds = island.bounds, type = island.type, _b = __read(Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(-1), 2), onBoard = _b[0], setOnBoard = _b[1], _c = __read(Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])({ pan: new react_native__WEBPACK_IMPORTED_MODULE_1__["Animated"].ValueXY(), panResponder: {} }), 2), _d = _c[0], pan = _d.pan, panResponder = _d.panResponder, setState = _c[1], _e = _Game__WEBPACK_IMPORTED_MODULE_3__["Undux"].useStores(), GameStore = _e.GameStore, GameplayStore = _e.GameplayStore, player = GameStore.get("id");
+    var coordinates = island.coordinates, bounds = island.bounds, type = island.type, onBoard = Object(react__WEBPACK_IMPORTED_MODULE_0__["useRef"])(), _b = __read(Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])({ pan: new react_native__WEBPACK_IMPORTED_MODULE_1__["Animated"].ValueXY(), panResponder: {} }), 2), _c = _b[0], pan = _c.pan, panResponder = _c.panResponder, setState = _b[1], _d = _Game__WEBPACK_IMPORTED_MODULE_3__["Undux"].useStores(), GameStore = _d.GameStore, GameplayStore = _d.GameplayStore, player = GameStore.get("id");
     // NOTE: Add mobile locating -- currently islands appear immediately below board
     //        && maybe -5px flush of left edge
     // @ts-ignore
@@ -1800,16 +1800,16 @@ function Island(_a) {
     }
     Object(react__WEBPACK_IMPORTED_MODULE_0__["useEffect"])(function () {
         console.log("effect");
+        if (!onBoard.current)
+            onBoard.current = -1;
         // @ts-ignore
         var x = pan.x, y = pan.y;
         function onPanResponderRelease() {
             // @ts-ignore
-            var _a = island.bounds, height = _a.height, width = _a.width, _b = __read(locate(x, y), 2), row = _b[0], col = _b[1], inBounds = (row >= 0 && row + height <= 10 && col >= 0 && col + width <= 10) ? 1 : -1, same = inBounds === onBoard, _c = GameplayStore.getState(), count = _c.count, islands = _c.islands;
-            console.log("onBoard", onBoard);
+            var _a = island.bounds, height = _a.height, width = _a.width, _b = __read(locate(x, y), 2), row = _b[0], col = _b[1], inBounds = (row >= 0 && row + height <= 10 && col >= 0 && col + width <= 10) ? 1 : -1, same = inBounds === onBoard.current, _c = GameplayStore.getState(), count = _c.count, islands = _c.islands;
             if (!same) {
-                console.log("inBounds", inBounds);
                 GameplayStore.set("count")((count + inBounds));
-                Promise.resolve(setOnBoard(inBounds)).then(function () { return console.log("onBoard'", onBoard); });
+                onBoard.current = inBounds;
             }
             var island_ = lodash_merge__WEBPACK_IMPORTED_MODULE_5___default()({}, islands[type], { bounds: { top_left: { row: row, col: col } } });
             islands[type] = island_;
@@ -1830,7 +1830,7 @@ function Island(_a) {
                 onPanResponderRelease: onPanResponderRelease
             })
         });
-    }, []);
+    }, [GameplayStore]);
     return (react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_ErrorBoundary_js__WEBPACK_IMPORTED_MODULE_2__["default"], null,
         react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_native__WEBPACK_IMPORTED_MODULE_1__["Animated"].View, __assign({ style: 
             // @ts-ignore
