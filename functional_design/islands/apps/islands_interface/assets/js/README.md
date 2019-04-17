@@ -1,5 +1,6 @@
 > After converting to `.tsx` && confirming `Undux` architecture works && merged into `master`,
-> try 2nd branch using **Flow** (&& see which I prefer... Flow seems to have better type _inference_ than TS)
+>   add frontend tests, improve backend test coverage
+>     * test that "what I see is what I get" (as a baseline) -- also setup build integration that auto-runs tests
 >   add `JSDoc`s _a la_:
 
 ## Store

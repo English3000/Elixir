@@ -1,4 +1,4 @@
-import React, { useEffect } from "react"
+import React from "react"
 import { AppRegistry, StyleSheet, View, TouchableOpacity, Text } from "react-native"
 import ErrorBoundary from "./ErrorBoundary.js"
 import socket, { set_islands } from "../socket"
@@ -10,22 +10,19 @@ export type GameplayState = { count : number, islands ?: {} }
 export const GameplayState : GameplayState = {count: 0, islands: undefined}
 export default function Gameplay(){
   const {GameStore, GameplayStore} = Undux.useStores(),
-        player                     = GameStore.get("id"),
-        my                         = GameStore.get("payload")[player],
+        {id, payload}              = GameStore.getState(),
         islands                    = GameplayStore.get("islands")
-
-  useEffect(() => { GameplayStore.set("islands")(my.islands) }, [])
 
   return (
     <ErrorBoundary>
       <View key="display" style={{alignItems: "center"}}>
         {islands ? <BoardRenderer /> : null}
 
-        {GameplayStore.get("count") === 5 && my.stage === "joined" ?
+        {GameplayStore.get("count") === 5 && payload[id].stage === "joined" ?
           <TouchableOpacity style={custom.button}
                             onPress={() =>
                               // @ts-ignore
-                              set_islands(socket.channels[0], {player, islands})}>
+                              set_islands(socket.channels[0], {player: id, islands})}>
             <Text style={custom.buttonText}>SET ISLANDS</Text>
           </TouchableOpacity>
         : null}

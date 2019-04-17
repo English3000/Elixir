@@ -4,7 +4,6 @@ import ErrorBoundary from "./ErrorBoundary.js"
 import { Undux } from "../Game"
 // @ts-ignore
 import Svg, { Rect } from "react-native-svg"
-import merge from "lodash.merge"
 
 export const {height, width} = Dimensions.get("window"),
              bound           = height > width ? (width-0.5) * 0.6 : (height-0.5) * 0.6,
@@ -15,31 +14,30 @@ type Props = { island : {}, topLeft : number }
 export default function Island({island, topLeft} : Props){
   // @ts-ignore
   const {coordinates, bounds, type}     = island,
-        onBoard : React.MutableRefObject<number> = useRef(),
+        onBoard                         = useRef(-1),
         [{pan, panResponder}, setState] = useState({pan: new Animated.ValueXY(), panResponder: {}}),
         {GameStore, GameplayStore}      = Undux.useStores(),
         player                          = GameStore.get("id")
   // NOTE: Add mobile locating -- currently islands appear immediately below board
   //        && maybe -5px flush of left edge
   // @ts-ignore
-  function locate(x, y) : [number, number] {
+  function locate(x, y) : {[key : string]: number} {
     const marginLeft = (player === "player1") ? -3 : 11,
           row        = (topLeft + y._value + y._offset) / unit(1),
           col        = (x._value + x._offset) / unit(1) + marginLeft
 
-    return [Math.round(row), Math.round(col)]
+    return {row: Math.round(row), col: Math.round(col)}
   }
 
   useEffect(() => {
-    console.log("effect")
-    if (!onBoard.current) onBoard.current = -1
     // @ts-ignore
     const {x, y} = pan
 
     function onPanResponderRelease(){
       // @ts-ignore
       const {height, width}  = island.bounds,
-            [row, col]       = locate(x, y),
+            top_left         = locate(x, y),
+            {row, col}       = top_left,
             inBounds         = (row >= 0 && row + height <= 10 && col >= 0 && col + width <= 10) ? 1 : -1,
             same             = inBounds === onBoard.current,
             {count, islands} = GameplayStore.getState()
@@ -49,8 +47,7 @@ export default function Island({island, topLeft} : Props){
         onBoard.current = inBounds
       }
 
-      const island_ = merge({}, islands[type], {bounds: {top_left: {row, col}}})
-      islands[type] = island_
+      islands[type] = { ...islands[type], bounds: {top_left, height, width} }
       GameplayStore.set("islands")(islands)
       // @ts-ignore
       pan.flattenOffset()

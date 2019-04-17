@@ -1,4 +1,4 @@
-import React, { useEffect } from "react" // `expo start` => https://blog.expo.io/announcing-expo-dev-tools-beta-c252cbeccb36
+import React, { useRef, useEffect } from "react"
 // @ts-ignore
 import { createConnectedStoreAs, Store, withLogger, withReduxDevtools } from "undux"
 import { AppRegistry, StyleSheet, Platform, View, TextInput, Button, TouchableOpacity, Text } from "react-native"
@@ -9,7 +9,6 @@ import Gameplay, { GameplayState } from "./components/Gameplay"
 import socket, { channel, history } from "./socket"
 // @ts-ignore
 import queryString from "query-string"
-import merge from "lodash.merge"
 
 type Form = {
   complete : boolean,
@@ -32,21 +31,22 @@ export type Undux = Store<AllStates>
 const INITIAL_STATE         = {complete: false, game: "", player: ""},
       Form                  = history.location.search.length > 1 ? false : INITIAL_STATE,
       GameState : GameState = {form: Form, update: true, id: undefined, message: undefined, payload: undefined},
-      DevTools              = process.env.NODE_ENV === 'production' ? undefined : [withLogger, withReduxDevtools]
+      DevTools              = process.env.NODE_ENV === "production" ? undefined : [withLogger, withReduxDevtools]
 
 function setupDevTool(stores : Undux){
   for (const key in stores) DevTools.forEach(Tool => Tool(stores[key]))
 }
 
-export const Undux = createConnectedStoreAs({
-  GameStore:     GameState,
-  GameplayStore: GameplayState,
-}, setupDevTool)
+export const Undux     = createConnectedStoreAs({
+                           GameStore:     GameState,
+                           GameplayStore: GameplayState,
+                         }, setupDevTool)
 
 export default function Game(){
-  const {GameStore}                  = Undux.useStores(),
+  const {GameStore, GameplayStore}   = Undux.useStores(),
         {form, id, message, payload} = GameStore.getState(),
-        {game, player, complete}     = form
+        {game, player, complete}     = form,
+        payloadValue                 = useRef(payload)
 
   function opponent() : string | undefined {
     if (payload)
@@ -69,37 +69,28 @@ export default function Game(){
 
     GameStore.set("form")(form_)
   }
-  // TODO: Add frontend channel tests
+
   function joinGame({complete, game, player} : Form, charCode = 13 /* enter */){
     if (complete !== false && charCode === 13 && game.length > 0 && player.length > 0) {
       let gameChannel = channel(socket, game, player)
       gameChannel.on( "error", ({reason}) => GameStore.set("message")({error: reason}) )
       gameChannel.join()
-        .receive( "ok", payload => {
+        .receive( "ok", payload_ => {
+          const id_ = (payload_.player1.name === player) ? "player1" : "player2"
+          GameStore.on("payload").subscribe((payload_ : any) => {
+            payloadValue.current = payload_
+            GameplayStore.set("islands")(payload_[id_].islands)
+          })
           GameStore.set("form")(false)
-          GameStore.set("payload")(payload)
-          const {player1, player2} = payload
-          if (player1.name === player) {
-            GameStore.set("id")("player1")
-            GameStore.set("message")({instruction: player1.stage})
-          }
-          if (player2.name === player) {
-            GameStore.set("id")("player2")
-            GameStore.set("message")({instruction: player2.stage})
-          }
+          GameStore.set("id")(id_)
+          GameStore.set("payload")(payload_)
+          GameStore.set("message")({instruction: payload_[id_].stage})
           history.push(`/?game=${game}&player=${player}`)
       }).receive( "error", ({reason}) => GameStore.set("message")({error: reason}) )
-      // BUG: This event is occuring b4 "ok" event
-      //  Commented it out in `game_channel.ex`
-      gameChannel.on( "game_joined", ({player1, player2}) => {
-        GameStore.set("message")({instruction: (id === "player1") ? player1.stage : player2.stage})
-        let player_1 = merge({}, GameStore.get("payload").player1)
-        player_1["stage"] = player1.stage
-        GameStore.set("payload")(merge({}, payload, {player_1, player2}))
-      })
       gameChannel.on( "islands_set", playerData => {
         GameStore.set("message")({instruction: playerData.stage})
-        GameStore.set("payload")(merge({}, payload, {[playerData.key]: playerData}))
+        payloadValue.current[playerData.key] = playerData
+        GameStore.set("payload")(payloadValue.current)
       })
       gameChannel.on( "coordinate_guessed", ({player_key}) =>
         GameStore.set("message")({
@@ -117,7 +108,7 @@ export default function Game(){
   // NOTE: Disabled `:phoenix_live_reload` so page doesn't auto-reload
   /** On server crash, rejoins game via query string. */
   useEffect(() => {
-    if (GameStore.get("update")) {
+    if (GameStore.get("update")) { // TODO: check if another scoping bug
       GameStore.set("update")(false)
       const query = history.location.search
       if (query.length > 1) joinGame(queryString.parse(query))
@@ -181,7 +172,7 @@ export default function Game(){
         <Gameplay />
       : null}
     </ErrorBoundary>
-  )
+  ) // BUG: All display on exit (so `payload` cond. isn't working now...)
 }
 
 const custom = StyleSheet.create({

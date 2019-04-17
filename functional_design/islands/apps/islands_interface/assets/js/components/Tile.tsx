@@ -30,10 +30,12 @@ export default function Tile(props : Props){
     })
   }, [])
 
+  useEffect(() => {if (color !== backgroundColor) setColor(color)}, [props])
+
   return (
     <ErrorBoundary>
       <TouchableOpacity style={[style, {backgroundColor}]}
-                        onPress={() =>
+                        onPress={() => // BUG: Not attacking
                           (game[attacker].stage === "turn") &&
                           (attacker === player) &&
                           ["blue", "brown"].includes(backgroundColor) ?

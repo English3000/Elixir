@@ -5,7 +5,6 @@ defmodule IslandsInterfaceWeb.GameChannel do
 
   alias IslandsInterfaceWeb.Presence
   alias IslandsEngine.Game.{Server, Supervisor}
-  # alias IslandsEngine.DataStructures.Player
 
   @doc "Sends game state (except opponent's board) to frontend."
   @spec join(topic :: String.t, params :: map, socket :: Socket.t) ::
@@ -59,29 +58,13 @@ defmodule IslandsInterfaceWeb.GameChannel do
   end
 
   defp respond(%{player1: %{name: name1}} = state, player, socket) do
-    opp_atom = if player == name1, do: :player2, else: :player1
-    state_   = update_in( state, [opp_atom], &Map.delete(&1, :islands) )
-
-    # send(self(), {:after_join, "game_joined", state_, opp_atom})
-
+    state_ = state
+             |> update_in(
+                  [ if(player == name1, do: :player2, else: :player1) ],
+                  &Map.delete(&1, :islands)
+                )
     {:ok, state_, socket}
   end
-
-  # def handle_info({:after_join, event, state, opp_atom}, socket) do
-  #   player_atom = Player.opponent(opp_atom)
-
-  #   %{name: player_name, stage: player_stage} = Map.get(state, player_atom)
-  #   %{name: opp_name,    stage: opp_stage}    = Map.get(state, opp_atom)
-
-  #   broadcast! socket, event, %{ player_atom => %{name: player_name, stage: player_stage},
-  #                                    opp_atom => %{name: opp_name, stage: opp_stage} }
-
-  #   if player_stage != :joined and
-  #      socket |> Presence.list() |> Map.keys() |> length < 2,
-  #     do: push socket, "message", %{instruction: "ready"}
-
-  #   {:noreply, socket}
-  # end
 
   @doc "<JS> socket.push(event, payload) => handle_in(event, payload, socket) <EX>"
   @spec handle_in(event :: String.t, payload :: any, socket :: Socket.t) ::
@@ -90,7 +73,7 @@ defmodule IslandsInterfaceWeb.GameChannel do
 
   def handle_in("set_islands", payload, %{topic: "game:" <> game} = socket) do
     case Server.registry_tuple(game) |> Server.set_islands(payload) do
-         {:ok, player} -> if player.key == :player2 and player.stage == :wait,
+      {:ok, player}    -> if player.key == :player2 and player.stage == :wait,
                             do: message(socket, "turn")
 
                           push socket, "islands_set", player
