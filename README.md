@@ -1,3 +1,5 @@
+* [creating secret environment variables](https://hexdocs.pm/phoenix/deployment.html#handling-of-your-application-secrets)
+
 _Debugging Gigalixir:_
 
 1. run locally: `MIX_ENV=prod mix phx.server`
