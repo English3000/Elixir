@@ -1,3 +1,8 @@
+_Debugging Gigalixir:_
+
+1. run locally: `MIX_ENV=prod mix phx.server`
+2. if still issue, `gigalixir logs`
+
 ## Ramp up with the WRAP Stack!
 ### `react-native-`[`W`](https://github.com/necolas/react-native-web)`eb` + Relay + Absinthe + PostgreSQL
 #### (+ Jest)
