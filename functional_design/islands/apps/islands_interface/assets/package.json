@@ -16,7 +16,7 @@
     "react-dom": "^16.6.1",
     "react-native-web": "^0.9.6",
     "svgs": "^3.2.1",
-    "underscore": "^1.9.1"
+    "underscore": "^1.12.1"
   },
   "devDependencies": {
     "@babel/core": "^7.0.0",
